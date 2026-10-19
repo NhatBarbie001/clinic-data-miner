@@ -1,0 +1,33 @@
+# --- Bí mật
+.env
+configs/local.yaml
+
+# --- Dữ liệu (lớn, không commit). Chỉ giữ cấu trúc thư mục.
+data/*
+!data/.gitkeep
+!data/raw/
+data/raw/*
+!data/raw/.gitkeep
+
+# --- Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# --- Công cụ
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Lưu ý: samples/ ĐƯỢC commit (mẫu nhỏ để duyệt kết quả từng task).

@@ -1,0 +1,50 @@
+$ uv run dm version
+dataminer 0.1.0
+
+$ uv run dm info
+dataminer   : 0.1.0
+python      : 3.12.13
+project root: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner
+
+Modules:
+  - core        ok
+  - ingest      ok
+  - structure   ok
+  - index       ok
+  - kb          ok
+  - qa          ok
+  - batch       ok
+  - datagen     ok
+  - evaluation  ok
+
+Thư mục:
+  - configs            ok
+  - prompts            ok
+  - scripts            ok
+  - app                ok
+  - eval               ok
+  - data/raw           ok
+  - samples            ok
+  - docs/phases        ok
+  - tests/unit         ok
+  - tests/integration  ok
+  - tests/fixtures     ok
+
+Trạng thái:
+  - .env      : chưa có (copy từ .env.example)
+  - PDF sách  : chưa có (chép vào data/raw/)
+
+$ uv run dm --help
+                                                                               
+ Usage: dm [OPTIONS] COMMAND [ARGS]...                                         
+                                                                               
+ Data-miner: khai thác dữ liệu y khoa từ sách PDF.                             
+                                                                               
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --help          Show this message and exit.                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Commands ──────────────────────────────────────────────────────────────────┐
+│ version  In phiên bản dataminer.                                            │
+│ info     In thông tin môi trường và trạng thái dự án.                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+

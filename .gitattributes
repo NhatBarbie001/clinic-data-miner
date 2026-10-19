@@ -1,0 +1,4 @@
+# Lưu mọi file text với LF trong repo, tránh diff giả do CRLF trên Windows.
+* text=auto eol=lf
+*.pdf binary
+*.png binary

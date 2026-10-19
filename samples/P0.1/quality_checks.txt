@@ -1,0 +1,73 @@
+# Kết quả kiểm tra chất lượng P0.1 - chạy lúc 2026-10-19 15:51:52
+
+$ uv run ruff check .
+All checks passed!
+
+$ uv run ruff format --check .
+21 files already formatted
+
+$ uv run mypy
+Success: no issues found in 11 source files
+
+$ uv run pytest -v
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, cov-7.1.0
+collecting ... collected 38 items
+
+tests/unit/test_scaffold.py::test_version_matches_pyproject PASSED       [  2%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[core] PASSED [  5%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[ingest] PASSED [  7%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[structure] PASSED [ 10%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[index] PASSED [ 13%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[kb] PASSED [ 15%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[qa] PASSED [ 18%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[batch] PASSED [ 21%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[datagen] PASSED [ 23%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[evaluation] PASSED [ 26%]
+tests/unit/test_scaffold.py::test_submodules_match_source_tree PASSED    [ 28%]
+tests/unit/test_scaffold.py::test_required_dir_exists[configs] PASSED    [ 31%]
+tests/unit/test_scaffold.py::test_required_dir_exists[prompts] PASSED    [ 34%]
+tests/unit/test_scaffold.py::test_required_dir_exists[scripts] PASSED    [ 36%]
+tests/unit/test_scaffold.py::test_required_dir_exists[app] PASSED        [ 39%]
+tests/unit/test_scaffold.py::test_required_dir_exists[eval] PASSED       [ 42%]
+tests/unit/test_scaffold.py::test_required_dir_exists[data/raw] PASSED   [ 44%]
+tests/unit/test_scaffold.py::test_required_dir_exists[samples] PASSED    [ 47%]
+tests/unit/test_scaffold.py::test_required_dir_exists[docs/phases] PASSED [ 50%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/unit] PASSED [ 52%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/integration] PASSED [ 55%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/fixtures] PASSED [ 57%]
+tests/unit/test_scaffold.py::test_find_project_root_from_subdir PASSED   [ 60%]
+tests/unit/test_scaffold.py::test_find_project_root_fails_outside_project PASSED [ 63%]
+tests/unit/test_scaffold.py::test_cli_version PASSED                     [ 65%]
+tests/unit/test_scaffold.py::test_cli_info PASSED                        [ 68%]
+tests/unit/test_scaffold.py::test_cli_subprocess_redirected_output_is_utf8[version] PASSED [ 71%]
+tests/unit/test_scaffold.py::test_cli_subprocess_redirected_output_is_utf8[info] PASSED [ 73%]
+tests/unit/test_scaffold.py::test_cli_no_args_shows_help PASSED          [ 76%]
+tests/unit/test_scaffold.py::test_gitignore_rules[.env-True] PASSED      [ 78%]
+tests/unit/test_scaffold.py::test_gitignore_rules[configs/local.yaml-True] PASSED [ 81%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/raw/book.pdf-True] PASSED [ 84%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/p1_clean/blocks.jsonl-True] PASSED [ 86%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/.gitkeep-False] PASSED [ 89%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/raw/.gitkeep-False] PASSED [ 92%]
+tests/unit/test_scaffold.py::test_gitignore_rules[samples/P0.1/cli_info.txt-False] PASSED [ 94%]
+tests/unit/test_scaffold.py::test_gitignore_rules[.env.example-False] PASSED [ 97%]
+tests/unit/test_scaffold.py::test_gitignore_rules[src/dataminer/cli.py-False] PASSED [100%]
+
+============================= 38 passed in 1.12s ==============================
+
+$ uv run pre-commit run --all-files
+trim trailing whitespace.................................................Passed
+fix end of files.........................................................Passed
+check yaml...............................................................Passed
+check toml...............................................................Passed
+check for merge conflicts................................................Passed
+check for added large files..............................................Passed
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+mypy (strict)............................................................Passed
+exit=0
