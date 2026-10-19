@@ -44,6 +44,8 @@ ignore = ["RUF001", "RUF002", "RUF003"]
 
 [tool.ruff.format]
 quote-style = "double"
+# Khối code trong tài liệu .md là minh họa (căn chỉnh để đọc) → không format.
+exclude = ["*.md"]
 
 # ---------------------------------------------------------------- mypy
 [tool.mypy]

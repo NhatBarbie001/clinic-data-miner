@@ -1,0 +1,44 @@
+# Ánh xạ tác vụ → model OpenRouter. Bắt buộc có đủ:
+#   ping, fix_ocr, classify, extract, qa, judge, datagen
+#
+# Chủ dự án chọn DeepSeek (2026-10-19). Model ID sẽ được xác nhận tồn tại + lấy giá ở P0.3.
+# reasoning.enabled = bật chế độ suy luận (tham số `reasoning` của OpenRouter):
+# chính xác hơn nhưng chậm và tốn token hơn → chỉ bật cho tác vụ cần suy luận.
+#
+# Lưu ý: `judge` cùng họ model với `qa`/`datagen` → có thể thiên vị khi tự chấm.
+# Cân nhắc đổi sang model khác họ trước P5 (xem P0.2_report.md).
+
+ping:
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 256
+
+fix_ocr:                     # P1 - sửa lỗi OCR, nhiều lời gọi, cần rẻ và bám sát văn bản
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 2048
+
+classify:                    # P2, P4 - phân loại tiêu đề, nhóm bệnh
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 512
+
+extract:                     # P4 - trích xuất JSON theo schema, cần chính xác
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 8192
+  reasoning:
+    enabled: true
+
+qa:                          # P5 - agent hỏi đáp, tool calling
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 4096
+  reasoning:
+    enabled: true
+
+judge:                       # P5, P7 - chấm độ trung thực
+  model: deepseek/deepseek-v4.1-flash-1017
+  max_tokens: 2048
+  reasoning:
+    enabled: true
+
+datagen:                     # P7 - sinh dữ liệu huấn luyện, cần đa dạng
+  model: deepseek/deepseek-v4.1-flash-1017
+  temperature: 0.7
+  max_tokens: 4096

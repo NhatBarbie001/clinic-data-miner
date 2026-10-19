@@ -1,0 +1,71 @@
+# Thông báo lỗi của `dm config validate` với các cấu hình cố ý sai (P0.2).
+# Chạy trên bản sao configs trong thư mục tạm; đường dẫn tạm được thay bằng <tmp>.
+
+## Gõ sai tên khóa
+--- configs/local.yaml:
+llm:
+  concurency: 2
+$ dm config validate
+Cấu hình không hợp lệ (1 lỗi):
+  - llm.concurency: khóa không tồn tại - có phải ý bạn là 'concurrency'?  [nguồn: configs/local.yaml]
+(exit=1)
+
+## Giá trị ngoài miền + nhiều lỗi cùng lúc
+--- configs/local.yaml:
+llm:
+  concurrency: 100
+  mode: fast
+budget:
+  total_usd: -5
+$ dm config validate
+Cấu hình không hợp lệ (3 lỗi):
+  - llm.mode: phải là một trong: 'live', 'replay', 'refresh' (nhận: 'fast')  [nguồn: configs/local.yaml]
+  - llm.concurrency: phải ≤ 64 (nhận: 100)  [nguồn: configs/local.yaml]
+  - budget.total_usd: phải ≥ 0.0 (nhận: -5)  [nguồn: configs/local.yaml]
+(exit=1)
+
+## Chương mẫu: trang bắt đầu > trang kết thúc
+--- configs/local.yaml:
+pilot:
+  page_start: 50
+  page_end: 10
+$ dm config validate
+Cấu hình không hợp lệ (1 lỗi):
+  - pilot: page_start (50) phải ≤ page_end (10)  [nguồn: configs/local.yaml]
+(exit=1)
+
+## Model thiếu tên, temperature quá lớn, effort sai
+--- configs/local.yaml:
+models:
+  extract:
+    model: ""
+    temperature: 3
+    reasoning:
+      effort: max
+$ dm config validate
+Cấu hình không hợp lệ (3 lỗi):
+  - models.extract.model: không được để trống (nhận: '')  [nguồn: configs/local.yaml]
+  - models.extract.temperature: phải ≤ 2.0 (nhận: 3)  [nguồn: configs/local.yaml]
+  - models.extract.reasoning.effort: phải là một trong: 'low', 'medium', 'high' (nhận: 'max')  [nguồn: configs/local.yaml]
+(exit=1)
+
+## YAML hỏng cú pháp
+--- configs/local.yaml:
+llm:
+  concurrency: [1, 2
+$ dm config validate
+<tmp>\proj\configs\local.yaml: YAML không hợp lệ ở dòng 3, cột 1: expected ',' or ']', but got '<stream end>'
+(exit=1)
+
+## Biến môi trường gõ sai: DM__LLM__TIMEOUT=5
+$ DM__LLM__TIMEOUT=5 dm config validate
+Cấu hình không hợp lệ (1 lỗi):
+  - llm.timeout: khóa không tồn tại - có phải ý bạn là 'timeout_s'?  [nguồn: env]
+(exit=1)
+
+## Cấu hình hợp lệ
+$ dm config validate
+Cấu hình hợp lệ ✓  fingerprint=8e056887429a
+  - 7 tác vụ model, chế độ LLM: live
+  - API key: chưa đặt (cần trước khi gọi LLM)
+(exit=0)

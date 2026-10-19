@@ -1,0 +1,112 @@
+# Kết quả kiểm tra chất lượng P0.2 - chạy lúc 2026-10-20 00:01:58
+
+$ uv run ruff check .
+All checks passed!
+
+$ uv run ruff format --check .
+17 files already formatted
+
+$ uv run mypy
+Success: no issues found in 12 source files
+
+$ uv run pytest -v
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, cov-7.1.0
+collecting ... collected 77 items
+
+tests/unit/test_config.py::test_01_real_config_is_valid PASSED           [  1%]
+tests/unit/test_config.py::test_02_paths_resolved_absolute_relative_to_root PASSED [  2%]
+tests/unit/test_config.py::test_03_local_yaml_deep_merge PASSED          [  3%]
+tests/unit/test_config.py::test_03b_local_yaml_overrides_nested_model PASSED [  5%]
+tests/unit/test_config.py::test_04_env_override_with_type_coercion PASSED [  6%]
+tests/unit/test_config.py::test_05_priority_env_over_local_over_default PASSED [  7%]
+tests/unit/test_config.py::test_05b_unrelated_env_vars_ignored PASSED    [  9%]
+tests/unit/test_config.py::test_06_typo_key_suggests_correct_name PASSED [ 10%]
+tests/unit/test_config.py::test_06b_typo_in_env_reports_env_source PASSED [ 11%]
+tests/unit/test_config.py::test_07_out_of_range_values[change0-llm.concurrency: ph\u1ea3i \u2264 64] PASSED [ 12%]
+tests/unit/test_config.py::test_07_out_of_range_values[change1-llm.concurrency: ph\u1ea3i \u2265 1] PASSED [ 14%]
+tests/unit/test_config.py::test_07_out_of_range_values[change2-budget.total_usd: ph\u1ea3i \u2265 0] PASSED [ 15%]
+tests/unit/test_config.py::test_07_out_of_range_values[change3-llm.mode: ph\u1ea3i l\xe0 m\u1ed9t trong] PASSED [ 16%]
+tests/unit/test_config.py::test_07_out_of_range_values[change4-project.book_id: kh\xf4ng kh\u1edbp m\u1eabu] PASSED [ 18%]
+tests/unit/test_config.py::test_07_out_of_range_values[change5-page_start (50) ph\u1ea3i \u2264 page_end (10)] PASSED [ 19%]
+tests/unit/test_config.py::test_07_out_of_range_values[change6-c\xf9ng c\xf3 ho\u1eb7c c\xf9ng \u0111\u1ec3 tr\u1ed1ng] PASSED [ 20%]
+tests/unit/test_config.py::test_07_out_of_range_values[change7-llm.base_url: thi\u1ebfu gi\xe1 tr\u1ecb b\u1eaft bu\u1ed9c] PASSED [ 22%]
+tests/unit/test_config.py::test_07b_multiple_errors_reported_together PASSED [ 23%]
+tests/unit/test_config.py::test_07c_group_error_blames_latest_layer PASSED [ 24%]
+tests/unit/test_config.py::test_07d_messages_in_vietnamese PASSED        [ 25%]
+tests/unit/test_config.py::test_08_missing_required_task PASSED          [ 27%]
+tests/unit/test_config.py::test_08b_budget_for_unknown_task PASSED       [ 28%]
+tests/unit/test_config.py::test_09_model_for_unknown_task_lists_valid PASSED [ 29%]
+tests/unit/test_config.py::test_10_missing_api_key_loads_but_require_fails PASSED [ 31%]
+tests/unit/test_config.py::test_10b_api_key_from_env PASSED              [ 32%]
+tests/unit/test_config.py::test_10c_api_key_from_dotenv_file PASSED      [ 33%]
+tests/unit/test_config.py::test_11_api_key_never_displayed PASSED        [ 35%]
+tests/unit/test_config.py::test_11b_api_key_not_in_cli_show PASSED       [ 36%]
+tests/unit/test_config.py::test_12_fingerprint_stable PASSED             [ 37%]
+tests/unit/test_config.py::test_12b_fingerprint_changes_with_params PASSED [ 38%]
+tests/unit/test_config.py::test_12c_fingerprint_ignores_api_key PASSED   [ 40%]
+tests/unit/test_config.py::test_12d_fingerprint_independent_of_location PASSED [ 41%]
+tests/unit/test_config.py::test_13_broken_yaml_reports_file_and_line PASSED [ 42%]
+tests/unit/test_config.py::test_13b_missing_required_file PASSED         [ 44%]
+tests/unit/test_config.py::test_13c_non_mapping_root PASSED              [ 45%]
+tests/unit/test_config.py::test_14_cli_validate_ok PASSED                [ 46%]
+tests/unit/test_config.py::test_14b_cli_validate_fails_with_errors PASSED [ 48%]
+tests/unit/test_config.py::test_14c_cli_show_lists_sources_and_fingerprint PASSED [ 49%]
+tests/unit/test_config.py::test_find_project_root_moved_to_core PASSED   [ 50%]
+tests/unit/test_scaffold.py::test_version_matches_pyproject PASSED       [ 51%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[core] PASSED [ 53%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[ingest] PASSED [ 54%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[structure] PASSED [ 55%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[index] PASSED [ 57%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[kb] PASSED [ 58%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[qa] PASSED [ 59%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[batch] PASSED [ 61%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[datagen] PASSED [ 62%]
+tests/unit/test_scaffold.py::test_submodule_importable_and_documented[evaluation] PASSED [ 63%]
+tests/unit/test_scaffold.py::test_submodules_match_source_tree PASSED    [ 64%]
+tests/unit/test_scaffold.py::test_required_dir_exists[configs] PASSED    [ 66%]
+tests/unit/test_scaffold.py::test_required_dir_exists[prompts] PASSED    [ 67%]
+tests/unit/test_scaffold.py::test_required_dir_exists[scripts] PASSED    [ 68%]
+tests/unit/test_scaffold.py::test_required_dir_exists[app] PASSED        [ 70%]
+tests/unit/test_scaffold.py::test_required_dir_exists[eval] PASSED       [ 71%]
+tests/unit/test_scaffold.py::test_required_dir_exists[data/raw] PASSED   [ 72%]
+tests/unit/test_scaffold.py::test_required_dir_exists[samples] PASSED    [ 74%]
+tests/unit/test_scaffold.py::test_required_dir_exists[docs/phases] PASSED [ 75%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/unit] PASSED [ 76%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/integration] PASSED [ 77%]
+tests/unit/test_scaffold.py::test_required_dir_exists[tests/fixtures] PASSED [ 79%]
+tests/unit/test_scaffold.py::test_find_project_root_from_subdir PASSED   [ 80%]
+tests/unit/test_scaffold.py::test_find_project_root_fails_outside_project PASSED [ 81%]
+tests/unit/test_scaffold.py::test_cli_version PASSED                     [ 83%]
+tests/unit/test_scaffold.py::test_cli_info PASSED                        [ 84%]
+tests/unit/test_scaffold.py::test_cli_subprocess_redirected_output_is_utf8[version] PASSED [ 85%]
+tests/unit/test_scaffold.py::test_cli_subprocess_redirected_output_is_utf8[info] PASSED [ 87%]
+tests/unit/test_scaffold.py::test_cli_no_args_shows_help PASSED          [ 88%]
+tests/unit/test_scaffold.py::test_gitignore_rules[.env-True] PASSED      [ 89%]
+tests/unit/test_scaffold.py::test_gitignore_rules[configs/local.yaml-True] PASSED [ 90%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/raw/book.pdf-True] PASSED [ 92%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/p1_clean/blocks.jsonl-True] PASSED [ 93%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/.gitkeep-False] PASSED [ 94%]
+tests/unit/test_scaffold.py::test_gitignore_rules[data/raw/.gitkeep-False] PASSED [ 96%]
+tests/unit/test_scaffold.py::test_gitignore_rules[samples/P0.1/cli_info.txt-False] PASSED [ 97%]
+tests/unit/test_scaffold.py::test_gitignore_rules[.env.example-False] PASSED [ 98%]
+tests/unit/test_scaffold.py::test_gitignore_rules[src/dataminer/cli.py-False] PASSED [100%]
+
+============================= 77 passed in 2.25s ==============================
+
+$ uv run pre-commit run --all-files
+trim trailing whitespace.................................................Passed
+fix end of files.........................................................Passed
+check yaml...............................................................Passed
+check toml...............................................................Passed
+check for merge conflicts................................................Passed
+check for added large files..............................................Passed
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+mypy (strict)............................................................Passed
+exit=0

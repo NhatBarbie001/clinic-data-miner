@@ -1,0 +1,11 @@
+# Copy thành configs/local.yaml (không commit) để tùy chỉnh trên máy của bạn.
+# Chỉ ghi các khóa muốn đổi - phần còn lại lấy từ default.yaml / models.yaml.
+
+llm:
+  concurrency: 2
+
+# models:
+#   extract:
+#     model: deepseek/deepseek-v4.1-flash-1017
+#     reasoning:
+#       enabled: false

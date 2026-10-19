@@ -1,0 +1,32 @@
+# Cấu hình mặc định của Data-miner. Xem docs/phases/P0/P0.2_plan.md.
+# Tùy chỉnh trên máy cá nhân: tạo configs/local.yaml (xem local.example.yaml).
+# Ghi đè nhanh qua biến môi trường: DM__<NHÓM>__<KHÓA>, vd. DM__LLM__MODE=replay
+
+project:
+  book_id: book01            # chữ thường, số, '_' hoặc '-'; dùng trong ID và tên artifact
+  book_file: book01.pdf      # file nằm trong paths.raw_dir
+
+paths:                       # tương đối với gốc repo
+  raw_dir: data/raw
+  data_dir: data
+  cache_dir: data/cache
+  samples_dir: samples
+  prompts_dir: prompts
+  eval_dir: eval
+
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: live                 # live | replay (chỉ đọc cache) | refresh (bỏ qua cache)
+  concurrency: 4             # số request đồng thời (1..64)
+  max_retries: 4             # số lần thử lại khi lỗi 429/5xx/timeout (0..10)
+  timeout_s: 120
+
+budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
+  total_usd: 20.0
+  per_task_usd:
+    ping: 1.0                # P0 chỉ dùng ping → P0 tối đa $1
+
+pilot:                       # chương mẫu - điền ở P0.6
+  page_start: null
+  page_end: null
+  diseases: []

@@ -10,14 +10,22 @@ import sys
 from pathlib import Path
 
 import typer
+import yaml
 
 from dataminer import SUBMODULES, __version__
+from dataminer.core.config import ConfigError, find_project_root, load_settings
 
 app = typer.Typer(
     name="dm",
     help="Data-miner: khai thác dữ liệu y khoa từ sách PDF.",
     no_args_is_help=True,
     add_completion=False,
+)
+config_app = typer.Typer(help="Xem và kiểm tra cấu hình.", no_args_is_help=True)
+app.add_typer(config_app, name="config")
+
+RootOption = typer.Option(
+    None, "--root", help="Gốc dự án (mặc định: tìm từ thư mục hiện tại).", show_default=False
 )
 
 # Thư mục bắt buộc của dự án, tương đối với gốc repo.
@@ -34,15 +42,6 @@ REQUIRED_DIRS: tuple[str, ...] = (
     "tests/integration",
     "tests/fixtures",
 )
-
-
-def find_project_root(start: Path | None = None) -> Path:
-    """Tìm gốc repo: thư mục gần nhất (đi ngược lên) có `pyproject.toml`."""
-    current = (start or Path.cwd()).resolve()
-    for candidate in (current, *current.parents):
-        if (candidate / "pyproject.toml").is_file():
-            return candidate
-    raise FileNotFoundError("Không tìm thấy pyproject.toml - hãy chạy trong thư mục dự án.")
 
 
 @app.command("version")
@@ -78,6 +77,37 @@ def info_cmd() -> None:
     typer.echo(f"  - .env      : {env_status}")
     pdfs = sorted(p.name for p in (root / "data" / "raw").glob("*.pdf"))
     typer.echo(f"  - PDF sách  : {', '.join(pdfs) if pdfs else 'chưa có (chép vào data/raw/)'}")
+
+
+@config_app.command("show")
+def config_show(root: Path | None = RootOption) -> None:
+    """In cấu hình cuối cùng sau khi gộp các lớp (API key đã bị che)."""
+    try:
+        settings = load_settings(root)
+    except ConfigError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from None
+    typer.echo(f"# fingerprint: {settings.fingerprint()}")
+    typer.echo("# các lớp đã áp dụng (lớp sau ghi đè lớp trước):")
+    for source in settings.sources:
+        typer.echo(f"#   - {source}")
+    typer.echo(
+        yaml.safe_dump(settings.to_display_dict(), allow_unicode=True, sort_keys=False).rstrip()
+    )
+
+
+@config_app.command("validate")
+def config_validate(root: Path | None = RootOption) -> None:
+    """Kiểm tra cấu hình: exit 0 nếu hợp lệ, exit 1 kèm danh sách lỗi."""
+    try:
+        settings = load_settings(root)
+    except ConfigError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from None
+    key_status = "đã đặt" if settings.llm.api_key else "chưa đặt (cần trước khi gọi LLM)"
+    typer.echo(f"Cấu hình hợp lệ ✓  fingerprint={settings.fingerprint()}")
+    typer.echo(f"  - {len(settings.models)} tác vụ model, chế độ LLM: {settings.llm.mode}")
+    typer.echo(f"  - API key: {key_status}")
 
 
 def _force_utf8_stdio() -> None:

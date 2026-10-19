@@ -1,6 +1,6 @@
 # Plan P0: Setup và khảo sát sách
 
-> Trạng thái: `Đang làm` (P0.1 đã được duyệt để triển khai; P0.2–P0.6 chờ duyệt)
+> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅; P0.3–P0.6 chờ duyệt.
 > Ngày tạo: 2026-10-19 · Cập nhật: 2026-10-19
 > Tham chiếu: [plan.md](../../../plan.md) mục P0 · [problem.md](../../../problem.md)
 
@@ -127,7 +127,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
   - Biến môi trường ghi đè được giá trị trong YAML.
   - Không có API key thì vẫn load được, chỉ báo lỗi khi thực sự gọi LLM.
 - **Data mẫu:** `samples/P0.2/resolved_config.yaml` (cấu hình sau khi gộp, đã che API key).
-- **DoD:** test pass; `dm config show` in ra cấu hình đã gộp và che key.
+- **DoD:** ✅ Hoàn thành, xem [P0.2_report.md](P0.2_report.md). Test pass; `dm config show` in ra cấu hình đã gộp và che key.
 
 ### P0.3 LLM client (`core/llm_client.py`, `core/cache.py`)
 - **Cách làm:** theo thiết kế ở mục 4.2.
@@ -199,4 +199,5 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 2026-10-19 | Tạo plan | — |
+| 2026-10-20 | P0.2: model = `deepseek/deepseek-v4.1-flash-1017` cho mọi tác vụ, thêm `reasoning` vào ModelSpec; ngân sách $20 tổng / $1 cho P0 | Quyết định của chủ dự án |
 | 2026-10-19 | P0.1: entry point `dm` đổi từ `cli:app` sang `cli:main` (ép UTF-8); hook whitespace/EOF bỏ qua `samples/`; thêm `.gitattributes` | Lỗi mã hóa tiếng Việt khi chuyển hướng output trên Windows; giữ output mẫu nguyên văn; tránh diff CRLF |

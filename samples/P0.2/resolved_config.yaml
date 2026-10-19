@@ -1,0 +1,87 @@
+# Output của: uv run dm config show  (đường dẫn gốc dự án thay bằng <root>)
+# fingerprint: 8e056887429a
+# các lớp đã áp dụng (lớp sau ghi đè lớp trước):
+#   - configs/default.yaml
+#   - configs/models.yaml
+project:
+  book_id: book01
+  book_file: book01.pdf
+paths:
+  raw_dir: <root>\data\raw
+  data_dir: <root>\data
+  cache_dir: <root>\data\cache
+  samples_dir: <root>\samples
+  prompts_dir: <root>\prompts
+  eval_dir: <root>\eval
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: live
+  concurrency: 4
+  max_retries: 4
+  timeout_s: 120.0
+  api_key: (chưa đặt)
+budget:
+  total_usd: 20.0
+  per_task_usd:
+    ping: 1.0
+models:
+  ping:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 256
+    reasoning:
+      enabled: false
+      effort: null
+    fallbacks: []
+  fix_ocr:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 2048
+    reasoning:
+      enabled: false
+      effort: null
+    fallbacks: []
+  classify:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 512
+    reasoning:
+      enabled: false
+      effort: null
+    fallbacks: []
+  extract:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 8192
+    reasoning:
+      enabled: true
+      effort: null
+    fallbacks: []
+  qa:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 4096
+    reasoning:
+      enabled: true
+      effort: null
+    fallbacks: []
+  judge:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.0
+    max_tokens: 2048
+    reasoning:
+      enabled: true
+      effort: null
+    fallbacks: []
+  datagen:
+    model: deepseek/deepseek-v4.1-flash-1017
+    temperature: 0.7
+    max_tokens: 4096
+    reasoning:
+      enabled: false
+      effort: null
+    fallbacks: []
+pilot:
+  page_start: null
+  page_end: null
+  diseases: []

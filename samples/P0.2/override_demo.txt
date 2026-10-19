@@ -1,0 +1,63 @@
+# Minh họa ghi đè cấu hình (P0.2). Chạy trên bản sao configs trong thư mục tạm.
+
+## 1. Mặc định
+$ dm config show   (chỉ trích phần llm)
+# fingerprint: 8e056887429a
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: live
+  concurrency: 4
+  max_retries: 4
+  timeout_s: 120.0
+  api_key: (chưa đặt)
+
+## 2. Thêm configs/local.yaml (copy từ local.example.yaml → concurrency: 2)
+--- local.yaml:
+llm:
+  concurrency: 2
+$ dm config show
+# fingerprint: b9187e9c4474
+# các lớp đã áp dụng (lớp sau ghi đè lớp trước):
+#   - configs/default.yaml
+#   - configs/models.yaml
+#   - configs/local.yaml
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: live
+  concurrency: 2
+  max_retries: 4
+  timeout_s: 120.0
+  api_key: (chưa đặt)
+
+## 3. Thêm biến môi trường DM__LLM__CONCURRENCY=8 DM__LLM__MODE=replay (env thắng local.yaml)
+$ DM__LLM__CONCURRENCY=8 DM__LLM__MODE=replay dm config show
+# fingerprint: 2612b3043d9a
+# các lớp đã áp dụng (lớp sau ghi đè lớp trước):
+#   - configs/default.yaml
+#   - configs/models.yaml
+#   - configs/local.yaml
+#   - env: DM__LLM__CONCURRENCY, DM__LLM__MODE
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: replay
+  concurrency: 8
+  max_retries: 4
+  timeout_s: 120.0
+  api_key: (chưa đặt)
+
+## 4. Đặt OPENROUTER_API_KEY=sk-or-FAKE-KEY-DEMO → key bị che, fingerprint KHÔNG đổi so với bước 3
+$ OPENROUTER_API_KEY=sk-or-FAKE-KEY-DEMO DM__LLM__CONCURRENCY=8 DM__LLM__MODE=replay dm config show
+# fingerprint: 2612b3043d9a
+# các lớp đã áp dụng (lớp sau ghi đè lớp trước):
+#   - configs/default.yaml
+#   - configs/models.yaml
+#   - configs/local.yaml
+#   - env: DM__LLM__CONCURRENCY, DM__LLM__MODE
+#   - env: OPENROUTER_API_KEY
+llm:
+  base_url: https://openrouter.ai/api/v1
+  mode: replay
+  concurrency: 8
+  max_retries: 4
+  timeout_s: 120.0
+  api_key: '***(đã đặt)'
