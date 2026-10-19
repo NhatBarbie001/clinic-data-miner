@@ -1,0 +1,12 @@
+OpenRouter: 470 model. Đã lưu bảng giá vào cache_dir/models.json
+
+tác vụ    model                                tồn tại    vào/1M    ra/1M  ghi chú
+ping      deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+fix_ocr   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+classify  deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+extract   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+qa        deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+judge     deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+datagen   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+
+✓ Mọi tác vụ trỏ tới model tồn tại.

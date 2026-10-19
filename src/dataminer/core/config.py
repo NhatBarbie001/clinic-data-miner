@@ -90,6 +90,9 @@ class LLMCfg(_Strict):
     concurrency: int = Field(default=4, ge=1, le=64)
     max_retries: int = Field(default=4, ge=0, le=10)
     timeout_s: float = Field(default=120, gt=0)
+    backoff_base_s: float = Field(default=1.0, ge=0)
+    backoff_max_s: float = Field(default=30.0, ge=0)
+    json_retries: int = Field(default=2, ge=0, le=5)
     api_key: SecretStr | None = None
 
 

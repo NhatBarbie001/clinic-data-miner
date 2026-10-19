@@ -20,6 +20,9 @@ llm:
   concurrency: 4             # số request đồng thời (1..64)
   max_retries: 4             # số lần thử lại khi lỗi 429/5xx/timeout (0..10)
   timeout_s: 120
+  backoff_base_s: 1.0        # chờ giữa các lần retry: base * 2^n (+ jitter), tối đa backoff_max_s
+  backoff_max_s: 30.0
+  json_retries: 2            # chat_json: số lượt yêu cầu model sửa JSON sai schema
 
 budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
   total_usd: 20.0

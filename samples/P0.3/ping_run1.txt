@@ -1,0 +1,15 @@
+1) chat
+  hỏi : Kể tên 3 triệu chứng thường gặp của bệnh cúm, trả lời trong một câu.
+  đáp : Ba triệu chứng thường gặp của bệnh cúm là sốt, ho và đau nhức cơ thể.
+[chat] model=deepseek/deepseek-v4.1-flash-1017 provider=Relace cached=False
+  tokens: vào=64 ra=31 suy-luận=0
+  chi phí: $0.000006  thời gian: 1.19s  số lần gọi HTTP: 1  finish=stop
+
+2) chat_json (schema PingAnswer)
+  object: {"benh":"cúm","trieu_chung":["sốt","ho","đau họng"],"muc_do_pho_bien":"cao"}
+[json] model=deepseek/deepseek-v4.1-flash-1017 provider=InferenceNet cached=False
+  tokens: vào=100 ra=42 suy-luận=0
+  chi phí: $0.000029  thời gian: 0.97s  số lần gọi HTTP: 1  finish=stop
+
+Tổng chi phí lần chạy này: $0.000035
+Đã ghi <tmp>\ping_result.json

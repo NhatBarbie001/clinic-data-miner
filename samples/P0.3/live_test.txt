@@ -1,0 +1,4 @@
+
+tests/integration/test_llm_live.py::test_live_ping_chat_and_json PASSED  [100%]
+
+====================== 1 passed, 120 deselected in 3.61s ======================

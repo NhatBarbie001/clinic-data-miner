@@ -1,6 +1,6 @@
 # Plan P0: Setup và khảo sát sách
 
-> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅; P0.3–P0.6 chờ duyệt.
+> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅; P0.4–P0.6 chờ duyệt.
 > Ngày tạo: 2026-10-19 · Cập nhật: 2026-10-19
 > Tham chiếu: [plan.md](../../../plan.md) mục P0 · [problem.md](../../../problem.md)
 
@@ -130,6 +130,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 - **DoD:** ✅ Hoàn thành, xem [P0.2_report.md](P0.2_report.md). Test pass; `dm config show` in ra cấu hình đã gộp và che key.
 
 ### P0.3 LLM client (`core/llm_client.py`, `core/cache.py`)
+> Plan chi tiết: [P0.3_plan.md](P0.3_plan.md)
 - **Cách làm:** theo thiết kế ở mục 4.2.
 - **Test** (mock HTTP, không tốn tiền):
   - Gọi 2 lần giống hệt nhau thì chỉ gọi API 1 lần.
@@ -140,7 +141,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
   - Giới hạn đồng thời được tôn trọng.
 - **Kiểm tra thật:** `dm llm ping` gửi 1 câu tiếng Việt đơn giản và 1 câu `chat_json` qua OpenRouter, chi phí khoảng dưới $0.01.
 - **Data mẫu:** `samples/P0.3/ping_result.json` (request, response, usage, cost, cache hit), `samples/P0.3/cost_log.jsonl`.
-- **DoD:** test pass; ping thật thành công; chạy ping lần 2 thì lấy từ cache (cache hit).
+- **DoD:** ✅ Hoàn thành, xem [P0.3_report.md](P0.3_report.md). Test pass; ping thật thành công; chạy ping lần 2 thì lấy từ cache (cache hit).
 
 ### P0.4 I/O và schema cơ sở (`core/io.py`, `core/schemas.py`, `core/logging.py`)
 - **Cách làm:**
@@ -199,5 +200,6 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 2026-10-19 | Tạo plan | — |
+| 2026-10-20 | P0.3: dùng `httpx` thay OpenAI SDK; luôn gửi `reasoning.enabled` rõ ràng | Kiểm soát retry/mock; DeepSeek tự suy luận nếu không tắt (+60% token ra) |
 | 2026-10-20 | P0.2: model = `deepseek/deepseek-v4.1-flash-1017` cho mọi tác vụ, thêm `reasoning` vào ModelSpec; ngân sách $20 tổng / $1 cho P0 | Quyết định của chủ dự án |
 | 2026-10-19 | P0.1: entry point `dm` đổi từ `cli:app` sang `cli:main` (ép UTF-8); hook whitespace/EOF bỏ qua `samples/`; thêm `.gitattributes` | Lỗi mã hóa tiếng Việt khi chuyển hướng output trên Windows; giữ output mẫu nguyên văn; tránh diff CRLF |

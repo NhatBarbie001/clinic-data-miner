@@ -13,6 +13,7 @@ import typer
 import yaml
 
 from dataminer import SUBMODULES, __version__
+from dataminer.cli_llm import llm_app
 from dataminer.core.config import ConfigError, find_project_root, load_settings
 
 app = typer.Typer(
@@ -23,6 +24,7 @@ app = typer.Typer(
 )
 config_app = typer.Typer(help="Xem và kiểm tra cấu hình.", no_args_is_help=True)
 app.add_typer(config_app, name="config")
+app.add_typer(llm_app, name="llm")
 
 RootOption = typer.Option(
     None, "--root", help="Gốc dự án (mặc định: tìm từ thư mục hiện tại).", show_default=False

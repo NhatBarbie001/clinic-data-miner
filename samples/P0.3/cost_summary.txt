@@ -1,0 +1,10 @@
+Số lời gọi API thật: 4
+Tổng đã chi: $0.000100 / ngân sách $20.0 (còn $19.9999)
+
+Theo tác vụ:
+  - ping      $0.000100 / $1.0
+
+Theo model:
+  - deepseek/deepseek-v4.1-flash-1017        $0.000100
+
+Cache: 4 response, 24.0 KB
