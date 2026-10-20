@@ -147,7 +147,8 @@ def test_06b_typo_in_env_reports_env_source(proj: Path) -> None:
         ({"llm.mode": "fast"}, "llm.mode: phải là một trong"),
         ({"project.book_id": "Sách 1"}, "project.book_id: không khớp mẫu"),
         ({"pilot.page_start": 50, "pilot.page_end": 10}, "page_start (50) phải ≤ page_end (10)"),
-        ({"pilot.page_start": 5}, "cùng có hoặc cùng để trống"),
+        # đặt rõ page_end=None: không phụ thuộc giá trị pilot trong default.yaml
+        ({"pilot.page_start": 5, "pilot.page_end": None}, "cùng có hoặc cùng để trống"),
         ({"llm.base_url": _DELETE}, "llm.base_url: thiếu giá trị bắt buộc"),
     ],
 )

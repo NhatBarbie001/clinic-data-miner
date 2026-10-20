@@ -29,7 +29,10 @@ budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
   per_task_usd:
     ping: 1.0                # P0 chỉ dùng ping → P0 tối đa $1
 
-pilot:                       # chương mẫu - điền ở P0.6
-  page_start: null
-  page_end: null
-  diseases: []
+pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
+  page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
+  page_end: 9
+  diseases:                  # tên như trong mục lục; kiểm tra bằng `dm pilot check`
+    - Viêm khớp dạng thấp
+    - Thoái hóa khớp gối
+    - Viêm loét dạ dày tá tràng

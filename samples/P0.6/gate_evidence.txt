@@ -1,0 +1,143 @@
+# Bằng chứng gate P0 - chạy lại lúc 2026-10-20 11:55:59
+
+$ uv run dm info
+dataminer   : 0.1.0
+python      : 3.12.13
+project root: <root>
+
+Modules:
+  - core        ok
+  - ingest      ok
+  - structure   ok
+  - index       ok
+  - kb          ok
+  - qa          ok
+  - batch       ok
+  - datagen     ok
+  - evaluation  ok
+  - devtools    ok
+
+Thư mục:
+  - configs            ok
+  - prompts            ok
+  - scripts            ok
+  - app                ok
+  - eval               ok
+  - data/raw           ok
+  - samples            ok
+  - docs/phases        ok
+  - tests/unit         ok
+  - tests/integration  ok
+  - tests/fixtures     ok
+
+Trạng thái:
+  - .env      : có
+  - PDF sách  : book01.pdf
+exit=0
+
+$ uv run dm config validate
+Cấu hình hợp lệ ✓  fingerprint=ed4388fb78cd
+  - 7 tác vụ model, chế độ LLM: live
+  - API key: đã đặt
+exit=0
+
+$ DM__LLM__MODE=replay uv run dm llm ping   (chỉ đọc cache - không gọi API, \$0)
+1) chat
+  hỏi : Kể tên 3 triệu chứng thường gặp của bệnh cúm, trả lời trong một câu.
+  đáp : Ba triệu chứng thường gặp của bệnh cúm là sốt, ho và đau nhức cơ thể.
+[chat] model=deepseek/deepseek-v4.1-flash-1017 provider=Relace cached=True
+  tokens: vào=64 ra=31 suy-luận=0
+  chi phí: $0.000000  thời gian: 0.00s  số lần gọi HTTP: 0  finish=stop
+
+2) chat_json (schema PingAnswer)
+  object: {"benh":"cúm","trieu_chung":["sốt","ho","đau họng"],"muc_do_pho_bien":"cao"}
+[json] model=deepseek/deepseek-v4.1-flash-1017 provider=InferenceNet cached=True
+  tokens: vào=100 ra=42 suy-luận=0
+  chi phí: $0.000000  thời gian: 0.00s  số lần gọi HTTP: 0  finish=stop
+
+Tổng chi phí lần chạy này: $0.000000
+exit=0
+
+$ uv run dm llm models
+OpenRouter: 470 model. Đã lưu bảng giá vào cache_dir/models.json
+
+tác vụ    model                                tồn tại    vào/1M    ra/1M  ghi chú
+ping      deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+fix_ocr   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+classify  deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+extract   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+qa        deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+judge     deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, reasoning ✓, giá thay đổi theo giờ
+datagen   deepseek/deepseek-v4.1-flash-1017    có         $0.150   $0.600  json ✓, giá thay đổi theo giờ
+
+✓ Mọi tác vụ trỏ tới model tồn tại.
+exit=0
+
+$ uv run dm llm cost
+Số lời gọi API thật: 4
+Tổng đã chi: $0.000100 / ngân sách $20.0 (còn $19.9999)
+
+Theo tác vụ:
+  - ping      $0.000100 / $1.0
+
+Theo model:
+  - deepseek/deepseek-v4.1-flash-1017        $0.000100
+
+Cache: 4 response, 24.0 KB
+exit=0
+
+$ uv run dm dev make-sample-book
+✓ <root>\data\raw\book01.pdf (9 trang, 404 KB, seed 7)
+  đáp án: <root>\data\raw\book01.truth.json
+  lỗi OCR đã cài: {'digit_confusion': 2, 'wrong_tone': 7, 'drop_diacritics': 24, 'char_confusion': 7, 'merge_words': 1, 'nfd_line': 2}
+exit=0
+
+$ uv run dm survey
+✓ 9 trang (8 có text), 158 dòng, cỡ chữ thân bài 10.4 pt
+  header/footer: 3 mẫu · ứng viên tiêu đề: 31 · dấu hiệu lỗi OCR: 10
+  báo cáo: <root>\data\p0_survey\survey_report.md
+exit=0
+
+$ uv run dm dev check-survey
+# Đối chiếu khảo sát với đáp án sách mẫu
+
+✓ header_footer: recall 100% · precision 100% (10 tìm thấy / 10 đáp án) - chỉ tiêu recall=1, precision=1
+✓ headings: recall 100% · precision 90% (31 tìm thấy / 28 đáp án) - chỉ tiêu recall=1
+    THỪA   tr.1: BỆNH HỌC NỘI KHOA
+    THỪA   tr.1: SÁCH MẪU TỔNG HỢP - CHỈ DÙNG ĐỂ KIỂM THỬ PHẦN MỀM
+    THỪA   tr.1: Tóm lược một số bệnh thường gặp
+✓ cỡ chữ thân bài: ước lượng 10.4 / đáp án 10.5 - chỉ tiêu sai số ≤ 0.5pt
+✓ pages_without_text: tìm thấy [2] / đáp án [2]
+✓ printed_page_numbers: tìm thấy {4: 1, 5: 2, 6: 3, 7: 4, 8: 5, 9: 6} / đáp án {4: 1, 5: 2, 6: 3, 7: 4, 8: 5, 9: 6}
+✓ toc_entries: tìm thấy 5 / đáp án 5
+
+Lỗi OCR đã cài (recall theo loại):
+  (recall tính trên các lỗi CÓ THỂ phát hiện không cần từ điển)
+  ✓ char_confusion   5/7 → recall 71% - chỉ tiêu 0.5
+  ✓ digit_confusion  2/2 → recall 100% - chỉ tiêu 1.0
+  ✓ drop_diacritics  0/24 → recall 0% - chỉ tiêu không áp dụng (cần P1)
+  ✓ merge_words      1/1 → recall 100% - chỉ tiêu 1.0
+  ✓ nfd_line         2/2 → recall 100% - chỉ tiêu 1.0
+  ✓ wrong_tone       0/7 → recall 0% - chỉ tiêu không áp dụng (cần P1)
+✓ báo động giả: 0/10 tín hiệu (precision 100%)
+
+KẾT LUẬN: ĐẠT mọi chỉ tiêu
+exit=0
+
+$ uv run dm pilot check
+Pilot: trang PDF 4-9
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✓ Thoái hóa khớp gối: tiêu đề ở trang 6
+  ✓ Viêm loét dạ dày tá tràng: tiêu đề ở trang 8
+KẾT LUẬN: pilot HỢP LỆ
+exit=0
+
+$ uv run dm runs list
+run_id                                 trạng thái thời lượng file ra gọi LLM    chi phí
+p0_demo_20261020-103028-503_e708       failed          0.02s       0       0  $0.000000
+p0_demo_20261020-103028-596_942f       success         0.02s       1       0  $0.000000
+p0_survey_20261020-113319-368_c8a7     success         2.30s       6       0  $0.000000
+p0_survey_20261020-113738-264_fd65     success         1.86s       6       0  $0.000000
+p0_survey_20261020-114049-663_389b     success         1.94s       6       0  $0.000000
+p0_survey_20261020-115609-108_e2f4     success         2.10s       6       0  $0.000000
+exit=0

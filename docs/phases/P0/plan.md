@@ -1,6 +1,6 @@
 # Plan P0: Setup và khảo sát sách
 
-> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅, P0.4 ✅, P0.5 ✅ (sách mẫu tổng hợp); P0.6 chờ duyệt.
+> Trạng thái: `Hoàn thành` ✅ - qua gate 2026-10-20, xem [gate_report.md](gate_report.md). P0.1–P0.6 ✅ (P0.5–P0.6 trên sách mẫu tổng hợp).
 > Ngày tạo: 2026-10-19 · Cập nhật: 2026-10-19
 > Tham chiếu: [plan.md](../../../plan.md) mục P0 · [problem.md](../../../problem.md)
 
@@ -173,9 +173,10 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
   - Bảng.
 
 ### P0.6 Chọn chương mẫu
+> Plan chi tiết: [P0.6_plan.md](P0.6_plan.md)
 - **Cách làm:** dựa trên P0.5, đề xuất 1 chương có khoảng 5–10 bệnh, đa dạng (có bảng, có danh sách thuốc, có lỗi OCR), rồi **chủ dự án xác nhận**.
 - **Kết quả:** `configs/default.yaml` → `pilot: {pages: [a, b], diseases: [...]}`.
-- **DoD:** chủ dự án đã duyệt chương mẫu.
+- **DoD:** ✅ Hoàn thành, xem [P0.6_report.md](P0.6_report.md). Chủ dự án đã duyệt chương mẫu.
 
 ## 6. Cấu hình và prompt mới
 - Chưa có prompt nghiệp vụ. P0.3 có một prompt `ping` để kiểm tra kết nối.
@@ -207,3 +208,4 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 | 2026-10-20 | P0.3: dùng `httpx` thay OpenAI SDK; luôn gửi `reasoning.enabled` rõ ràng | Kiểm soát retry/mock; DeepSeek tự suy luận nếu không tắt (+60% token ra) |
 | 2026-10-20 | P0.4: thêm `core/run.py` (RunRecorder), `core/errors_vi.py` (lỗi tiếng Việt dùng chung), CLI `dm runs` | Manifest/log theo lần chạy; thống nhất thông báo lỗi cấu hình và dữ liệu |
 | 2026-10-20 | P0.5: tự sinh **sách mẫu tổng hợp** (`devtools/`) kèm đáp án; thêm `core/text_vi.py`, `dm survey`, `dm dev` | Chưa có sách thật; đáp án cho phép đo chất lượng bằng số |
+| 2026-10-20 | P0.6: pilot = toàn bộ nội dung sách mẫu (trang PDF 4–9, 3 bệnh); thêm `dm pilot check`; gate P0 đạt | Sách mẫu chỉ có 3 bệnh; kiểm tra pilot bằng máy thay vì chỉ ghi tay |

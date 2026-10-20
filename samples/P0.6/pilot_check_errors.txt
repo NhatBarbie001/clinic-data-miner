@@ -1,0 +1,86 @@
+# Thông báo của `dm pilot check` với cấu hình pilot cố ý sai (P0.6)
+# Chạy trên bản sao configs + kết quả khảo sát sách mẫu; mỗi tình huống ghi đè bằng configs/local.yaml
+
+## Phạm vi quá hẹp - bệnh nằm ngoài
+--- configs/local.yaml:
+pilot:
+  page_end: 5
+$ dm pilot check
+Pilot: trang PDF 4-5
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✗ Bệnh 'Thoái hóa khớp gối' nằm NGOÀI phạm vi 4-5: tiêu đề ở trang [6].
+  ✗ Bệnh 'Viêm loét dạ dày tá tràng' nằm NGOÀI phạm vi 4-5: tiêu đề ở trang [8].
+KẾT LUẬN: pilot KHÔNG hợp lệ
+(exit=1)
+
+## Phạm vi gồm trang trắng
+--- configs/local.yaml:
+pilot:
+  page_start: 1
+$ dm pilot check
+Pilot: trang PDF 1-9
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✓ Thoái hóa khớp gối: tiêu đề ở trang 6
+  ✓ Viêm loét dạ dày tá tràng: tiêu đề ở trang 8
+  ✗ Trang không có lớp text nằm trong pilot: [2].
+  ⚠ Trang 1 có tiêu đề cấp bệnh 'BỆNH HỌC NỘI KHOA' không nằm trong pilot.diseases.
+  ⚠ Trang 3 có tiêu đề cấp bệnh 'MỤC LỤC' không nằm trong pilot.diseases.
+KẾT LUẬN: pilot KHÔNG hợp lệ
+(exit=1)
+
+## Phạm vi vượt số trang
+--- configs/local.yaml:
+pilot:
+  page_end: 15
+$ dm pilot check
+Pilot: trang PDF 4-15
+  ✗ Phạm vi trang 4-15 vượt quá số trang PDF (9).
+KẾT LUẬN: pilot KHÔNG hợp lệ
+(exit=1)
+
+## Tên bệnh không có trong sách
+--- configs/local.yaml:
+pilot:
+  diseases: [Viêm khớp dạng thấp, Hen phế quản]
+$ dm pilot check
+Pilot: trang PDF 4-9
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✗ Không tìm thấy tiêu đề bệnh 'Hen phế quản' (kiểm tra chính tả, hoặc tiêu đề bị lỗi OCR nặng - xem data/p0_survey/heading_candidates.json).
+  ⚠ Trang 6 có tiêu đề cấp bệnh 'THOÁI HÓA KHỚP GỐI' không nằm trong pilot.diseases.
+  ⚠ Trang 8 có tiêu đề cấp bệnh 'VIÊM LOÉT DẠ DÀY TÁ TRÀNG' không nằm trong pilot.diseases.
+KẾT LUẬN: pilot KHÔNG hợp lệ
+(exit=1)
+
+## Bỏ sót bệnh trong phạm vi (cảnh báo, vẫn hợp lệ)
+--- configs/local.yaml:
+pilot:
+  diseases: [Viêm khớp dạng thấp, Thoái hóa khớp gối]
+$ dm pilot check
+Pilot: trang PDF 4-9
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✓ Thoái hóa khớp gối: tiêu đề ở trang 6
+  ⚠ Trang 8 có tiêu đề cấp bệnh 'VIÊM LOÉT DẠ DÀY TÁ TRÀNG' không nằm trong pilot.diseases.
+KẾT LUẬN: pilot HỢP LỆ
+(exit=0)
+
+## Tên viết không dấu vẫn khớp
+--- configs/local.yaml:
+pilot:
+  diseases: [viem khop dang thap, THOAI HOA KHOP GOI, Viêm loét dạ dày tá tràng]
+$ dm pilot check
+Pilot: trang PDF 4-9
+  ✓ viem khop dang thap: tiêu đề ở trang 4
+  ✓ THOAI HOA KHOP GOI: tiêu đề ở trang 6
+  ✓ Viêm loét dạ dày tá tràng: tiêu đề ở trang 8
+KẾT LUẬN: pilot HỢP LỆ
+(exit=0)
+
+## Chưa khai báo pilot
+--- configs/local.yaml:
+pilot:
+  page_start: null
+  page_end: null
+$ dm pilot check
+  ✗ Chưa khai báo pilot: cần pilot.page_start, pilot.page_end (số trang PDF) và pilot.diseases trong configs/default.yaml (hoặc local.yaml).
+KẾT LUẬN: pilot KHÔNG hợp lệ
+(exit=1)

@@ -125,3 +125,19 @@ def check_cmd(
     typer.echo(report)
     if not checks["all_pass"]:
         raise typer.Exit(1)
+
+
+pilot_app = typer.Typer(help="Chương mẫu (pilot): kiểm tra cấu hình pilot.", no_args_is_help=True)
+SurveyDirOption = typer.Option(None, "--survey", help="Thư mục kết quả `dm survey`.")
+
+
+@pilot_app.command("check")
+def pilot_check_cmd(root: Path | None = RootOption, survey: Path | None = SurveyDirOption) -> None:
+    """Kiểm tra pilot: trang tồn tại, có text, mỗi bệnh có tiêu đề trong phạm vi trang."""
+    from dataminer.ingest.pilot import check_pilot, format_pilot_report
+
+    settings = _load(root)
+    report = check_pilot(settings.pilot, survey or settings.paths.data_dir / PHASE)
+    typer.echo(format_pilot_report(report))
+    if not report.ok:
+        raise typer.Exit(1)

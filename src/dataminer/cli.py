@@ -15,7 +15,7 @@ import yaml
 from dataminer import SUBMODULES, __version__
 from dataminer.cli_llm import llm_app
 from dataminer.cli_runs import runs_app
-from dataminer.cli_survey import dev_app, survey_cmd
+from dataminer.cli_survey import dev_app, pilot_app, survey_cmd
 from dataminer.core.config import ConfigError, find_project_root, load_settings
 from dataminer.core.logging import setup_logging
 
@@ -30,6 +30,7 @@ app.add_typer(config_app, name="config")
 app.add_typer(llm_app, name="llm")
 app.add_typer(runs_app, name="runs")
 app.add_typer(dev_app, name="dev")
+app.add_typer(pilot_app, name="pilot")
 app.command("survey")(survey_cmd)
 
 LogLevelOption = typer.Option(

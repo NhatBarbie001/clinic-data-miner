@@ -1,0 +1,7 @@
+pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
+  page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
+  page_end: 9
+  diseases:                  # tên như trong mục lục; kiểm tra bằng `dm pilot check`
+    - Viêm khớp dạng thấp
+    - Thoái hóa khớp gối
+    - Viêm loét dạ dày tá tràng

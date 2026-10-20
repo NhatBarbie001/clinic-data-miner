@@ -1,0 +1,5 @@
+Pilot: trang PDF 4-9
+  ✓ Viêm khớp dạng thấp: tiêu đề ở trang 4
+  ✓ Thoái hóa khớp gối: tiêu đề ở trang 6
+  ✓ Viêm loét dạ dày tá tràng: tiêu đề ở trang 8
+KẾT LUẬN: pilot HỢP LỆ
