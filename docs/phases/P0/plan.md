@@ -1,6 +1,6 @@
 # Plan P0: Setup và khảo sát sách
 
-> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅; P0.4–P0.6 chờ duyệt.
+> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅, P0.4 ✅; P0.5–P0.6 cần PDF sách.
 > Ngày tạo: 2026-10-19 · Cập nhật: 2026-10-19
 > Tham chiếu: [plan.md](../../../plan.md) mục P0 · [problem.md](../../../problem.md)
 
@@ -144,6 +144,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 - **DoD:** ✅ Hoàn thành, xem [P0.3_report.md](P0.3_report.md). Test pass; ping thật thành công; chạy ping lần 2 thì lấy từ cache (cache hit).
 
 ### P0.4 I/O và schema cơ sở (`core/io.py`, `core/schemas.py`, `core/logging.py`)
+> Plan chi tiết: [P0.4_plan.md](P0.4_plan.md)
 - **Cách làm:**
   - `BaseRecord(id, schema_version)`.
   - `RunManifest`: phase, thời gian bắt đầu/kết thúc, git commit, hash cấu hình, model, prompt version, số bản ghi vào/ra, chi phí.
@@ -156,7 +157,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
   - Ghi atomic: lỗi giữa chừng thì file cũ còn nguyên.
   - Tiếp tục được: bỏ qua các id đã xong.
 - **Data mẫu:** `samples/P0.4/example_records.jsonl`, `samples/P0.4/example_manifest.json`.
-- **DoD:** test pass, mypy strict pass.
+- **DoD:** ✅ Hoàn thành, xem [P0.4_report.md](P0.4_report.md). Test pass, mypy strict pass.
 
 ### P0.5 Khảo sát sách (**cần PDF**)
 - **Cách làm:** theo mục 4.3. Thêm thư viện `pymupdf`.
@@ -200,6 +201,7 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 2026-10-19 | Tạo plan | — |
+| 2026-10-20 | P0.4: thêm `core/run.py` (RunRecorder), `core/errors_vi.py` (lỗi tiếng Việt dùng chung), CLI `dm runs` | Manifest/log theo lần chạy; thống nhất thông báo lỗi cấu hình và dữ liệu |
 | 2026-10-20 | P0.3: dùng `httpx` thay OpenAI SDK; luôn gửi `reasoning.enabled` rõ ràng | Kiểm soát retry/mock; DeepSeek tự suy luận nếu không tắt (+60% token ra) |
 | 2026-10-20 | P0.2: model = `deepseek/deepseek-v4.1-flash-1017` cho mọi tác vụ, thêm `reasoning` vào ModelSpec; ngân sách $20 tổng / $1 cho P0 | Quyết định của chủ dự án |
 | 2026-10-19 | P0.1: entry point `dm` đổi từ `cli:app` sang `cli:main` (ép UTF-8); hook whitespace/EOF bỏ qua `samples/`; thêm `.gitattributes` | Lỗi mã hóa tiếng Việt khi chuyển hướng output trên Windows; giữ output mẫu nguyên văn; tránh diff CRLF |

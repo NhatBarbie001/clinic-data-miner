@@ -1,0 +1,24 @@
+== Lần chạy 1 (sẽ 'chết' sau 3 bệnh)
+  đã xong từ trước: 0 · cần xử lý: 5
+  ✓ Cúm  (dz_07b24076f3c19de2)
+  ✓ Viêm khớp dạng thấp  (dz_874d66bef2da4d07)
+  ✓ Thoái hóa khớp gối  (dz_65461ac55018b205)
+  ✗ mô phỏng tiến trình chết khi đang ghi 'Viêm loét dạ dày tá tràng'
+
+== Lần chạy 2 (chạy tiếp)
+  đã xong từ trước: 3 · cần xử lý: 2
+  ✓ Viêm loét dạ dày tá tràng  (dz_362cef5babb5a8c7)
+  ✓ Tăng huyết áp  (dz_c809c62fbb60abca)
+  manifest: data\p0_demo\runs\p0_demo_20261020-103028-596_942f.json
+
+== Thông báo lỗi khi đọc file có dòng sai
+  [thiếu trường + sai kiểu]
+    bad_example.jsonl:2: symptoms: thiếu giá trị bắt buộc; page: phải là số nguyên (nhận: 'mười')
+  [danh sách rỗng + trang âm]
+    bad_example.jsonl:1: symptoms: phải có ít nhất 1 phần tử (nhận: []); page: phải ≥ 1 (nhận: -1)
+  [khóa gõ nhầm]
+    bad_example.jsonl:1: symptoms: thiếu giá trị bắt buộc; symtoms: khóa không tồn tại
+  [không phải JSON]
+    bad_example.jsonl:1: không phải JSON hợp lệ (Expecting property name enclosed in double quotes, cột 16)
+  [schema_version cũ]
+    bad_example.jsonl:1: (bản ghi): schema_version=0 nhưng code hiện tại của DiseaseNote là v1 - file được tạo bởi phiên bản code khác, hãy chạy lại phase sinh ra file này

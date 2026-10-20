@@ -1,0 +1,43 @@
+{
+  "run_id": "p0_demo_20261020-103028-596_942f",
+  "phase": "p0_demo",
+  "status": "success",
+  "started_at": "2026-10-20T10:30:28.694+07:00",
+  "finished_at": "2026-10-20T10:30:28.711+07:00",
+  "duration_s": 0.018,
+  "git_commit": "7a25af2d2a74f7598d4a8fa2ff72082a60a1aefc",
+  "git_dirty": true,
+  "config_fingerprint": "bf1ef82f2866",
+  "models": {
+    "ping": "deepseek/deepseek-v4.1-flash-1017",
+    "fix_ocr": "deepseek/deepseek-v4.1-flash-1017",
+    "classify": "deepseek/deepseek-v4.1-flash-1017",
+    "extract": "deepseek/deepseek-v4.1-flash-1017",
+    "qa": "deepseek/deepseek-v4.1-flash-1017",
+    "judge": "deepseek/deepseek-v4.1-flash-1017",
+    "datagen": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "prompts": {},
+  "inputs": [],
+  "outputs": [
+    {
+      "path": "data/p0_demo/records.jsonl",
+      "records": 5,
+      "sha256": "099258664b89f0392ea9fa3ee008d2bc3ece5a737bcaecde8c38f4274a48374d",
+      "bytes": 796
+    }
+  ],
+  "llm": {
+    "calls": 0,
+    "cost_usd": 0.0
+  },
+  "counts": {
+    "skipped_done": 3,
+    "processed": 2,
+    "records": 5
+  },
+  "notes": [
+    "hoàn tất 5/5 bệnh"
+  ],
+  "error": null
+}

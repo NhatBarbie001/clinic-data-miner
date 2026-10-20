@@ -33,6 +33,8 @@ from pydantic import (
     model_validator,
 )
 
+from dataminer.core.errors_vi import describe_error
+
 ENV_PREFIX = "DM__"
 API_KEY_ENV = "OPENROUTER_API_KEY"
 REQUIRED_TASKS: tuple[str, ...] = (
@@ -294,44 +296,18 @@ def _model_at(loc: tuple[str, ...]) -> type[BaseModel] | None:
     return None
 
 
-def _describe(err: Mapping[str, Any]) -> str:
-    kind = err["type"]
-    ctx = err.get("ctx") or {}
-    shown = f" (nhận: {err['input']!r})" if "input" in err and kind != "missing" else ""
-    if kind == "less_than_equal":
-        return f"phải ≤ {ctx['le']}{shown}"
-    if kind == "greater_than_equal":
-        return f"phải ≥ {ctx['ge']}{shown}"
-    if kind == "greater_than":
-        return f"phải > {ctx['gt']}{shown}"
-    if kind == "missing":
-        return "thiếu giá trị bắt buộc"
-    if kind == "literal_error":
-        expected = str(ctx["expected"]).replace(" or ", ", ")
-        return f"phải là một trong: {expected}{shown}"
-    if kind == "string_too_short":
-        return f"không được để trống{shown}"
-    if kind == "string_pattern_mismatch":
-        return f"không khớp mẫu {ctx['pattern']}{shown}"
-    if kind == "value_error":
-        return str(ctx.get("error", err["msg"]))
-    return f"{err['msg']}{shown}"
-
-
 def _format_errors(exc: ValidationError, sources: Mapping[str, str], order: list[str]) -> str:
     lines: list[str] = []
     for err in exc.errors():
         loc = tuple(str(p) for p in err["loc"])
         key = ".".join(loc) or "(gốc)"
+        msg = describe_error(err)
         if err["type"] == "extra_forbidden":
-            msg = "khóa không tồn tại"
             parent = _model_at(loc[:-1])
             if parent is not None:
                 close = difflib.get_close_matches(loc[-1], list(parent.model_fields), n=1)
                 if close:
                     msg += f" - có phải ý bạn là '{close[0]}'?"
-        else:
-            msg = _describe(err)
         source = _source_of(loc, sources, order)
         suffix = f"  [nguồn: {source}]" if source else ""
         if key == "(gốc)" and msg.startswith(("models:", "budget.")):

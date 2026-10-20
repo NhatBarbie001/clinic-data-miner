@@ -1,0 +1,2 @@
+2026-10-20 10:30:28 INFO dataminer.run: bắt đầu p0_demo_20261020-103028-503_e708 (config bf1ef82f2866)
+2026-10-20 10:30:28 ERROR dataminer.run: THẤT BẠI p0_demo_20261020-103028-503_e708: SimulatedCrashError: mô phỏng tiến trình chết khi đang ghi 'Viêm loét dạ dày tá tràng'

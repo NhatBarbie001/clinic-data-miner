@@ -1,0 +1,11 @@
+== Thông báo lỗi khi đọc file có dòng sai
+  [thiếu trường + sai kiểu]
+    bad_example.jsonl:2: symptoms: thiếu giá trị bắt buộc; page: phải là số nguyên (nhận: 'mười')
+  [danh sách rỗng + trang âm]
+    bad_example.jsonl:1: symptoms: phải có ít nhất 1 phần tử (nhận: []); page: phải ≥ 1 (nhận: -1)
+  [khóa gõ nhầm]
+    bad_example.jsonl:1: symptoms: thiếu giá trị bắt buộc; symtoms: khóa không tồn tại
+  [không phải JSON]
+    bad_example.jsonl:1: không phải JSON hợp lệ (Expecting property name enclosed in double quotes, cột 16)
+  [schema_version cũ]
+    bad_example.jsonl:1: (bản ghi): schema_version=0 nhưng code hiện tại của DiseaseNote là v1 - file được tạo bởi phiên bản code khác, hãy chạy lại phase sinh ra file này

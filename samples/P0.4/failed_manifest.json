@@ -1,0 +1,32 @@
+{
+  "run_id": "p0_demo_20261020-103028-503_e708",
+  "phase": "p0_demo",
+  "status": "failed",
+  "started_at": "2026-10-20T10:30:28.571+07:00",
+  "finished_at": "2026-10-20T10:30:28.592+07:00",
+  "duration_s": 0.022,
+  "git_commit": "7a25af2d2a74f7598d4a8fa2ff72082a60a1aefc",
+  "git_dirty": true,
+  "config_fingerprint": "bf1ef82f2866",
+  "models": {
+    "ping": "deepseek/deepseek-v4.1-flash-1017",
+    "fix_ocr": "deepseek/deepseek-v4.1-flash-1017",
+    "classify": "deepseek/deepseek-v4.1-flash-1017",
+    "extract": "deepseek/deepseek-v4.1-flash-1017",
+    "qa": "deepseek/deepseek-v4.1-flash-1017",
+    "judge": "deepseek/deepseek-v4.1-flash-1017",
+    "datagen": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "prompts": {},
+  "inputs": [],
+  "outputs": [],
+  "llm": {
+    "calls": 0,
+    "cost_usd": 0.0
+  },
+  "counts": {
+    "skipped_done": 0
+  },
+  "notes": [],
+  "error": "SimulatedCrashError: mô phỏng tiến trình chết khi đang ghi 'Viêm loét dạ dày tá tràng'"
+}

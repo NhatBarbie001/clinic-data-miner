@@ -1,0 +1,5 @@
+{"id": "dz_07b24076f3c19de2", "schema_version": 1, "name": "Cúm", "symptoms": ["sốt", "ho", "đau mỏi người"], "page": 12}
+{"id": "dz_874d66bef2da4d07", "schema_version": 1, "name": "Viêm khớp dạng thấp", "symptoms": ["đau khớp", "sưng khớp", "cứng khớp buổi sáng"], "page": 120}
+{"id": "dz_65461ac55018b205", "schema_version": 1, "name": "Thoái hóa khớp gối", "symptoms": ["đau khớp gối", "lục khục khi cử động"], "page": 140}
+{"id": "dz_362cef5babb5a8c7", "schema_version": 1, "name": "Viêm loét dạ dày tá tràng", "symptoms": ["đau thượng vị", "ợ hơi", "buồn nôn"], "page": 210}
+{"id": "dz_c809c62fbb60abca", "schema_version": 1, "name": "Tăng huyết áp", "symptoms": ["đau đầu", "chóng mặt", "ù tai"], "page": 305}
