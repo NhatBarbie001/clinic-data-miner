@@ -43,3 +43,11 @@ p1:                          # P1 - trích xuất và làm sạch text (docs/pha
     bottom_zone: 0.09        # dòng nằm trong 9% cuối trang → có thể là footer
     min_repeat_pages: 2      # lặp lại ở ≥ 2 trang (chữ số coi như nhau) → header/footer chạy
     small_ratio: 0.95        # chữ ≤ 95% cỡ thân bài nằm ở lề → header (kể cả chỉ xuất hiện 1 lần)
+  blocks:                    # P1.3 - dựng block
+    bullet_markers: ["-", "•", "–", "+"]
+    para_gap_ratio: 0.25     # khoảng cách dòng dôi ra ≥ 0.25 × cỡ chữ → đoạn mới
+    x_tolerance: 3.0         # sai số lề trái (pt) khi xét dòng tiếp của đoạn
+    join_across_pages: true  # nối đoạn bị ngắt qua trang (khi câu trước chưa kết thúc)
+    table_min_rows: 2        # bảng = ≥ 2 hàng liên tiếp...
+    table_min_cells: 2       # ...mỗi hàng ≥ 2 dòng cùng dải dọc
+    heading_size_delta: 1.5  # tiêu đề chỉ dựa vào cỡ chữ: phải ≥ thân bài + 1.5pt

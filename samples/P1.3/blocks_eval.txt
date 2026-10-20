@@ -1,0 +1,6 @@
+# P1.3 - đối chiếu block với đáp án (pilot trang 4-9)
+
+{'blocks': 85, 'by_kind': {'heading': 27, 'paragraph': 7, 'list_item': 49, 'caption': 1, 'table': 1}, 'joined_across_pages': 1}
+
+✓ G3_blocks: truth_blocks=85, exact=85, recall=1.0, target=0.97
+✓ G4_tables: truth_tables=1, found_tables=1

@@ -148,10 +148,23 @@ class FurnitureCfg(_Strict):
     small_ratio: float = Field(default=0.95, gt=0, le=1)  # chữ ≤ ratio × thân bài, nằm ở lề
 
 
+class BlocksCfg(_Strict):
+    """P1.3 - dựng block."""
+
+    bullet_markers: list[str] = Field(default_factory=lambda: ["-", "•", "–", "+"])
+    para_gap_ratio: float = Field(default=0.25, gt=0)  # khoảng dôi ≥ ratio × cỡ chữ → đoạn mới
+    x_tolerance: float = Field(default=3.0, ge=0)  # sai số lề trái (pt)
+    join_across_pages: bool = True
+    table_min_rows: int = Field(default=2, ge=2)
+    table_min_cells: int = Field(default=2, ge=2)
+    heading_size_delta: float = Field(default=1.5, gt=0)  # chỉ dựa cỡ chữ: phải ≥ thân bài + delta
+
+
 class P1Cfg(_Strict):
     """Phase P1 - trích xuất và làm sạch text (các task sau bổ sung nhóm của mình)."""
 
     furniture: FurnitureCfg = Field(default_factory=FurnitureCfg)
+    blocks: BlocksCfg = Field(default_factory=BlocksCfg)
 
 
 class Settings(_Strict):

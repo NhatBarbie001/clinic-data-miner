@@ -1,0 +1,421 @@
+"""P1.3 - Dựng block: tiêu đề, đoạn văn, gạch đầu dòng, bảng (hàng × cột), chú thích, mục lục.
+
+Nối các dòng bị ngắt (kể cả qua trang) thành đoạn/gạch đầu dòng, gom ô bảng thành hàng.
+P1 KHÔNG quyết định cấp tiêu đề - chỉ gắn đặc trưng (numbering, is_upper, font_size, x0) cho P2.
+Xem docs/phases/P1/P1.3_plan.md.
+"""
+
+import itertools
+import re
+import statistics
+from collections.abc import Iterable
+from typing import Any, Literal
+
+from pydantic import Field
+
+from dataminer.core.config import BlocksCfg
+from dataminer.core.schemas import BaseRecord, stable_id
+from dataminer.core.text_vi import has_vietnamese_marks, nfc
+from dataminer.ingest.pdf_reader import ROW_TOLERANCE, Line
+
+RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
+RE_SUB = re.compile(r"^(\d{1,2}\.\d{1,2})\.?\s+\S")
+RE_SECTION = re.compile(r"^(\d{1,2})\.\s+\S")
+RE_NUMBERED_ITEM = re.compile(r"^(\d{1,2})[.)]\s+\S")
+RE_TOC_ENTRY = re.compile(r"(\.{4,}|…{2,})\s*\d+\s*$")
+RE_CAPTION = re.compile(r"^(Bảng|BẢNG|Hình|HÌNH|Biểu đồ|Sơ đồ)\s+\d+(\.\d+)*\.?(\s|$)")
+SENTENCE_END = (".", ":", ";", "?", "!", "…")
+
+BlockKind = Literal["heading", "paragraph", "list_item", "table", "caption", "toc_entry", "other"]
+
+
+# --------------------------------------------------------------------------- đặc trưng dòng
+
+
+def is_upper_text(text: str) -> bool:
+    letters = [c for c in nfc(text) if c.isalpha()]
+    return len(letters) >= 3 and sum(c.isupper() for c in letters) / len(letters) >= 0.8
+
+
+def heading_signals(
+    text: str, size: float, body_size: float, bold: bool = False
+) -> tuple[list[str], str]:
+    """(lý do, cấp đoán) của một dòng có thể là tiêu đề - dùng chung cho khảo sát (P0.5)."""
+    text = nfc(text)
+    upper = is_upper_text(text)
+    reasons: list[str] = []
+    if size >= body_size + 0.75:
+        reasons.append(f"cỡ chữ {size:.1f} > thân bài {body_size:.1f}")
+    if upper:
+        reasons.append("viết hoa toàn bộ")
+    if bold:
+        reasons.append("in đậm")
+    level = "unknown"
+    if RE_CHAPTER.match(text):
+        reasons.append("mẫu 'CHƯƠNG n'")
+        level = "chapter"
+    elif RE_SUB.match(text):
+        reasons.append("đánh số 'n.m.'")
+        level = "subsection"
+    elif RE_SECTION.match(text):
+        reasons.append("đánh số 'n.'")
+        level = "section"
+    elif upper and size >= body_size + 1.5:
+        level = "disease_or_title"
+    return reasons, level
+
+
+def numbering_of(text: str) -> str | None:
+    text = nfc(text)
+    if m := RE_CHAPTER.match(text):
+        return f"{m.group(1).upper()} {m.group(2)}"
+    if m := RE_SUB.match(text):
+        return m.group(1)
+    if m := RE_NUMBERED_ITEM.match(text):
+        return m.group(1)
+    return None
+
+
+def bullet_marker(text: str, markers: Iterable[str]) -> str | None:
+    for marker in markers:
+        if text.startswith(marker) and len(text) > len(marker) and text[len(marker)].isspace():
+            return marker
+    return None
+
+
+LineKind = Literal["toc_entry", "caption", "heading", "bullet_start", "numbered_item", "body"]
+
+
+def classify_line(ln: Line, body_size: float, cfg: BlocksCfg) -> LineKind:
+    """Loại một dòng (không xét bảng - bảng được nhận diện theo hàng trước đó)."""
+    text = nfc(ln.text)
+    if RE_TOC_ENTRY.search(text):
+        return "toc_entry"
+    if RE_CAPTION.match(text):
+        return "caption"
+    if bullet_marker(text, cfg.bullet_markers):
+        return "bullet_start"
+    upper = is_upper_text(text)
+    if RE_CHAPTER.match(text) or RE_SUB.match(text):
+        return "heading"
+    if RE_SECTION.match(text):
+        # "3. TRIỆU CHỨNG" là tiêu đề; "1. Uống thuốc sau ăn." là danh sách đánh số
+        if upper or ln.size >= body_size + 0.75:
+            return "heading"
+        return "numbered_item"
+    if RE_NUMBERED_ITEM.match(text):
+        return "numbered_item"
+    if upper or ln.size >= body_size + cfg.heading_size_delta:
+        return "heading"
+    return "body"
+
+
+# --------------------------------------------------------------------------- block
+
+
+class Block(BaseRecord):
+    """Đơn vị văn bản sau P1 - đầu vào của P2. Schema ở docs/phases/P1/plan.md mục 2."""
+
+    kind: BlockKind
+    text: str  # văn bản cuối cùng (P1.4/P1.5 sẽ cập nhật)
+    text_rules: str  # sau quy tắc, trước LLM
+    page_start: int
+    page_end: int
+    printed_start: int | None = None
+    printed_end: int | None = None
+    line_ids: list[str]
+    bbox: tuple[float, float, float, float]  # của dòng đầu
+    x0: float
+    font_size: float
+    is_upper: bool = False
+    numbering: str | None = None
+    marker: str | None = None  # ký hiệu gạch đầu dòng ("-", "1."...) - không nằm trong text
+    rows: list[list[str]] | None = None
+    flags: list[str] = Field(default_factory=list)
+
+
+def join_text(prev: str, nxt: str) -> str:
+    """Nối 2 dòng: thêm khoảng trắng; giữ gạch nối giữa 2 phần Latin không dấu (anti- + CCP)."""
+    if prev.endswith("-") and nxt[:1].isascii() and nxt[:1].isalpha():
+        last = prev.split()[-1] if prev.split() else ""
+        if not has_vietnamese_marks(last):
+            return prev + nxt
+    return f"{prev} {nxt}"
+
+
+def _center(ln: Line) -> float:
+    return (ln.bbox[1] + ln.bbox[3]) / 2
+
+
+def group_rows(lines: list[Line]) -> list[list[Line]]:
+    """Gom các dòng (đã theo thứ tự đọc) cùng dải dọc thành hàng."""
+    rows: list[list[Line]] = []
+    for ln in lines:
+        if rows and ln.page == rows[-1][0].page:
+            first = rows[-1][0]
+            if abs(_center(ln) - _center(first)) < ROW_TOLERANCE * min(ln.size, first.size):
+                rows[-1].append(ln)
+                continue
+        rows.append([ln])
+    return rows
+
+
+def _column_positions(cells: list[Line], gap: float = 10.0) -> list[float]:
+    xs = sorted(c.bbox[0] for c in cells)
+    cols = [xs[0]]
+    for x in xs[1:]:
+        if x - cols[-1] > gap:
+            cols.append(x)
+    return cols
+
+
+def _fits_table(row: list[Line], table: list[list[Line]], neighbour: list[Line]) -> bool:
+    """Hàng 1 dòng (thiếu ô) sát bảng có thuộc bảng không: cùng trang, cách hàng kề đúng nhịp
+    hàng của bảng, thẳng lề một cột, và KHÔNG tràn sang cột kế tiếp (đoạn văn sau bảng chạy
+    hết chiều ngang nên bị loại)."""
+    (cell,) = row
+    if cell.page != neighbour[0].page:
+        return False
+    cells = [c for r in table for c in r]
+    cols = _column_positions(cells)
+    steps = [abs(_center(r2[0]) - _center(r1[0])) for r1, r2 in itertools.pairwise(table)]
+    row_step = statistics.median(steps) if steps else 2 * cell.size
+    if abs(_center(cell) - _center(neighbour[0])) > 1.5 * row_step:
+        return False
+    idx = min(range(len(cols)), key=lambda i: abs(cols[i] - cell.bbox[0]))
+    if abs(cols[idx] - cell.bbox[0]) > 10:
+        return False
+    return idx == len(cols) - 1 or cell.bbox[2] < cols[idx + 1]
+
+
+def find_tables(lines: list[Line], cfg: BlocksCfg) -> list[list[list[Line]]]:
+    """Bảng = các hàng liên tiếp cùng trang, trong đó ≥ table_min_rows hàng "đủ" (≥ table_min_cells
+    dòng cùng dải dọc - văn bản một cột không bao giờ có 2 dòng cùng dải dọc), cộng các hàng
+    thiếu ô (1 dòng) nằm xen giữa hoặc sát bảng và khớp cột (`_fits_table`)."""
+    rows = [sorted(r, key=lambda c: c.bbox[0]) for r in group_rows(lines)]
+    wide = [len(r) >= cfg.table_min_cells for r in rows]
+    member = list(wide)
+
+    def block_around(k: int) -> list[list[Line]]:
+        lo = hi = k
+        while lo > 0 and member[lo - 1] and rows[lo - 1][0].page == rows[k][0].page:
+            lo -= 1
+        while hi + 1 < len(rows) and member[hi + 1] and rows[hi + 1][0].page == rows[k][0].page:
+            hi += 1
+        return rows[lo : hi + 1]
+
+    changed = True
+    while changed:
+        changed = False
+        for k, row in enumerate(rows):
+            if member[k] or len(row) != 1:
+                continue
+            for nb in (k - 1, k + 1):
+                if (
+                    0 <= nb < len(rows)
+                    and member[nb]
+                    and _fits_table(row, block_around(nb), rows[nb])
+                ):
+                    member[k] = changed = True
+                    break
+
+    tables: list[list[list[Line]]] = []
+    k = 0
+    while k < len(rows):
+        if not member[k]:
+            k += 1
+            continue
+        run = block_around(k)
+        if sum(len(r) >= cfg.table_min_cells for r in run) >= cfg.table_min_rows:
+            tables.append(run)
+        k += len(run)
+    return tables
+
+
+def _table_block(rows: list[list[Line]], book_id: str) -> Block:
+    cells = [c for row in rows for c in row]
+    cols = _column_positions(cells)
+    grid: list[list[str]] = []
+    for row in rows:
+        values = [""] * len(cols)
+        for cell in row:
+            idx = min(range(len(cols)), key=lambda i: abs(cols[i] - cell.bbox[0]))
+            values[idx] = f"{values[idx]} {cell.text}".strip()
+        grid.append(values)
+    first = rows[0][0]
+    return Block(
+        id=stable_id(book_id, first.page, first.index, prefix="blk"),
+        kind="table",
+        text="\n".join(" | ".join(r) for r in grid),
+        text_rules="\n".join(" | ".join(r) for r in grid),
+        page_start=first.page,
+        page_end=rows[-1][0].page,
+        line_ids=[c.id for c in cells],
+        bbox=first.bbox,
+        x0=min(c.bbox[0] for c in cells),
+        font_size=round(statistics.fmean(c.size for c in cells), 2),
+        rows=grid,
+    )
+
+
+def _line_step(lines: list[Line]) -> float:
+    """Khoảng cách dọc điển hình giữa 2 dòng liên tiếp (trung vị), đo bằng MÉP DƯỚI:
+    mép trên dao động theo cỡ chữ OCR ước lượng (±6% × phần trên chữ ≈ ±1.3pt), mép dưới
+    chỉ ≈ ±0.4pt - đủ ổn định để phân biệt dòng tiếp (0pt dôi) với đoạn mới (~4pt dôi)."""
+    steps = [
+        b.bbox[3] - a.bbox[3]
+        for a, b in itertools.pairwise(lines)
+        if a.page == b.page and 0 < b.bbox[3] - a.bbox[3] < 3 * a.size
+    ]
+    return statistics.median(steps) if steps else 14.0
+
+
+class _Open:
+    """Block đang được nối thêm dòng."""
+
+    def __init__(self, kind: BlockKind, ln: Line, text: str, marker: str | None) -> None:
+        self.kind = kind
+        self.lines = [ln]
+        self.text = text
+        self.marker = marker
+        self.flags: list[str] = []
+
+    @property
+    def last(self) -> Line:
+        return self.lines[-1]
+
+
+def build_blocks(
+    lines: list[Line],
+    body_size: float,
+    cfg: BlocksCfg | None = None,
+    printed: dict[int, int | None] | None = None,
+    book_id: str = "book",
+) -> list[Block]:
+    """Dựng block từ dòng NỘI DUNG (đã bỏ header/footer), theo thứ tự đọc."""
+    cfg = cfg or BlocksCfg()
+    printed = printed or {}
+    step = _line_step(lines)
+    table_of: dict[str, int] = {}
+    tables = find_tables(lines, cfg)
+    for t_idx, rows in enumerate(tables):
+        for row in rows:
+            for cell in row:
+                table_of[cell.id] = t_idx
+
+    out: list[Block] = []
+    current: _Open | None = None
+
+    def close() -> None:
+        nonlocal current
+        if current is not None:
+            out.append(_to_block(current, book_id, printed))
+            current = None
+
+    emitted_tables: set[int] = set()
+    for ln in lines:
+        if ln.id in table_of:
+            t_idx = table_of[ln.id]
+            if t_idx not in emitted_tables:
+                close()
+                block = _table_block(tables[t_idx], book_id)
+                block.printed_start = printed.get(block.page_start)
+                block.printed_end = printed.get(block.page_end)
+                out.append(block)
+                emitted_tables.add(t_idx)
+            continue
+
+        kind = classify_line(ln, body_size, cfg)
+        text = nfc(ln.text)
+        if kind == "body" and current is not None and _continues(current, ln, step, cfg):
+            if ln.page != current.last.page:
+                current.flags.append("joined_across_pages")
+            current.text = join_text(current.text, text)
+            current.lines.append(ln)
+            continue
+        if kind == "heading" and current is not None and _heading_continues(current, ln, step):
+            current.text = join_text(current.text, text)
+            current.lines.append(ln)
+            continue
+
+        close()
+        if kind == "bullet_start":
+            marker = bullet_marker(text, cfg.bullet_markers)
+            assert marker is not None
+            current = _Open("list_item", ln, text[len(marker) :].strip(), marker)
+        elif kind == "numbered_item":
+            m = RE_NUMBERED_ITEM.match(text)
+            assert m is not None
+            marker = text[: m.end(1) + 1]
+            current = _Open("list_item", ln, text[len(marker) :].strip(), marker)
+        elif kind == "body":
+            current = _Open("paragraph", ln, text, None)
+        else:
+            current = _Open(kind, ln, text, None)
+    close()
+    return out
+
+
+def _continues(cur: _Open, ln: Line, step: float, cfg: BlocksCfg) -> bool:
+    """Dòng thân bài `ln` có phải phần tiếp của block đang mở không?"""
+    if cur.kind not in ("paragraph", "list_item"):
+        return False
+    prev = cur.last
+    if ln.page != prev.page:  # sang trang mới: chỉ nối khi câu trước chưa kết thúc
+        if not cfg.join_across_pages or cur.text.rstrip().endswith(SENTENCE_END):
+            return False
+    elif ln.bbox[3] - prev.bbox[3] - step >= cfg.para_gap_ratio * ln.size:
+        return False  # khoảng cách dôi ra → đoạn mới
+    if cur.kind == "list_item":
+        # dòng tiếp của gạch đầu dòng thụt vào so với ký hiệu
+        return ln.bbox[0] > cur.lines[0].bbox[0] + cfg.x_tolerance
+    margin = min(x.bbox[0] for x in cur.lines)
+    if abs(ln.bbox[0] - margin) <= cfg.x_tolerance:
+        return True
+    # đoạn thụt dòng đầu: dòng tiếp lùi về lề trái
+    return len(cur.lines) == 1 and ln.bbox[0] < cur.lines[0].bbox[0] - cfg.x_tolerance
+
+
+def _heading_continues(cur: _Open, ln: Line, step: float) -> bool:
+    """Tiêu đề dài xuống dòng: cùng kiểu, không đánh số, sát ngay dòng trước."""
+    if cur.kind != "heading" or ln.page != cur.last.page or numbering_of(ln.text):
+        return False
+    same_style = is_upper_text(ln.text) == is_upper_text(cur.text)
+    close = ln.bbox[3] - cur.last.bbox[3] <= 1.3 * max(step, cur.last.size * 1.2)
+    return same_style and abs(ln.size - cur.last.size) < 0.8 and close
+
+
+def _to_block(cur: _Open, book_id: str, printed: dict[int, int | None]) -> Block:
+    first = cur.lines[0]
+    sizes = [(ln.size, len(ln.text)) for ln in cur.lines]
+    total = sum(w for _, w in sizes) or 1
+    flags = sorted(set(cur.flags) | {f for ln in cur.lines for f in ln.flags})
+    return Block(
+        id=stable_id(book_id, first.page, first.index, prefix="blk"),
+        kind=cur.kind,
+        text=cur.text,
+        text_rules=cur.text,
+        page_start=first.page,
+        page_end=cur.last.page,
+        printed_start=printed.get(first.page),
+        printed_end=printed.get(cur.last.page),
+        line_ids=[ln.id for ln in cur.lines],
+        bbox=first.bbox,
+        x0=first.bbox[0],
+        font_size=round(sum(s * w for s, w in sizes) / total, 2),
+        is_upper=is_upper_text(cur.text),
+        numbering=numbering_of(cur.text) if cur.kind == "heading" else None,
+        marker=cur.marker,
+        flags=flags,
+    )
+
+
+def blocks_summary(blocks: list[Block]) -> dict[str, Any]:
+    kinds: dict[str, int] = {}
+    for b in blocks:
+        kinds[b.kind] = kinds.get(b.kind, 0) + 1
+    return {
+        "blocks": len(blocks),
+        "by_kind": kinds,
+        "joined_across_pages": sum("joined_across_pages" in b.flags for b in blocks),
+    }

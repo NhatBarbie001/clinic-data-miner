@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 from dataminer.core.io import write_json, write_jsonl
 from dataminer.core.text_vi import has_vietnamese_marks, is_nfc, is_valid_syllable, nfc
+from dataminer.ingest.blocks import heading_signals
 from dataminer.ingest.page_furniture import classify_furniture, furniture_key
 from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
 
@@ -106,27 +107,7 @@ def find_heading_candidates(lines: list[SurveyLine], body_size: float) -> dict[s
         if RE_TOC_ENTRY.search(text):
             toc_entries.append({"page": ln.page, "index": ln.index, "text": ln.text})
             continue
-        letters = [c for c in text if c.isalpha()]
-        upper = len(letters) >= 3 and sum(c.isupper() for c in letters) / len(letters) >= 0.8
-        reasons: list[str] = []
-        if ln.size >= body_size + 0.75:
-            reasons.append(f"cỡ chữ {ln.size:.1f} > thân bài {body_size:.1f}")
-        if upper:
-            reasons.append("viết hoa toàn bộ")
-        if ln.bold:
-            reasons.append("in đậm")
-        level = "unknown"
-        if RE_CHAPTER.match(text):
-            reasons.append("mẫu 'CHƯƠNG n'")
-            level = "chapter"
-        elif RE_SUB.match(text):
-            reasons.append("đánh số 'n.m.'")
-            level = "subsection"
-        elif RE_SECTION.match(text):
-            reasons.append("đánh số 'n.'")
-            level = "section"
-        elif upper and ln.size >= body_size + 1.5:
-            level = "disease_or_title"
+        reasons, level = heading_signals(text, ln.size, body_size, ln.bold)
         if reasons:
             candidates.append(
                 {

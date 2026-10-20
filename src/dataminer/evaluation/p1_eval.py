@@ -58,3 +58,113 @@ def format_eval(report: dict[str, Any]) -> str:
             if isinstance(v, list) and v:
                 lines.extend(f"    {k}: {x}" for x in v)
     return "\n".join(lines)
+
+
+def _truth_keys(truth: dict[str, Any], pages: set[int]) -> list[dict[str, Any]]:
+    """Dòng nội dung của đáp án trong `pages`, kèm khóa so khớp (trang, văn bản OCR, lần xuất
+    hiện), nhóm block, và số thứ tự mục (tăng sau mỗi tiêu đề) để phát hiện gộp nhầm."""
+    seen: dict[tuple[int, str], int] = {}
+    section = 0
+    out = []
+    for i, ln in enumerate(truth["lines"]):
+        if ln["pdf_page"] not in pages or ln["role"] in ("header", "footer"):
+            continue
+        text = _norm(ln["ocr"])
+        occ = seen.get((ln["pdf_page"], text), 0)
+        seen[(ln["pdf_page"], text)] = occ + 1
+        if ln["role"] == "heading":
+            section += 1
+        if ln.get("block"):
+            group = ln["block"]
+        elif ln["role"] == "table":
+            group = f"table@{ln['pdf_page']}"
+        else:  # mục lục, bìa, tiêu đề "MỤC LỤC": mỗi dòng là một block
+            group = f"{ln['role']}@{ln['pdf_page']}#{i}"
+        out.append(
+            {
+                "key": (ln["pdf_page"], text, occ),
+                "group": group,
+                "section": section,
+                "role": ln["role"],
+                "text": text,
+            }
+        )
+    return out
+
+
+def eval_blocks(blocks: list[Any], lines: list[Any], truth: dict[str, Any]) -> dict[str, Any]:
+    """G3 (block dựng đúng tập dòng, không gộp nhầm qua tiêu đề) và G4 (bảng đúng hàng × cột).
+
+    `blocks`: Block (P1.3); `lines`: các Line nội dung đã dùng để dựng block.
+    """
+    pages = {ln.page for ln in lines}
+    tlines = _truth_keys(truth, pages)
+    by_key = {t["key"]: t for t in tlines}
+    seen: dict[tuple[int, str], int] = {}
+    key_of: dict[str, tuple[int, str, int]] = {}
+    for ln in lines:
+        text = _norm(ln.text)
+        occ = seen.get((ln.page, text), 0)
+        seen[(ln.page, text)] = occ + 1
+        key_of[ln.id] = (ln.page, text, occ)
+    unmatched_lines = [lid for lid, key in key_of.items() if key not in by_key]
+
+    truth_groups: dict[str, set[tuple[int, str, int]]] = {}
+    for t in tlines:
+        truth_groups.setdefault(t["group"], set()).add(t["key"])
+    predicted = [frozenset(key_of[lid] for lid in b.line_ids if lid in key_of) for b in blocks]
+    predicted_set = set(predicted)
+    wrong = [
+        sorted(keys)[0][1][:70]
+        for keys in truth_groups.values()
+        if frozenset(keys) not in predicted_set
+    ]
+    merged = [
+        b.text[:70]
+        for b, keys in zip(blocks, predicted, strict=True)
+        if len({by_key[k]["section"] for k in keys if k in by_key}) > 1
+    ]
+    exact = len(truth_groups) - len(wrong)
+    recall = round(exact / len(truth_groups), 4) if truth_groups else 1.0
+
+    # G4: bảng - so ô (bản OCR của đáp án) theo hàng × cột
+    tables_truth: dict[int, list[list[str]]] = {}
+    for ln in truth["lines"]:
+        if ln["role"] == "table" and ln["pdf_page"] in pages:
+            grid = tables_truth.setdefault(ln["pdf_page"], [])
+            while len(grid) <= ln["row"]:
+                grid.append([])
+            row = grid[ln["row"]]
+            while len(row) <= ln["col"]:
+                row.append("")
+            row[ln["col"]] = _norm(ln["ocr"])
+    tables_got = {
+        b.page_start: [[_norm(c) for c in r] for r in b.rows or []]
+        for b in blocks
+        if b.kind == "table"
+    }
+    table_errors = [
+        f"trang {page}: {tables_got.get(page)} ≠ {grid}"
+        for page, grid in tables_truth.items()
+        if tables_got.get(page) != grid
+    ]
+    extra_tables = sorted(set(tables_got) - set(tables_truth))
+    return {
+        "G3_blocks": {
+            "truth_blocks": len(truth_groups),
+            "exact": exact,
+            "recall": recall,
+            "target": 0.97,
+            "wrong": wrong,
+            "merged_across_headings": merged,
+            "unmatched_lines": unmatched_lines,
+            "pass": recall >= 0.97 and not merged and not unmatched_lines,
+        },
+        "G4_tables": {
+            "truth_tables": len(tables_truth),
+            "found_tables": len(tables_got),
+            "errors": table_errors,
+            "extra_tables": [f"trang {p}" for p in extra_tables],
+            "pass": not table_errors and not extra_tables,
+        },
+    }

@@ -1,6 +1,6 @@
 # Plan P1: Trích xuất và làm sạch text
 
-> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅; P1.3–P1.6 chưa làm.
+> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅, P1.3 ✅; P1.4–P1.6 chưa làm.
 > Ngày tạo: 2026-10-20 · Tham chiếu: [plan.md](../../../plan.md) mục P1 · [problem.md](../../../problem.md) mục 4.1, 5 · Đầu vào từ P0: [gate_report.md](../P0/gate_report.md), [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -99,7 +99,7 @@ Thứ tự tuyến tính. Mỗi task tự thêm phần đánh giá của mình v
 # configs/default.yaml
 p1:
   furniture: {top_zone: 0.09, bottom_zone: 0.09, min_repeat_pages: 2}
-  blocks:   {para_gap_ratio: 0.6, bullet_markers: ["-", "•", "–"], join_across_pages: true}
+  blocks:   {para_gap_ratio: 0.25, bullet_markers: ["-", "•", "–", "+"], join_across_pages: true, heading_size_delta: 1.5}
   fix:      {enabled: true, blocks_per_call: 25, max_changed_ratio: 0.35, min_similarity: 0.6}
 budget:
   per_task_usd: {fix_ocr: 2.0}    # P1 tối đa $2 (dự kiến pilot dưới $0.01)
@@ -153,3 +153,4 @@ Chạy lại dùng cache nên $0. Chế độ `replay` cho phép tái lập mà 
 |---|---|---|
 | 2026-10-20 | Tạo plan | — |
 | 2026-10-20 | Duyệt plan (đồng ý Q1, Q2: gửi mọi block qua LLM; lỗi số liệu chỉ gắn cờ). P1.1 xong; thêm quy tắc: mỗi quy tắc cần ít nhất 1 test không dựa trên sách mẫu | Sách mẫu không kiểm được thứ tự đọc (P1.1_report mục 7) |
+| 2026-10-20 | P1.3: `para_gap_ratio` 0.6 → 0.25 (ngưỡng trên khoảng DÔI RA), thêm `heading_size_delta`; G3 97% quá rộng → khi có sách thật cần duyệt tay | Đo khoảng cách thực tế trên sách mẫu; sách mẫu không có 2 đoạn liền nhau |
