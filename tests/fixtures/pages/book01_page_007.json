@@ -1,0 +1,168 @@
+{
+ "label": "loi_lieu_thuoc",
+ "source": "sách mẫu tổng hợp seed 7 (dm dev make-sample-book)",
+ "page": 7,
+ "size": [
+  420.0,
+  595.0
+ ],
+ "images": 1,
+ "spans": [
+  {
+   "text": "Bệnh học nội khoa (sách mẫu)",
+   "bbox": [
+    48.0,
+    30.5,
+    173.5,
+    42.6
+   ],
+   "size": 8.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "5. ĐIỀU TRỊ",
+   "bbox": [
+    48.0,
+    60.8,
+    110.3,
+    77.0
+   ],
+   "size": 11.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Giảm can, tập luyện tăng sức mạnh cơ đùi.",
+   "bbox": [
+    58.0,
+    79.6,
+    284.1,
+    94.6
+   ],
+   "size": 11.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Paracetamol 5OO mg mỗi lần, không quá 3 g mỗi ngày.",
+   "bbox": [
+    58.0,
+    96.5,
+    329.5,
+    110.3
+   ],
+   "size": 10.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Thuốc chống viêm không steroid dạng bôi hoặc uống trong",
+   "bbox": [
+    58.0,
+    112.2,
+    354.4,
+    126.4
+   ],
+   "size": 10.4,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "dot đau.",
+   "bbox": [
+    64.1,
+    126.8,
+    104.3,
+    140.9
+   ],
+   "size": 10.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Tiêm corticoid nội khớp khi có tràn dịch, không quá 3 lần mỗi",
+   "bbox": [
+    58.0,
+    142.1,
+    379.6,
+    157.1
+   ],
+   "size": 11.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "năm.",
+   "bbox": [
+    64.1,
+    156.5,
+    90.6,
+    171.6
+   ],
+   "size": 11.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Phẫu thuật thay khớp gối khi điều trị nội khoa thất bại.",
+   "bbox": [
+    58.0,
+    173.5,
+    322.4,
+    187.3
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "6. PHÒNG BỆNH",
+   "bbox": [
+    48.0,
+    197.4,
+    133.3,
+    212.6
+   ],
+   "size": 11.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Duy trì cân nặng hợp lý, tránh mang vác nặng.",
+   "bbox": [
+    58.0,
+    216.3,
+    285.4,
+    230.2
+   ],
+   "size": 10.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Tập thể dục đều đặn, đúng tư thế.",
+   "bbox": [
+    58.0,
+    232.3,
+    227.0,
+    246.1
+   ],
+   "size": 10.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "– 4 –",
+   "bbox": [
+    200.6,
+    555.4,
+    219.4,
+    567.6
+   ],
+   "size": 9.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  }
+ ]
+}

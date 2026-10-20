@@ -1,0 +1,312 @@
+{
+ "label": "dau_chuong",
+ "source": "sách mẫu tổng hợp seed 7 (dm dev make-sample-book)",
+ "page": 4,
+ "size": [
+  420.0,
+  595.0
+ ],
+ "images": 1,
+ "spans": [
+  {
+   "text": "CHƯƠNG 1. BỆNH CƠ XƯƠNG KHỚP",
+   "bbox": [
+    75.9,
+    61.7,
+    320.1,
+    81.2
+   ],
+   "size": 14.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "VIÊM KHỚP DẠNG THẤP",
+   "bbox": [
+    48.0,
+    107.9,
+    199.8,
+    126.1
+   ],
+   "size": 13.4,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "1. ĐẠI CƯƠNG",
+   "bbox": [
+    48.0,
+    140.0,
+    129.0,
+    156.3
+   ],
+   "size": 12.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Viêm khớp dạng thấp la bệnh lý tự miễn mạn tính, đặc trưng bởi",
+   "bbox": [
+    48.0,
+    160.0,
+    349.6,
+    173.6
+   ],
+   "size": 10.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "tình trạng viêrn màng hoạt dịch ở nhiều khớp, có tính chất đối",
+   "bbox": [
+    48.0,
+    174.3,
+    345.1,
+    188.2
+   ],
+   "size": 10.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "xứng. Bệnh gặp chủ yếu ở nữ giới, tuổi trung niên từ 30 đến 50.",
+   "bbox": [
+    48.0,
+    188.2,
+    367.2,
+    202.8
+   ],
+   "size": 10.7,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Nếu không được điều trị đúng, bệnh tiến triển gây hủy hoại sụn",
+   "bbox": [
+    48.0,
+    202.3,
+    379.7,
+    217.4
+   ],
+   "size": 11.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "khớp, biến dạng khớp và tàn phế.",
+   "bbox": [
+    48.0,
+    217.3,
+    214.8,
+    231.8
+   ],
+   "size": 10.6,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "2. NGUYEN NHÂN",
+   "bbox": [
+    48.0,
+    244.0,
+    143.3,
+    259.5
+   ],
+   "size": 11.4,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Nguyên nhân chính xác của bệnh chưa được biết rõ. Bệnh được",
+   "bbox": [
+    48.0,
+    262.2,
+    379.2,
+    277.3
+   ],
+   "size": 11.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "cho 1à kết quả của sự tương tác giữa yếu tố di truyền và yếu tố",
+   "bbox": [
+    48.0,
+    277.9,
+    340.4,
+    291.4
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "môi trường.",
+   "bbox": [
+    48.0,
+    291.2,
+    109.9,
+    306.2
+   ],
+   "size": 11.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "2.1. Yếu tố nguy cơ",
+   "bbox": [
+    48.0,
+    315.6,
+    138.7,
+    329.5
+   ],
+   "size": 10.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Yếu tố di truyen: người mang kháng nguyên HLA-DR4 có nguy",
+   "bbox": [
+    58.0,
+    332.2,
+    358.1,
+    345.9
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "cơ mắc bệnh cao hơn.",
+   "bbox": [
+    64.1,
+    346.8,
+    167.0,
+    360.4
+   ],
+   "size": 10.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Giới tính nữ và các thay đổi nội tiết.",
+   "bbox": [
+    58.0,
+    362.4,
+    233.9,
+    376.5
+   ],
+   "size": 10.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Hút tbuốc lá là yếu tố môi trường quan trọng nhất.",
+   "bbox": [
+    58.0,
+    377.8,
+    324.2,
+    392.6
+   ],
+   "size": 10.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Nhiễm khuẩn, nhiễm virus có thể đóng vai trò khởi phát.",
+   "bbox": [
+    58.0,
+    394.6,
+    331.1,
+    408.4
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "3. TRIỆU CHỨNG",
+   "bbox": [
+    48.0,
+    418.0,
+    138.5,
+    433.8
+   ],
+   "size": 11.6,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "3.1. Lâm sàng",
+   "bbox": [
+    48.0,
+    441.9,
+    117.5,
+    456.4
+   ],
+   "size": 10.7,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Viêm nhiều khớp nhỏ ở bàn tay như khớp cổ tay, khớp bàn",
+   "bbox": [
+    58.0,
+    458.8,
+    347.0,
+    472.8
+   ],
+   "size": 10.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "ngón và kbớp ngón gần, có tính chất đối xứng hai bên.",
+   "bbox": [
+    64.1,
+    472.9,
+    336.1,
+    487.4
+   ],
+   "size": 10.6,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Cứng khớp buổi sáng kéo dài trên 1 giờ.",
+   "bbox": [
+    58.0,
+    489.7,
+    249.8,
+    503.2
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Khớp sưng, đau, nóng; về sau có thể biến dạng như bàn tay",
+   "bbox": [
+    58.0,
+    505.7,
+    340.8,
+    519.2
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "– 1 –",
+   "bbox": [
+    200.6,
+    555.7,
+    218.8,
+    567.5
+   ],
+   "size": 8.7,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  }
+ ]
+}

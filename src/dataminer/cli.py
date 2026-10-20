@@ -15,6 +15,7 @@ import yaml
 from dataminer import SUBMODULES, __version__
 from dataminer.cli_llm import llm_app
 from dataminer.cli_runs import runs_app
+from dataminer.cli_survey import dev_app, survey_cmd
 from dataminer.core.config import ConfigError, find_project_root, load_settings
 from dataminer.core.logging import setup_logging
 
@@ -28,6 +29,8 @@ config_app = typer.Typer(help="Xem và kiểm tra cấu hình.", no_args_is_help
 app.add_typer(config_app, name="config")
 app.add_typer(llm_app, name="llm")
 app.add_typer(runs_app, name="runs")
+app.add_typer(dev_app, name="dev")
+app.command("survey")(survey_cmd)
 
 LogLevelOption = typer.Option(
     "WARNING", "--log-level", help="Mức log ra console: DEBUG, INFO, WARNING, ERROR."

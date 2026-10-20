@@ -1,0 +1,383 @@
+{
+  "candidates": [
+    {
+      "page": 1,
+      "index": 0,
+      "text": "BỆNH HỌC NỘI KHOA",
+      "size": 21.5,
+      "level_guess": "disease_or_title",
+      "reasons": [
+        "cỡ chữ 21.5 > thân bài 10.4",
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 1,
+      "index": 1,
+      "text": "Tóm lược một số bệnh thường gặp",
+      "size": 11.5,
+      "level_guess": "unknown",
+      "reasons": [
+        "cỡ chữ 11.5 > thân bài 10.4"
+      ]
+    },
+    {
+      "page": 1,
+      "index": 2,
+      "text": "SÁCH MẪU TỔNG HỢP - CHỈ DÙNG ĐỂ KIỂM THỬ PHẦN MỀM",
+      "size": 9.7,
+      "level_guess": "unknown",
+      "reasons": [
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 3,
+      "index": 0,
+      "text": "MỤC LỤC",
+      "size": 13.8,
+      "level_guess": "disease_or_title",
+      "reasons": [
+        "cỡ chữ 13.8 > thân bài 10.4",
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 0,
+      "text": "CHƯƠNG 1. BỆNH CƠ XƯƠNG KHỚP",
+      "size": 14.3,
+      "level_guess": "chapter",
+      "reasons": [
+        "cỡ chữ 14.3 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "mẫu 'CHƯƠNG n'"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 1,
+      "text": "VIÊM KHỚP DẠNG THẤP",
+      "size": 13.4,
+      "level_guess": "disease_or_title",
+      "reasons": [
+        "cỡ chữ 13.4 > thân bài 10.4",
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 2,
+      "text": "1. ĐẠI CƯƠNG",
+      "size": 12.0,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.0 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 8,
+      "text": "2. NGUYEN NHÂN",
+      "size": 11.4,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.4 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 12,
+      "text": "2.1. Yếu tố nguy cơ",
+      "size": 10.2,
+      "level_guess": "subsection",
+      "reasons": [
+        "đánh số 'n.m.'"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 18,
+      "text": "3. TRIỆU CHỨNG",
+      "size": 11.6,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.6 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 4,
+      "index": 19,
+      "text": "3.1. Lâm sàng",
+      "size": 10.7,
+      "level_guess": "subsection",
+      "reasons": [
+        "đánh số 'n.m.'"
+      ]
+    },
+    {
+      "page": 5,
+      "index": 4,
+      "text": "3.2. Cận lâm sàng",
+      "size": 10.4,
+      "level_guess": "subsection",
+      "reasons": [
+        "đánh số 'n.m.'"
+      ]
+    },
+    {
+      "page": 5,
+      "index": 10,
+      "text": "4. CHẨN ĐOÁN",
+      "size": 11.5,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.5 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 5,
+      "index": 15,
+      "text": "5. ĐIỀU TRỊ",
+      "size": 11.0,
+      "level_guess": "section",
+      "reasons": [
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 5,
+      "index": 24,
+      "text": "6. PHÒNG BỆNH",
+      "size": 12.0,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.0 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 6,
+      "index": 1,
+      "text": "THOÁI HÓA KHỚP GỐI",
+      "size": 14.1,
+      "level_guess": "disease_or_title",
+      "reasons": [
+        "cỡ chữ 14.1 > thân bài 10.4",
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 6,
+      "index": 2,
+      "text": "1. DAI CƯƠNG",
+      "size": 12.1,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.1 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 6,
+      "index": 7,
+      "text": "2. NGUYÊN NHÂN",
+      "size": 11.7,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.7 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 6,
+      "index": 12,
+      "text": "3. TRIỆU CHUNG",
+      "size": 11.7,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.7 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 6,
+      "index": 20,
+      "text": "4. CHẨN ĐOÁN",
+      "size": 11.2,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.2 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 7,
+      "index": 1,
+      "text": "5. ĐIỀU TRỊ",
+      "size": 11.9,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.9 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 7,
+      "index": 9,
+      "text": "6. PHÒNG BỆNH",
+      "size": 11.1,
+      "level_guess": "section",
+      "reasons": [
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 0,
+      "text": "CHƯƠNG 2. BỆNH TIÊU HÓA",
+      "size": 15.2,
+      "level_guess": "chapter",
+      "reasons": [
+        "cỡ chữ 15.2 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "mẫu 'CHƯƠNG n'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 1,
+      "text": "VIÊM LOÉT DẠ DÀY TÁ TRÀNG",
+      "size": 13.1,
+      "level_guess": "disease_or_title",
+      "reasons": [
+        "cỡ chữ 13.1 > thân bài 10.4",
+        "viết hoa toàn bộ"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 2,
+      "text": "1. ĐẠI CƯƠNG",
+      "size": 10.8,
+      "level_guess": "section",
+      "reasons": [
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 6,
+      "text": "2. NGUYÊN NHÂN",
+      "size": 12.1,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.1 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 12,
+      "text": "3. TRIỆU CHỨNG",
+      "size": 12.1,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.1 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 16,
+      "text": "4. BIEN CHỨNG",
+      "size": 11.4,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 11.4 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 8,
+      "index": 20,
+      "text": "5. CHẨN ĐOÁN",
+      "size": 10.9,
+      "level_guess": "section",
+      "reasons": [
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 9,
+      "index": 1,
+      "text": "6. ĐIỀU TRI",
+      "size": 10.8,
+      "level_guess": "section",
+      "reasons": [
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    },
+    {
+      "page": 9,
+      "index": 24,
+      "text": "7. PHÒNG BỆNH",
+      "size": 12.1,
+      "level_guess": "section",
+      "reasons": [
+        "cỡ chữ 12.1 > thân bài 10.4",
+        "viết hoa toàn bộ",
+        "đánh số 'n.'"
+      ]
+    }
+  ],
+  "toc_entries": [
+    {
+      "page": 3,
+      "index": 1,
+      "text": "Chương 1. Bệnh cơ xương khớp ................................................ 1"
+    },
+    {
+      "page": 3,
+      "index": 2,
+      "text": "Viêm khớp dạng thấp .................................................................... 1"
+    },
+    {
+      "page": 3,
+      "index": 3,
+      "text": "Thoái hóa khớp gối ........................................................................ 3"
+    },
+    {
+      "page": 3,
+      "index": 4,
+      "text": "Chương 2. Bệnh tiêu hỏa ............................................................. 5"
+    },
+    {
+      "page": 3,
+      "index": 5,
+      "text": "Viêm loét dạ dày tá tràng .............................................................. 5"
+    }
+  ]
+}

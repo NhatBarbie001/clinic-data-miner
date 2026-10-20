@@ -1,0 +1,360 @@
+{
+ "label": "co_bang",
+ "source": "sách mẫu tổng hợp seed 7 (dm dev make-sample-book)",
+ "page": 9,
+ "size": [
+  420.0,
+  595.0
+ ],
+ "images": 1,
+ "spans": [
+  {
+   "text": "Bệnh học nội khoa (sách mẫu)",
+   "bbox": [
+    48.0,
+    31.4,
+    160.8,
+    42.3
+   ],
+   "size": 8.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "6. ĐIỀU TRI",
+   "bbox": [
+    48.0,
+    62.0,
+    104.5,
+    76.7
+   ],
+   "size": 10.8,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Ngừng các thuốc gây loét nếu có thể.",
+   "bbox": [
+    58.0,
+    80.6,
+    240.4,
+    94.3
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Thuốc ức chế bơm proton: omeprazol 20 mg uống 2 lần mỗi",
+   "bbox": [
+    58.0,
+    96.7,
+    345.0,
+    110.3
+   ],
+   "size": 10.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "ngay.",
+   "bbox": [
+    64.1,
+    110.8,
+    90.6,
+    124.9
+   ],
+   "size": 10.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Nếu có Helicobacter pylori: dùng phác đồ diệt vi khuẩn trong",
+   "bbox": [
+    58.0,
+    127.3,
+    346.3,
+    140.7
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "14 ngày (Bảng 2.1).",
+   "bbox": [
+    64.1,
+    140.6,
+    162.6,
+    155.6
+   ],
+   "size": 11.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Bảng 2.1. Phác độ diệt Helicobacter pylori 3 thuốc",
+   "bbox": [
+    92.9,
+    163.1,
+    316.5,
+    176.1
+   ],
+   "size": 9.6,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Thuộc",
+   "bbox": [
+    52.0,
+    180.7,
+    78.2,
+    193.1
+   ],
+   "size": 9.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Liều mỗi lần",
+   "bbox": [
+    168.6,
+    180.6,
+    221.3,
+    193.1
+   ],
+   "size": 9.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Số lần/ngày",
+   "bbox": [
+    252.9,
+    180.5,
+    304.3,
+    193.2
+   ],
+   "size": 9.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Thời gian",
+   "bbox": [
+    317.7,
+    180.5,
+    358.2,
+    193.2
+   ],
+   "size": 9.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Omeprazol",
+   "bbox": [
+    52.0,
+    196.9,
+    99.3,
+    209.2
+   ],
+   "size": 9.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "20 mg",
+   "bbox": [
+    168.6,
+    196.0,
+    197.9,
+    209.5
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "2",
+   "bbox": [
+    252.9,
+    195.8,
+    258.7,
+    209.5
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "14 ngảy",
+   "bbox": [
+    317.7,
+    196.4,
+    352.9,
+    209.4
+   ],
+   "size": 9.5,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Amoxicilin",
+   "bbox": [
+    52.0,
+    212.6,
+    98.0,
+    225.5
+   ],
+   "size": 9.5,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "l g",
+   "bbox": [
+    168.6,
+    213.1,
+    178.8,
+    225.4
+   ],
+   "size": 9.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "2",
+   "bbox": [
+    252.9,
+    213.1,
+    258.0,
+    225.4
+   ],
+   "size": 9.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "14 ngày",
+   "bbox": [
+    317.7,
+    212.8,
+    352.2,
+    225.5
+   ],
+   "size": 9.3,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "Clarithromycin",
+   "bbox": [
+    52.0,
+    229.0,
+    115.7,
+    241.6
+   ],
+   "size": 9.2,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "500 mg",
+   "bbox": [
+    168.6,
+    228.3,
+    203.5,
+    241.8
+   ],
+   "size": 9.9,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "2",
+   "bbox": [
+    252.9,
+    229.2,
+    258.1,
+    241.5
+   ],
+   "size": 9.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "14 ngày",
+   "bbox": [
+    317.7,
+    229.3,
+    351.1,
+    241.5
+   ],
+   "size": 9.0,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "7. PHÒNG BỆNH",
+   "bbox": [
+    48.0,
+    258.1,
+    141.0,
+    274.6
+   ],
+   "size": 12.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Ăn uống điều độ, đúng giờ; hạn chế rượu bia, khong hút",
+   "bbox": [
+    58.0,
+    277.7,
+    341.5,
+    292.0
+   ],
+   "size": 10.5,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "thuốc.",
+   "bbox": [
+    64.1,
+    292.6,
+    93.9,
+    306.3
+   ],
+   "size": 10.1,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "- Không tự ý dùng thuốc chống viêm không steroid kẻo dài.",
+   "bbox": [
+    58.0,
+    308.0,
+    353.1,
+    322.5
+   ],
+   "size": 10.6,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  },
+  {
+   "text": "– 6 –",
+   "bbox": [
+    200.6,
+    555.9,
+    218.4,
+    567.5
+   ],
+   "size": 8.5,
+   "font": "Noto Sans Regular",
+   "flags": 4
+  }
+ ]
+}

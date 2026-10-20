@@ -1,0 +1,133 @@
+{
+  "patterns": [
+    {
+      "zone": "bottom",
+      "pattern": "– # –",
+      "kind": "page_number",
+      "confidence": "high",
+      "pages": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "example": "– 1 –"
+    },
+    {
+      "zone": "top",
+      "pattern": "bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "pages": [
+        5,
+        7,
+        9
+      ],
+      "example": "Bệnh học nội khoa (sách mẫu)"
+    },
+    {
+      "zone": "top",
+      "pattern": "chương #. bệnh cơ xương khớp",
+      "kind": "running_head",
+      "confidence": "medium",
+      "pages": [
+        6
+      ],
+      "example": "Chương 1. Bệnh cơ xương khớp"
+    }
+  ],
+  "instances": [
+    {
+      "page": 4,
+      "index": 24,
+      "zone": "bottom",
+      "text": "– 1 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 1
+    },
+    {
+      "page": 5,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "printed_page": null
+    },
+    {
+      "page": 5,
+      "index": 28,
+      "zone": "bottom",
+      "text": "– 2 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 2
+    },
+    {
+      "page": 6,
+      "index": 0,
+      "zone": "top",
+      "text": "Chương 1. Bệnh cơ xương khớp",
+      "kind": "running_head",
+      "confidence": "medium",
+      "printed_page": null
+    },
+    {
+      "page": 6,
+      "index": 25,
+      "zone": "bottom",
+      "text": "– 3 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 3
+    },
+    {
+      "page": 7,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "printed_page": null
+    },
+    {
+      "page": 7,
+      "index": 12,
+      "zone": "bottom",
+      "text": "– 4 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 4
+    },
+    {
+      "page": 8,
+      "index": 24,
+      "zone": "bottom",
+      "text": "– 5 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 5
+    },
+    {
+      "page": 9,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "printed_page": null
+    },
+    {
+      "page": 9,
+      "index": 28,
+      "zone": "bottom",
+      "text": "– 6 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "printed_page": 6
+    }
+  ]
+}

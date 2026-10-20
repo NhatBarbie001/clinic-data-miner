@@ -87,6 +87,7 @@ Data-miner/
 │  ├─ batch/         (P6)      # runner, exporter
 │  ├─ datagen/       (P7)      # generators/, filters/, splitter, exporter
 │  ├─ evaluation/    (xuyên suốt) # metrics, judges, runners
+│  ├─ devtools/      (P0.5)    # sách mẫu tổng hợp + đáp án, đối chiếu khảo sát (không thuộc pipeline)
 │  └─ cli.py                   # `dm p1 run`, `dm p3 eval`, ...
 ├─ app/                        # Streamlit UI (P5)
 ├─ eval/                       # bộ câu hỏi chuẩn + nhãn tay (có version)

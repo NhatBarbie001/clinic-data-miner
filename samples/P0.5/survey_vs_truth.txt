@@ -1,0 +1,23 @@
+# Đối chiếu khảo sát với đáp án sách mẫu
+
+✓ header_footer: recall 100% · precision 100% (10 tìm thấy / 10 đáp án) - chỉ tiêu recall=1, precision=1
+✓ headings: recall 100% · precision 90% (31 tìm thấy / 28 đáp án) - chỉ tiêu recall=1
+    THỪA   tr.1: BỆNH HỌC NỘI KHOA
+    THỪA   tr.1: SÁCH MẪU TỔNG HỢP - CHỈ DÙNG ĐỂ KIỂM THỬ PHẦN MỀM
+    THỪA   tr.1: Tóm lược một số bệnh thường gặp
+✓ cỡ chữ thân bài: ước lượng 10.4 / đáp án 10.5 - chỉ tiêu sai số ≤ 0.5pt
+✓ pages_without_text: tìm thấy [2] / đáp án [2]
+✓ printed_page_numbers: tìm thấy {4: 1, 5: 2, 6: 3, 7: 4, 8: 5, 9: 6} / đáp án {4: 1, 5: 2, 6: 3, 7: 4, 8: 5, 9: 6}
+✓ toc_entries: tìm thấy 5 / đáp án 5
+
+Lỗi OCR đã cài (recall theo loại):
+  (recall tính trên các lỗi CÓ THỂ phát hiện không cần từ điển)
+  ✓ char_confusion   5/7 → recall 71% - chỉ tiêu 0.5
+  ✓ digit_confusion  2/2 → recall 100% - chỉ tiêu 1.0
+  ✓ drop_diacritics  0/24 → recall 0% - chỉ tiêu không áp dụng (cần P1)
+  ✓ merge_words      1/1 → recall 100% - chỉ tiêu 1.0
+  ✓ nfd_line         2/2 → recall 100% - chỉ tiêu 1.0
+  ✓ wrong_tone       0/7 → recall 0% - chỉ tiêu không áp dụng (cần P1)
+✓ báo động giả: 0/10 tín hiệu (precision 100%)
+
+KẾT LUẬN: ĐẠT mọi chỉ tiêu

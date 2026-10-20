@@ -1,0 +1,82 @@
+[
+  {
+    "page": 4,
+    "index": 4,
+    "kind": "invalid_syllable",
+    "token": "viêrn",
+    "detail": "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
+    "line": "tình trạng viêrn màng hoạt dịch ở nhiều khớp, có tính chất đối"
+  },
+  {
+    "page": 4,
+    "index": 10,
+    "kind": "digit_in_word",
+    "token": "1à",
+    "detail": "chữ số dính trong từ (vd. 1à)",
+    "line": "cho 1à kết quả của sự tương tác giữa yếu tố di truyền và yếu tố"
+  },
+  {
+    "page": 4,
+    "index": 16,
+    "kind": "invalid_syllable",
+    "token": "tbuốc",
+    "detail": "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
+    "line": "- Hút tbuốc lá là yếu tố môi trường quan trọng nhất."
+  },
+  {
+    "page": 4,
+    "index": 21,
+    "kind": "invalid_syllable",
+    "token": "kbớp",
+    "detail": "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
+    "line": "ngón và kbớp ngón gần, có tính chất đối xứng hai bên."
+  },
+  {
+    "page": 5,
+    "index": 5,
+    "kind": "nfd_line",
+    "token": "",
+    "detail": "dòng mã hóa Unicode tổ hợp (NFD) - cần chuẩn hóa NFC",
+    "line": "- Tốc độ máu lắng vá protein phản ứng C (CRP) tăng."
+  },
+  {
+    "page": 5,
+    "index": 20,
+    "kind": "invalid_syllable",
+    "token": "rnỗi",
+    "detail": "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
+    "line": "methotrexat 7,5-15 mg rnỗi tuần, kết hợp acid folic."
+  },
+  {
+    "page": 6,
+    "index": 4,
+    "kind": "invalid_syllable",
+    "token": "phảnứng",
+    "detail": "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
+    "line": "tổn thương sụn khớp, kèm theo phảnứng của xương dưới sụn và"
+  },
+  {
+    "page": 7,
+    "index": 3,
+    "kind": "digit_lookalike",
+    "token": "5OO",
+    "detail": "chữ O/I/l lẫn trong số (vd. 5OO)",
+    "line": "- Paracetamol 5OO mg mỗi lần, không quá 3 g mỗi ngày."
+  },
+  {
+    "page": 9,
+    "index": 3,
+    "kind": "nfd_line",
+    "token": "",
+    "detail": "dòng mã hóa Unicode tổ hợp (NFD) - cần chuẩn hóa NFC",
+    "line": "- Thuốc ức chế bơm proton: omeprazol 20 mg uống 2 lần mỗi"
+  },
+  {
+    "page": 9,
+    "index": 17,
+    "kind": "digit_lookalike",
+    "token": "l g",
+    "detail": "chữ cái đứng thay số trước đơn vị",
+    "line": "l g"
+  }
+]

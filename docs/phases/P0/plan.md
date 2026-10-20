@@ -1,6 +1,6 @@
 # Plan P0: Setup và khảo sát sách
 
-> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅, P0.4 ✅; P0.5–P0.6 cần PDF sách.
+> Trạng thái: `Đang làm`. P0.1 ✅, P0.2 ✅, P0.3 ✅, P0.4 ✅, P0.5 ✅ (sách mẫu tổng hợp); P0.6 chờ duyệt.
 > Ngày tạo: 2026-10-19 · Cập nhật: 2026-10-19
 > Tham chiếu: [plan.md](../../../plan.md) mục P0 · [problem.md](../../../problem.md)
 
@@ -160,11 +160,12 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 - **DoD:** ✅ Hoàn thành, xem [P0.4_report.md](P0.4_report.md). Test pass, mypy strict pass.
 
 ### P0.5 Khảo sát sách (**cần PDF**)
+> Plan chi tiết: [P0.5_plan.md](P0.5_plan.md). Do chưa có sách thật, P0.5 tự sinh **sách mẫu tổng hợp** kèm đáp án.
 - **Cách làm:** theo mục 4.3. Thêm thư viện `pymupdf`.
 - **Test:** script chạy trên một PDF nhỏ tự tạo trong test (2–3 trang có tiêu đề, header, footer), kiểm tra thống kê và phát hiện header đúng.
 - **Data mẫu:** `samples/P0.5/` gồm thống kê sách, 3–5 trang mẫu (JSON + PNG), danh sách ứng viên header/footer.
 - **Kết quả:** `docs/book_profile.md`, `tests/fixtures/pages/` (5–10 trang đại diện).
-- **DoD:** `book_profile.md` mô tả được bằng quy tắc cụ thể:
+- **DoD:** ✅ Hoàn thành, xem [P0.5_report.md](P0.5_report.md). `book_profile.md` mô tả được bằng quy tắc cụ thể:
   - Đầu chương, đầu bệnh, đầu mục trông thế nào.
   - Danh sách tên mục chuẩn của một bệnh.
   - Các kiểu lỗi OCR hay gặp, kèm ví dụ.
@@ -201,7 +202,8 @@ Từ kết quả đó viết `docs/book_profile.md` bằng tay (có hỗ trợ t
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 2026-10-19 | Tạo plan | — |
-| 2026-10-20 | P0.4: thêm `core/run.py` (RunRecorder), `core/errors_vi.py` (lỗi tiếng Việt dùng chung), CLI `dm runs` | Manifest/log theo lần chạy; thống nhất thông báo lỗi cấu hình và dữ liệu |
-| 2026-10-20 | P0.3: dùng `httpx` thay OpenAI SDK; luôn gửi `reasoning.enabled` rõ ràng | Kiểm soát retry/mock; DeepSeek tự suy luận nếu không tắt (+60% token ra) |
-| 2026-10-20 | P0.2: model = `deepseek/deepseek-v4.1-flash-1017` cho mọi tác vụ, thêm `reasoning` vào ModelSpec; ngân sách $20 tổng / $1 cho P0 | Quyết định của chủ dự án |
 | 2026-10-19 | P0.1: entry point `dm` đổi từ `cli:app` sang `cli:main` (ép UTF-8); hook whitespace/EOF bỏ qua `samples/`; thêm `.gitattributes` | Lỗi mã hóa tiếng Việt khi chuyển hướng output trên Windows; giữ output mẫu nguyên văn; tránh diff CRLF |
+| 2026-10-20 | P0.2: model = `deepseek/deepseek-v4.1-flash-1017` cho mọi tác vụ, thêm `reasoning` vào ModelSpec; ngân sách $20 tổng / $1 cho P0 | Quyết định của chủ dự án |
+| 2026-10-20 | P0.3: dùng `httpx` thay OpenAI SDK; luôn gửi `reasoning.enabled` rõ ràng | Kiểm soát retry/mock; DeepSeek tự suy luận nếu không tắt (+60% token ra) |
+| 2026-10-20 | P0.4: thêm `core/run.py` (RunRecorder), `core/errors_vi.py` (lỗi tiếng Việt dùng chung), CLI `dm runs` | Manifest/log theo lần chạy; thống nhất thông báo lỗi cấu hình và dữ liệu |
+| 2026-10-20 | P0.5: tự sinh **sách mẫu tổng hợp** (`devtools/`) kèm đáp án; thêm `core/text_vi.py`, `dm survey`, `dm dev` | Chưa có sách thật; đáp án cho phép đo chất lượng bằng số |

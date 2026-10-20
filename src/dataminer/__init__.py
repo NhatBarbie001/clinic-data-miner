@@ -10,6 +10,7 @@ Các module con theo phase (xem plan.md):
     batch       P6 batch & export
     datagen     P7 sinh dữ liệu huấn luyện
     evaluation  đánh giá xuyên suốt
+    devtools    công cụ phát triển (sách mẫu tổng hợp, đối chiếu đáp án) - không thuộc pipeline
 """
 
 from importlib.metadata import PackageNotFoundError, version
@@ -29,6 +30,7 @@ SUBMODULES: tuple[str, ...] = (
     "batch",
     "datagen",
     "evaluation",
+    "devtools",
 )
 
 __all__ = ["SUBMODULES", "__version__"]

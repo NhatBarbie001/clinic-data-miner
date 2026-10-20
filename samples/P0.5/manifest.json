@@ -1,0 +1,79 @@
+{
+  "run_id": "p0_survey_20261020-114049-663_389b",
+  "phase": "p0_survey",
+  "status": "success",
+  "started_at": "2026-10-20T11:40:49.737+07:00",
+  "finished_at": "2026-10-20T11:40:51.680+07:00",
+  "duration_s": 1.944,
+  "git_commit": "0a81398a8160a4f337b380a379c63fd56af85e0c",
+  "git_dirty": true,
+  "config_fingerprint": "bf1ef82f2866",
+  "models": {
+    "ping": "deepseek/deepseek-v4.1-flash-1017",
+    "fix_ocr": "deepseek/deepseek-v4.1-flash-1017",
+    "classify": "deepseek/deepseek-v4.1-flash-1017",
+    "extract": "deepseek/deepseek-v4.1-flash-1017",
+    "qa": "deepseek/deepseek-v4.1-flash-1017",
+    "judge": "deepseek/deepseek-v4.1-flash-1017",
+    "datagen": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "prompts": {},
+  "inputs": [
+    {
+      "path": "data/raw/book01.pdf",
+      "records": null,
+      "sha256": "60ff5fe87f66589b8ab1c1760713d853e1dfcaf36f42ee3bbf6603ad406757b5",
+      "bytes": 413881
+    }
+  ],
+  "outputs": [
+    {
+      "path": "data/p0_survey/stats.json",
+      "records": null,
+      "sha256": "42e2b1628cb6c55e91a726a6c9ceeb862c1009b23057eb161f652fbb7be9dae1",
+      "bytes": 769
+    },
+    {
+      "path": "data/p0_survey/lines.jsonl",
+      "records": 158,
+      "sha256": "1c56bbe73036fe050cea4d9a8041fa094c1e218a403d30f73e4bbe6aef2cd0ef",
+      "bytes": 38234
+    },
+    {
+      "path": "data/p0_survey/header_footer.json",
+      "records": null,
+      "sha256": "eb807fc617a4b851c5fd42d43c00381b6222013952846de7e8e276b5100ab2a9",
+      "bytes": 2722
+    },
+    {
+      "path": "data/p0_survey/heading_candidates.json",
+      "records": null,
+      "sha256": "56f8c2e36221ab2975f26fe115deda3a7c474dec128f5481569761a262a1d980",
+      "bytes": 8602
+    },
+    {
+      "path": "data/p0_survey/ocr_signals.json",
+      "records": null,
+      "sha256": "addbd08b15862c56129a3c7849267816af8fccde2860b0918be56632b087120e",
+      "bytes": 2610
+    },
+    {
+      "path": "data/p0_survey/survey_report.md",
+      "records": null,
+      "sha256": "3eaba3982517aaec2950f3ff3e17d70f4e3badf077b3691968984d80db9cdca1",
+      "bytes": 5791
+    }
+  ],
+  "llm": {
+    "calls": 0,
+    "cost_usd": 0.0
+  },
+  "counts": {
+    "pages": 9,
+    "lines": 158,
+    "heading_candidates": 31,
+    "ocr_signals": 10
+  },
+  "notes": [],
+  "error": null
+}
