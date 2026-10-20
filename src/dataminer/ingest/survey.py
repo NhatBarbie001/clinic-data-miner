@@ -1,24 +1,20 @@
 """P0.5 - Khảo sát sách PDF: thống kê, dòng text, header/footer, ứng viên tiêu đề, dấu hiệu lỗi OCR.
 
 Không gọi LLM, không sửa dữ liệu - chỉ đo đạc để thiết kế P1/P2 dựa trên dữ liệu thật.
-Phần trích dòng (`extract_lines`) sẽ được P1 dùng lại.
+Trích dòng dùng `pdf_reader.read_lines` (P1.1).
 """
 
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 import pymupdf
 from pydantic import BaseModel
 
 from dataminer.core.io import write_json, write_jsonl
-from dataminer.core.schemas import BaseRecord, stable_id
 from dataminer.core.text_vi import has_vietnamese_marks, is_nfc, is_valid_syllable, nfc
-
-TOP_ZONE = 0.09  # dòng nằm hoàn toàn trong 9% đầu trang → vùng header
-BOTTOM_ZONE = 0.09  # dòng nằm hoàn toàn trong 9% cuối trang → vùng footer
-Zone = Literal["top", "body", "bottom"]
+from dataminer.ingest.pdf_reader import Line, read_lines
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^\d{1,2}\.\d{1,2}\.?\s+\S")
@@ -33,56 +29,12 @@ RE_MISSING_SPACE = re.compile(r"[^\W\d_][(\[]|[,;:)\]][^\W\d_]")
 UNITS = {"g", "mg", "mcg", "µg", "ml", "l", "ui", "iu"}
 
 
-class SurveyLine(BaseRecord):
-    """Một dòng text trích từ PDF kèm đặc trưng trình bày."""
-
-    page: int
-    index: int  # thứ tự dòng trong trang
-    text: str
-    bbox: tuple[float, float, float, float]
-    size: float  # cỡ chữ (trung bình theo số ký tự của các span)
-    font: str
-    bold: bool
-    zone: Zone
+# Trích dòng đã chuyển sang P1.1 (`pdf_reader`); giữ tên cũ để code/test P0.5 không đổi.
+SurveyLine = Line
 
 
-def extract_lines(doc: pymupdf.Document, book_id: str = "book") -> list[SurveyLine]:
-    lines: list[SurveyLine] = []
-    for page_no in range(1, doc.page_count + 1):
-        page = doc[page_no - 1]
-        height = page.rect.height
-        index = 0
-        for block in page.get_text("dict")["blocks"]:
-            if block["type"] != 0:
-                continue
-            for raw in block["lines"]:
-                spans = [s for s in raw["spans"] if s["text"].strip()]
-                if not spans:
-                    continue
-                text = "".join(s["text"] for s in raw["spans"]).strip()
-                chars = sum(len(s["text"]) for s in spans)
-                size = sum(s["size"] * len(s["text"]) for s in spans) / chars
-                x0, y0, x1, y1 = (round(v, 1) for v in raw["bbox"])
-                zone: Zone = "body"
-                if y1 < height * TOP_ZONE:
-                    zone = "top"
-                elif y0 > height * (1 - BOTTOM_ZONE):
-                    zone = "bottom"
-                lines.append(
-                    SurveyLine(
-                        id=stable_id(book_id, page_no, index, prefix="ln"),
-                        page=page_no,
-                        index=index,
-                        text=text,
-                        bbox=(x0, y0, x1, y1),
-                        size=round(size, 2),
-                        font=spans[0]["font"],
-                        bold=any(s["flags"] & 16 or "bold" in s["font"].lower() for s in spans),
-                        zone=zone,
-                    )
-                )
-                index += 1
-    return lines
+def extract_lines(doc: pymupdf.Document, book_id: str = "book") -> list[Line]:
+    return read_lines(doc, book_id=book_id)
 
 
 def body_font_size(lines: list[SurveyLine]) -> float:
@@ -107,7 +59,7 @@ def compute_stats(doc: pymupdf.Document, lines: list[SurveyLine]) -> dict[str, A
         sizes[round(ln.size * 2) / 2] += len(ln.text)
     n_chars = sum(by_page.values()) or 1
     bold_chars = sum(len(ln.text) for ln in lines if ln.bold)
-    nfd_lines = [ln for ln in lines if not is_nfc(ln.text)]
+    nfd_lines = [ln for ln in lines if not is_nfc(ln.text_raw)]
     return {
         "pages": doc.page_count,
         "pages_with_text": len(by_page),
@@ -236,7 +188,7 @@ def find_ocr_signals(lines: list[SurveyLine]) -> list[dict[str, Any]]:
         )
 
     for ln in lines:
-        if not is_nfc(ln.text):
+        if not is_nfc(ln.text_raw):
             add(ln, "nfd_line", "", "dòng mã hóa Unicode tổ hợp (NFD) - cần chuẩn hóa NFC")
         text = nfc(ln.text)
         tokens = text.split()

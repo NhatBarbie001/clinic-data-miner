@@ -1,6 +1,6 @@
 # Plan P1: Trích xuất và làm sạch text
 
-> Trạng thái: `Draft`, chờ duyệt
+> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅; P1.2–P1.6 chưa làm.
 > Ngày tạo: 2026-10-20 · Tham chiếu: [plan.md](../../../plan.md) mục P1 · [problem.md](../../../problem.md) mục 4.1, 5 · Đầu vào từ P0: [gate_report.md](../P0/gate_report.md), [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -152,3 +152,4 @@ Chạy lại dùng cache nên $0. Chế độ `replay` cho phép tái lập mà 
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 2026-10-20 | Tạo plan | — |
+| 2026-10-20 | Duyệt plan (đồng ý Q1, Q2: gửi mọi block qua LLM; lỗi số liệu chỉ gắn cờ). P1.1 xong; thêm quy tắc: mỗi quy tắc cần ít nhất 1 test không dựa trên sách mẫu | Sách mẫu không kiểm được thứ tự đọc (P1.1_report mục 7) |
