@@ -1,0 +1,7 @@
+# P1.2 - đối chiếu với đáp án (pilot trang 4-9, cỡ thân bài 10.4 pt)
+
+Dòng vào: 147 · nội dung giữ lại: 137 · đồ đạc trang bỏ: 10
+Cảnh báo: không có
+
+✓ G1_furniture: truth=10, removed=10
+✓ G2_printed_pages: pages=6

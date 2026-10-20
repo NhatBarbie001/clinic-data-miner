@@ -36,3 +36,10 @@ pilot:                       # chương mẫu (P0.6): mọi phase chạy phần 
     - Viêm khớp dạng thấp
     - Thoái hóa khớp gối
     - Viêm loét dạ dày tá tràng
+
+p1:                          # P1 - trích xuất và làm sạch text (docs/phases/P1/plan.md)
+  furniture:                 # P1.2 - header/footer/số trang
+    top_zone: 0.09           # dòng nằm trong 9% đầu trang → có thể là header
+    bottom_zone: 0.09        # dòng nằm trong 9% cuối trang → có thể là footer
+    min_repeat_pages: 2      # lặp lại ở ≥ 2 trang (chữ số coi như nhau) → header/footer chạy
+    small_ratio: 0.95        # chữ ≤ 95% cỡ thân bài nằm ở lề → header (kể cả chỉ xuất hiện 1 lần)

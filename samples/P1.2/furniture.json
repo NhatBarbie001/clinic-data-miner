@@ -1,0 +1,153 @@
+{
+  "removed": [
+    {
+      "line_id": "ln_29e971501688b479",
+      "page": 4,
+      "index": 24,
+      "zone": "bottom",
+      "text": "– 1 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 1
+    },
+    {
+      "line_id": "ln_c6498e1a9498ad51",
+      "page": 5,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "reason": "lặp lại ở 3 trang",
+      "printed_page": null
+    },
+    {
+      "line_id": "ln_ff0c3dd473e7ae68",
+      "page": 5,
+      "index": 28,
+      "zone": "bottom",
+      "text": "– 2 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 2
+    },
+    {
+      "line_id": "ln_f16a5eba9f471dc1",
+      "page": 6,
+      "index": 0,
+      "zone": "top",
+      "text": "Chương 1. Bệnh cơ xương khớp",
+      "kind": "running_head",
+      "confidence": "medium",
+      "reason": "chữ nhỏ (8.5 ≤ 95% thân bài) nằm ở lề",
+      "printed_page": null
+    },
+    {
+      "line_id": "ln_fa21cbdf881168f0",
+      "page": 6,
+      "index": 25,
+      "zone": "bottom",
+      "text": "– 3 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 3
+    },
+    {
+      "line_id": "ln_17523bcc540f064e",
+      "page": 7,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "reason": "lặp lại ở 3 trang",
+      "printed_page": null
+    },
+    {
+      "line_id": "ln_2c7c4619997cae4a",
+      "page": 7,
+      "index": 12,
+      "zone": "bottom",
+      "text": "– 4 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 4
+    },
+    {
+      "line_id": "ln_4d4ca2bde0bcab2d",
+      "page": 8,
+      "index": 24,
+      "zone": "bottom",
+      "text": "– 5 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 5
+    },
+    {
+      "line_id": "ln_7e7534bce021447e",
+      "page": 9,
+      "index": 0,
+      "zone": "top",
+      "text": "Bệnh học nội khoa (sách mẫu)",
+      "kind": "running_head",
+      "confidence": "high",
+      "reason": "lặp lại ở 3 trang",
+      "printed_page": null
+    },
+    {
+      "line_id": "ln_a041710e2275f8db",
+      "page": 9,
+      "index": 28,
+      "zone": "bottom",
+      "text": "– 6 –",
+      "kind": "page_number",
+      "confidence": "high",
+      "reason": "chỉ gồm số trang",
+      "printed_page": 6
+    }
+  ],
+  "pages": [
+    {
+      "page": 4,
+      "printed_page": 1,
+      "source": "page_number",
+      "flags": []
+    },
+    {
+      "page": 5,
+      "printed_page": 2,
+      "source": "page_number",
+      "flags": []
+    },
+    {
+      "page": 6,
+      "printed_page": 3,
+      "source": "page_number",
+      "flags": []
+    },
+    {
+      "page": 7,
+      "printed_page": 4,
+      "source": "page_number",
+      "flags": []
+    },
+    {
+      "page": 8,
+      "printed_page": 5,
+      "source": "page_number",
+      "flags": []
+    },
+    {
+      "page": 9,
+      "printed_page": 6,
+      "source": "page_number",
+      "flags": []
+    }
+  ],
+  "warnings": []
+}

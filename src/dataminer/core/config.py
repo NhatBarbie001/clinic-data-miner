@@ -139,6 +139,21 @@ class PilotCfg(_Strict):
         return self
 
 
+class FurnitureCfg(_Strict):
+    """P1.2 - nhận diện header/footer/số trang."""
+
+    top_zone: float = Field(default=0.09, gt=0, lt=0.5)  # tỉ lệ chiều cao trang
+    bottom_zone: float = Field(default=0.09, gt=0, lt=0.5)
+    min_repeat_pages: int = Field(default=2, ge=2)  # lặp ở ≥ n trang → header/footer chạy
+    small_ratio: float = Field(default=0.95, gt=0, le=1)  # chữ ≤ ratio × thân bài, nằm ở lề
+
+
+class P1Cfg(_Strict):
+    """Phase P1 - trích xuất và làm sạch text (các task sau bổ sung nhóm của mình)."""
+
+    furniture: FurnitureCfg = Field(default_factory=FurnitureCfg)
+
+
 class Settings(_Strict):
     project: ProjectCfg
     paths: PathsCfg
@@ -146,6 +161,7 @@ class Settings(_Strict):
     budget: BudgetCfg
     models: dict[str, ModelSpec]
     pilot: PilotCfg = Field(default_factory=PilotCfg)
+    p1: P1Cfg = Field(default_factory=P1Cfg)
 
     _fingerprint: str = PrivateAttr(default="")
     _sources: list[str] = PrivateAttr(default_factory=list)

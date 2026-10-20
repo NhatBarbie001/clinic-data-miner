@@ -102,13 +102,30 @@ def detect_columns(lines: list[Line]) -> bool:
     return crossing <= 0.1 * len(body) and left >= 0.3 * len(body) and right >= 0.3 * len(body)
 
 
+def body_font_size(lines: list[Line]) -> float:
+    """Cỡ chữ thân bài = trung vị cỡ chữ theo số ký tự của các dòng vùng thân trang."""
+    weighted = sorted((ln.size, len(ln.text)) for ln in lines if ln.zone == "body")
+    total = sum(w for _, w in weighted)
+    acc = 0
+    for size, weight in weighted:
+        acc += weight
+        if acc * 2 >= total:
+            return round(size, 1)
+    return 0.0
+
+
 def read_lines(
     source: Path | pymupdf.Document,
     *,
     book_id: str = "book",
     pages: tuple[int, int] | None = None,
+    top_zone: float = TOP_ZONE,
+    bottom_zone: float = BOTTOM_ZONE,
 ) -> list[Line]:
-    """Đọc mọi dòng text (hoặc chỉ các trang trong `pages`, tính cả hai đầu)."""
+    """Đọc mọi dòng text (hoặc chỉ các trang trong `pages`, tính cả hai đầu).
+
+    `top_zone`/`bottom_zone`: tỉ lệ chiều cao trang coi là lề trên/dưới (cấu hình p1.furniture).
+    """
     doc = pymupdf.open(source) if isinstance(source, Path) else source
     lines: list[Line] = []
     try:
@@ -122,9 +139,9 @@ def read_lines(
                 raw = item["text_raw"]
                 x0, y0, x1, y1 = item["bbox"]
                 zone: Zone = "body"
-                if y1 < height * TOP_ZONE:
+                if y1 < height * top_zone:
                     zone = "top"
-                elif y0 > height * (1 - BOTTOM_ZONE):
+                elif y0 > height * (1 - bottom_zone):
                     zone = "bottom"
                 page_lines.append(
                     Line(

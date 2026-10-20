@@ -14,13 +14,13 @@ from pydantic import BaseModel
 
 from dataminer.core.io import write_json, write_jsonl
 from dataminer.core.text_vi import has_vietnamese_marks, is_nfc, is_valid_syllable, nfc
-from dataminer.ingest.pdf_reader import Line, read_lines
+from dataminer.ingest.page_furniture import classify_furniture, furniture_key
+from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^\d{1,2}\.\d{1,2}\.?\s+\S")
 RE_SECTION = re.compile(r"^\d{1,2}\.\s+\S")
 RE_TOC_ENTRY = re.compile(r"(\.{4,}|…{2,})\s*\d+\s*$")
-RE_PAGE_NUMBER = re.compile(r"^[^\w]*\d{1,4}[^\w]*$")
 RE_LETTERS = re.compile(r"[^\W\d_]+")
 RE_DIGIT_LOOKALIKE = re.compile(r"\d[OoIl]|[OoIl]\d")  # 5OO, 1O, l0...
 RE_DIGIT_IN_WORD = re.compile(r"\d[a-zà-ỹđ]|[a-zà-ỹđ]\d")  # 1à, khớ1 (chữ thường sát chữ số)
@@ -35,18 +35,6 @@ SurveyLine = Line
 
 def extract_lines(doc: pymupdf.Document, book_id: str = "book") -> list[Line]:
     return read_lines(doc, book_id=book_id)
-
-
-def body_font_size(lines: list[SurveyLine]) -> float:
-    """Cỡ chữ thân bài = trung vị cỡ chữ theo số ký tự của các dòng vùng thân trang."""
-    weighted = sorted((ln.size, len(ln.text)) for ln in lines if ln.zone == "body")
-    total = sum(w for _, w in weighted)
-    acc = 0
-    for size, weight in weighted:
-        acc += weight
-        if acc * 2 >= total:
-            return round(size, 1)
-    return 0.0
 
 
 def compute_stats(doc: pymupdf.Document, lines: list[SurveyLine]) -> dict[str, Any]:
@@ -76,53 +64,36 @@ def compute_stats(doc: pymupdf.Document, lines: list[SurveyLine]) -> dict[str, A
     }
 
 
-def _hf_key(text: str) -> str:
-    return re.sub(r"\d+", "#", " ".join(nfc(text).casefold().split()))
-
-
 def find_header_footer(lines: list[SurveyLine], body_size: float) -> dict[str, Any]:
-    """Header/footer = dòng ở lề trên/dưới, lặp lại qua nhiều trang (chữ số coi như nhau)
-    hoặc là số trang, hoặc chữ nhỏ hơn thân bài nằm sát lề."""
-    margin = [ln for ln in lines if ln.zone != "body"]
-    pages_by_key: dict[tuple[str, str], set[int]] = defaultdict(set)
-    for ln in margin:
-        pages_by_key[(ln.zone, _hf_key(ln.text))].add(ln.page)
-
+    """Header/footer cho báo cáo khảo sát - logic nằm ở `page_furniture` (P1.2)."""
+    _, removed = classify_furniture(lines, body_size)
     patterns: dict[tuple[str, str], dict[str, Any]] = {}
     instances = []
-    for ln in margin:
-        key = (ln.zone, _hf_key(ln.text))
-        is_number = bool(RE_PAGE_NUMBER.match(nfc(ln.text)))
-        repeated = len(pages_by_key[key]) >= 2
-        small = ln.size <= body_size * 0.95
-        if not (is_number or repeated or small):
-            continue
-        confidence = "high" if (is_number or repeated) else "medium"
-        kind = "page_number" if is_number else "running_head"
-        printed = int(re.sub(r"\D", "", ln.text)) if is_number else None
+    for item in removed:
         instances.append(
             {
-                "page": ln.page,
-                "index": ln.index,
-                "zone": ln.zone,
-                "text": ln.text,
-                "kind": kind,
-                "confidence": confidence,
-                "printed_page": printed,
+                "page": item.page,
+                "index": item.index,
+                "zone": item.zone,
+                "text": item.text,
+                "kind": item.kind,
+                "confidence": item.confidence,
+                "printed_page": item.printed_page,
             }
         )
+        key = (item.zone, furniture_key(item.text))
         pat = patterns.setdefault(
             key,
             {
-                "zone": ln.zone,
+                "zone": item.zone,
                 "pattern": key[1],
-                "kind": kind,
-                "confidence": confidence,
+                "kind": item.kind,
+                "confidence": item.confidence,
                 "pages": [],
-                "example": ln.text,
+                "example": item.text,
             },
         )
-        pat["pages"].append(ln.page)
+        pat["pages"].append(item.page)
     return {"patterns": list(patterns.values()), "instances": instances}
 
 

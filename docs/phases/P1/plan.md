@@ -1,6 +1,6 @@
 # Plan P1: Trích xuất và làm sạch text
 
-> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅; P1.2–P1.6 chưa làm.
+> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅; P1.3–P1.6 chưa làm.
 > Ngày tạo: 2026-10-20 · Tham chiếu: [plan.md](../../../plan.md) mục P1 · [problem.md](../../../problem.md) mục 4.1, 5 · Đầu vào từ P0: [gate_report.md](../P0/gate_report.md), [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
