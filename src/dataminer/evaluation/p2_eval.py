@@ -3,10 +3,12 @@
 Chỉ tiêu gate xem docs/phases/P2/plan.md mục 7.
 """
 
+import difflib
 import re
 from typing import Any
 
 from dataminer.core.text_vi import nfc
+from dataminer.structure.heading_levels import HeadingDecision
 from dataminer.structure.toc import TocResult, match_key
 
 
@@ -66,6 +68,48 @@ def eval_toc(result: TocResult, truth: dict[str, Any]) -> dict[str, Any]:
             "title_clean_match": len(expected) - len(clean_mismatch),
             "problems": problems,
             "ocr_damaged_titles": clean_mismatch,
+            "pass": not problems and len(expected) > 0,
+        }
+    }
+
+
+def eval_heading_levels(
+    decisions: list[HeadingDecision], truth: dict[str, Any], pages: tuple[int, int]
+) -> dict[str, Any]:
+    """G2: cấp của mọi tiêu đề trong `pages` (trang PDF đã xử lý) đúng như đáp án.
+
+    Ghép theo THỨ TỰ đọc; mỗi cặp phải cùng văn bản (khóa không dấu giống ≥ 0.8, chịu lỗi OCR
+    còn sót) - lệch nghĩa là P1 sót/thừa tiêu đề và mọi cặp sau đó vô nghĩa → không đạt.
+    """
+    lo, hi = pages
+    expected = [
+        h for h in truth["headings"] if lo <= h["pdf_page"] <= hi and h["level"] != "toc_title"
+    ]
+    problems: list[str] = []
+    correct = 0
+    for i, want in enumerate(expected):
+        if i >= len(decisions):
+            problems.append(f"thiếu tiêu đề #{i + 1} '{want['text']}'")
+            continue
+        d = decisions[i]
+        similar = difflib.SequenceMatcher(None, match_key(d.text), match_key(want["text"]))
+        if similar.ratio() < 0.8:
+            problems.append(f"#{i + 1} lệch thứ tự: '{d.text}' ↔ đáp án '{want['text']}'")
+            break
+        if d.level != want["level"]:
+            problems.append(f"#{i + 1} '{d.text}': {d.level} ≠ {want['level']}")
+        else:
+            correct += 1
+    problems.extend(f"thừa tiêu đề '{d.text}'" for d in decisions[len(expected) :])
+    return {
+        "G2_heading_levels": {
+            "truth": len(expected),
+            "found": len(decisions),
+            "correct": correct,
+            "by_source": {
+                src: sum(d.source == src for d in decisions) for src in ("rules", "toc", "llm")
+            },
+            "problems": problems,
             "pass": not problems and len(expected) > 0,
         }
     }

@@ -76,3 +76,93 @@ def toc_cmd(
         typer.echo("\n" + format_eval(report))
         if not all_pass(report):
             raise typer.Exit(1)
+
+
+NoLLMOption = typer.Option(False, "--no-llm", help="Không hỏi LLM cho tiêu đề mơ hồ.")
+
+
+@p2_app.command("headings")
+def headings_cmd(
+    root: Path | None = RootOption,
+    evaluate: bool = EvalOption,
+    truth: Path | None = TruthOption,
+    no_llm: bool = NoLLMOption,
+) -> None:
+    """Cấp của mọi tiêu đề (chương/bệnh/mục/mục con/khác) → data/p2_tree/heading_levels.jsonl."""
+    from dataminer.core.io import read_jsonl, write_json, write_jsonl
+    from dataminer.core.llm_client import LLMClient
+    from dataminer.core.llm_types import LLMError
+    from dataminer.core.prompts import PromptError, load_prompt
+    from dataminer.evaluation.p1_eval import format_eval
+    from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
+    from dataminer.ingest.blocks import Block
+    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.structure.heading_levels import classify_headings
+    from dataminer.structure.toc import TocResult, extract_toc
+
+    settings = _load(root)
+    blocks_path = p1_dir(settings) / "blocks.jsonl"
+    if not blocks_path.is_file():
+        typer.echo(f"Chưa có {blocks_path} - chạy `dm p1 run` trước.", err=True)
+        raise typer.Exit(1)
+    blocks = list(read_jsonl(blocks_path, Block))
+    out_dir = p2_dir(settings)
+    toc_path = out_dir / "toc.json"
+    if toc_path.is_file():
+        toc = TocResult.model_validate_json(toc_path.read_text(encoding="utf-8"))
+    else:
+        pdf = settings.paths.raw_dir / settings.project.book_file
+        toc = extract_toc(
+            pdf,
+            book_id=settings.project.book_id,
+            cfg=settings.p2.toc,
+            furniture=settings.p1.furniture,
+        )
+        write_json(toc_path, toc.model_dump(mode="json"))
+
+    cfg = settings.p2.headings
+    use_llm = cfg.llm_fallback and not no_llm
+    try:
+        prompt = load_prompt(settings.paths.prompts_dir, cfg.prompt) if use_llm else None
+        client = LLMClient(settings) if use_llm else None
+        result = classify_headings(blocks, toc.entries, cfg, client=client, prompt=prompt)
+    except (LLMError, PromptError, ConfigError) as exc:
+        typer.echo(f"✗ {exc}", err=True)
+        raise typer.Exit(1) from None
+    out = out_dir / "heading_levels.jsonl"
+    write_jsonl(out, result.decisions)
+
+    counts = {
+        lv: sum(d.level == lv for d in result.decisions)
+        for lv in ("chapter", "disease", "section", "subsection", "other")
+    }
+    sources = {s: sum(d.source == s for d in result.decisions) for s in ("rules", "toc", "llm")}
+    typer.echo(
+        f"Tiêu đề: {len(result.decisions)} · thân bài cỡ {result.body_size} · "
+        + " · ".join(f"{k} {v}" for k, v in counts.items())
+    )
+    typer.echo(
+        f"  nguồn: quy tắc {sources['rules']} · mục lục {sources['toc']} · LLM {sources['llm']} "
+        f"({result.llm_calls} lời gọi mới, ${result.llm_cost_usd:.6f})"
+    )
+    for d in result.decisions:
+        if d.confidence != "high" or d.flags:
+            typer.echo(f"  ⚑ {d.text} → {d.level} ({d.confidence}, {d.source}) {d.flags}")
+    for w in result.warnings:
+        typer.echo(f"  ⚠ {w}")
+    typer.echo(f"  đầu ra: {out}")
+
+    if evaluate:
+        truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(
+            ".truth.json"
+        )
+        if not truth_path.is_file():
+            typer.echo(f"Không có đáp án {truth_path} - chỉ đánh giá được với sách mẫu.", err=True)
+            raise typer.Exit(1)
+        pages = (min(b.page_start for b in blocks), max(b.page_end for b in blocks))
+        report = eval_heading_levels(
+            result.decisions, json.loads(truth_path.read_text(encoding="utf-8")), pages
+        )
+        typer.echo("\n" + format_eval(report))
+        if not all_pass(report):
+            raise typer.Exit(1)

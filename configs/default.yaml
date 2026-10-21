@@ -29,6 +29,7 @@ budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
   per_task_usd:
     ping: 1.0                # P0 chỉ dùng ping → P0 tối đa $1
     fix_ocr: 2.0             # P1.4 sửa lỗi OCR (dự kiến pilot < $0.01)
+    classify: 0.5            # P2 phân loại tiêu đề / tên mục mơ hồ (pilot sách mẫu: $0)
 
 pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
   page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
@@ -65,3 +66,9 @@ p2:                          # P2 - dựng cây cấu trúc (docs/phases/P2/plan
     pages: auto              # auto = tự tìm trong search_pages trang đầu; hoặc [3, 3] (trang PDF)
     search_pages: 15
     min_entries: 2           # trang có ≥ 2 dòng chấm dẫn → trang mục lục
+  headings:                  # P2.2 - phân cấp tiêu đề
+    disease_size_delta: 1.5  # IN HOA, không đánh số, cỡ ≥ thân bài + 1.5 → ứng viên bệnh
+    use_toc: true            # dùng mục lục để xác nhận/sửa cấp
+    toc_match_min: 0.85      # khớp gần với mục lục (tiêu đề mục lục có thể còn lỗi OCR)
+    llm_fallback: true       # tiêu đề còn tin cậy thấp → hỏi LLM (tác vụ `classify`)
+    prompt: p2_classify_heading

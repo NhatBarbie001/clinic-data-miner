@@ -1,0 +1,3 @@
+Đánh giá G2 (sách mẫu seed 7, pilot trang PDF 4-9) - dm p2 headings --eval
+
+✓ G2_heading_levels: truth=27, found=27, correct=27, by_source={'rules': 22, 'toc': 5, 'llm': 0}

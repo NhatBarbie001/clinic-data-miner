@@ -1,0 +1,5 @@
+Tiêu đề: 27 · thân bài cỡ 10.5 · chapter 2 · disease 3 · section 19 · subsection 3 · other 0
+  nguồn: quy tắc 22 · mục lục 5 · LLM 0 (0 lời gọi mới, $0.000000)
+  đầu ra: data/p2_tree/heading_levels.jsonl
+
+✓ G2_heading_levels: truth=27, found=27, correct=27, by_source={'rules': 22, 'toc': 5, 'llm': 0}

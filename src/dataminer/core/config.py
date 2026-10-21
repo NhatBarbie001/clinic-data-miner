@@ -193,10 +193,21 @@ class TocCfg(_Strict):
         return self
 
 
+class HeadingsCfg(_Strict):
+    """P2.2 - phân cấp tiêu đề."""
+
+    disease_size_delta: float = Field(default=1.5, gt=0)  # IN HOA, không số, cỡ ≥ thân bài + delta
+    use_toc: bool = True  # dùng mục lục để xác nhận/sửa cấp
+    toc_match_min: float = Field(default=0.85, gt=0, le=1)  # độ giống tối thiểu khi khớp gần
+    llm_fallback: bool = True  # tiêu đề còn tin cậy thấp → hỏi LLM (tác vụ `classify`)
+    prompt: str = "p2_classify_heading"
+
+
 class P2Cfg(_Strict):
     """Phase P2 - dựng cây cấu trúc (các task sau bổ sung nhóm của mình)."""
 
     toc: TocCfg = Field(default_factory=TocCfg)
+    headings: HeadingsCfg = Field(default_factory=HeadingsCfg)
 
 
 class Settings(_Strict):

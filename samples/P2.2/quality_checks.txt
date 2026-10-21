@@ -1,0 +1,76 @@
+# P2.2 - kiểm tra chất lượng (chạy 2026-10-21)
+
+## 1. Quét 30 seed sách mẫu: block P1 CHỈ quy tắc (chưa sửa OCR) + mục lục P2.1 → G2
+ 1 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['CHƯƠNG 2. BỆNH TIÊU HÓA'] cảnh_báo=0 []
+ 2 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['VIÊM LOÉT DẠ DÀY TÁ TRÀNG'] cảnh_báo=0 []
+ 3 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ 4 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ 5 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ 6 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['CHƯƠNG 1. BỆNH CƠ XƯƠNG KHỚP', 'VIÊM LOÉT DẠ DÀY TÁ TRÀNG'] cảnh_báo=0 []
+ 7 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ 8 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ 9 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+10 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+11 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+12 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+13 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+14 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+15 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+16 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+17 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+18 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+19 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['CHƯƠNG 2. BỆNH TIÊU HÓA'] cảnh_báo=0 []
+20 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['VIÊM LOÉT DẠ DÀY TÁ TRÀNG'] cảnh_báo=0 []
+21 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['THOÁI HÓA KHỚP GỐI'] cảnh_báo=0 []
+22 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+23 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+24 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+25 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+26 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['VIÊM KHỚP DẠNG THẤP'] cảnh_báo=0 []
+27 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=['THOÁI HÓA KHỚP GỐI', 'CHƯƠNG 2. BỆNH TIÊU HÓA'] cảnh_báo=0 []
+28 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+29 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+30 ✓ 27/27 nguồn={'rules': 22, 'toc': 5, 'llm': 0} khớp_gần=[] cảnh_báo=0 []
+ĐẠT 30/30
+
+## 2. Mutation check (đột biến code → test phải FAIL; mỗi đột biến đã xác nhận áp dụng được)
+H1 bỏ khớp gần mục lục: BỊ BẮT ✓ · 3 failed, 18 passed in 15.37s · ['test_01_pilot_matches_truth[1]', 'test_01_pilot_matches_truth[2]', 'test_01b_toc_title_with_char_error_matches_fuzzy']
+H2 bỏ mẫu chương không dấu: BỊ BẮT ✓ · 1 failed, 20 passed in 14.71s · ['test_02_ocr_damaged_headings_still_match_toc']
+H3 bỏ cờ missing_from_toc: BỊ BẮT ✓ · 2 failed, 19 passed in 14.46s · ['test_05_disease_missing_from_toc', 'test_05e_each_toc_entry_used_once']
+H4 mục lục không đổi cấp: BỊ BẮT ✓ · 1 failed, 20 passed in 13.76s · ['test_05d_toc_overrides_rule_level']
+H5 gọi LLM cho mọi tiêu đề: BỊ BẮT ✓ · 5 failed, 16 passed in 14.03s · ['test_01_pilot_matches_truth[7]', 'test_01_pilot_matches_truth[1]', 'test_01_pilot_matches_truth[2]', 'test_08_llm_fallback_for_low_only', 'test_cli_headings']
+H6 không xét mục con thuộc mục: BỊ BẮT ✓ · 1 failed, 20 passed in 13.97s · ['test_07_numbering_gap']
+H7 không đếm lại số mục mỗi bệnh: BỊ BẮT ✓ · 4 failed, 17 passed in 13.47s · ['test_01_pilot_matches_truth[7]', 'test_01_pilot_matches_truth[1]', 'test_01_pilot_matches_truth[2]', 'test_07_numbering_gap']
+H8 cảnh báo mục lục thiếu cả ngoài phạm vi: BỊ BẮT ✓ · 1 failed, 20 passed in 13.92s · ['test_05b_toc_entry_not_found_in_scope']
+H9 bỏ ngưỡng cỡ chữ của bệnh: BỊ BẮT ✓ · 3 failed, 18 passed in 13.80s · ['test_04_note_heading_is_other', 'test_08_llm_fallback_for_low_only', 'test_08b_llm_label_outside_set_is_clear_error']
+H10 mục chữ thường không xét cỡ: BỊ BẮT ✓ · 1 failed, 20 passed in 14.79s · ['test_06b_lowercase_numbered_rules']
+H11 eval bỏ kiểm tra gióng thứ tự: BỊ BẮT ✓ · 1 failed, 20 passed in 13.20s · ['test_09b_eval_fails_on_missing_extra_misaligned']
+H12 eval bỏ đếm tiêu đề thừa: BỊ BẮT ✓ · 1 failed, 20 passed in 14.37s · ['test_09b_eval_fails_on_missing_extra_misaligned']
+H13 eval bỏ so cấp: BỊ BẮT ✓ · 2 failed, 19 passed in 13.60s · ['test_09_eval_fails_on_wrong_truth', 'test_cli_headings']
+H14 bỏ cờ lệch trang mục lục: BỊ BẮT ✓ · 1 failed, 20 passed in 15.05s · ['test_05c_toc_page_mismatch_flagged']
+H15 một mục lục ghép nhiều lần: BỊ BẮT ✓ · 5 failed, 16 passed in 14.74s · ['test_01_pilot_matches_truth[7]', 'test_01_pilot_matches_truth[1]', 'test_01_pilot_matches_truth[2]', 'test_05b_toc_entry_not_found_in_scope', 'test_05e_each_toc_entry_used_once']
+H16 eval đạt khi đáp án rỗng: BỊ BẮT ✓ · 1 failed, 20 passed in 13.95s · ['test_09b_eval_fails_on_missing_extra_misaligned']
+
+## 3. Test
+tests/unit/test_heading_levels.py::test_01_pilot_matches_truth[7] PASSED
+tests/unit/test_heading_levels.py::test_01_pilot_matches_truth[1] PASSED
+tests/unit/test_heading_levels.py::test_01_pilot_matches_truth[2] PASSED
+tests/unit/test_heading_levels.py::test_01b_toc_title_with_char_error_matches_fuzzy PASSED
+tests/unit/test_heading_levels.py::test_02_ocr_damaged_headings_still_match_toc PASSED
+tests/unit/test_heading_levels.py::test_03_ocr_error_in_section_title_keeps_level PASSED
+tests/unit/test_heading_levels.py::test_04_note_heading_is_other PASSED
+tests/unit/test_heading_levels.py::test_05_disease_missing_from_toc PASSED
+tests/unit/test_heading_levels.py::test_05b_toc_entry_not_found_in_scope PASSED
+tests/unit/test_heading_levels.py::test_05c_toc_page_mismatch_flagged PASSED
+tests/unit/test_heading_levels.py::test_05d_toc_overrides_rule_level PASSED
+tests/unit/test_heading_levels.py::test_06_no_toc_rules_only PASSED
+tests/unit/test_heading_levels.py::test_06b_lowercase_numbered_rules PASSED
+tests/unit/test_heading_levels.py::test_07_numbering_gap PASSED
+tests/unit/test_heading_levels.py::test_08_llm_fallback_for_low_only PASSED
+tests/unit/test_heading_levels.py::test_08b_llm_label_outside_set_is_clear_error PASSED
+tests/unit/test_heading_levels.py::test_08c_llm_disabled_by_config PASSED
+tests/unit/test_heading_levels.py::test_09_eval_fails_on_wrong_truth PASSED
+tests/unit/test_heading_levels.py::test_09b_eval_fails_on_missing_extra_misaligned PASSED
+tests/unit/test_heading_levels.py::test_cli_headings PASSED
+tests/unit/test_heading_levels.py::test_05e_each_toc_entry_used_once PASSED
+============================= 21 passed in 14.70s =============================
