@@ -1,6 +1,6 @@
 # Plan P2: Dựng cấu trúc tài liệu
 
-> Trạng thái: `Đã duyệt`, đang triển khai (P2.1 ✅, P2.2 ✅)
+> Trạng thái: `Đã duyệt`, đang triển khai (P2.1 ✅, P2.2 ✅, P2.3 ✅)
 > Ngày tạo: 2026-10-21 · Tham chiếu: [plan.md](../../../plan.md) mục P2 · Đầu vào từ P1: [P1 gate_report](../P1/gate_report.md) · Hồ sơ sách: [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -183,6 +183,7 @@ p2:
 
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
+| 2026-10-21 | P2.3 xong. `display_title` lấy từ thân sách (mục lục không được sửa OCR); ID phụ thuộc chữ tiêu đề → chốt cây trước P3, P2.6 ghi sha256 `nodes.jsonl` | Báo cáo P2.3 |
 | 2026-10-21 | P2.2 xong. LLM chạy cho mọi tiêu đề tin cậy low (kể cả bệnh ngoài mục lục) để tránh "bệnh giả" như `LƯU Ý`; chương nhận cả dạng mất dấu `CHUONG n` | Báo cáo P2.2 |
 | 2026-10-21 | P2.1 xong. Phát hiện: tiêu đề mục lục có thể còn lỗi nhầm ký tự (`Viêrn`, `Cbương`; 9/30 seed) → P2.2 phải so khớp gần đúng, không chỉ so `match_key` | Báo cáo P2.1 |
 | 2026-10-21 | Tạo plan. So với plan tổng: tách thêm P2.5 (EV.1) và P2.6 (CLI/gate); P2.2 thêm đối chiếu mục lục; chỉ tiêu đo tự động bằng đáp án | Áp dụng cấu trúc đã hiệu quả ở P1 |

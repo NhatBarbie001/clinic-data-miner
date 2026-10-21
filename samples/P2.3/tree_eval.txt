@@ -1,0 +1,5 @@
+Đánh giá G3, G4, G6 (sách mẫu seed 7, pilot trang PDF 4-9) - dm p2 tree --eval
+
+✓ G3_diseases_vs_toc: truth=3, found=3
+✓ G4_content_in_node: lines=110, correct=110, ratio=1.0
+✓ G6_invariants: nodes=28

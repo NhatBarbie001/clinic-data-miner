@@ -1,0 +1,84 @@
+# P2.3 - kiểm tra chất lượng (chạy 2026-10-21)
+
+## 1. Quét 30 seed: block P1 CHỈ quy tắc (chưa sửa OCR) → mục lục → cấp tiêu đề → cây → G3, G4, G6
+ 1 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 2 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 3 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 4 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 5 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 6 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 7 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 8 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ 9 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+10 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+11 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+12 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+13 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+14 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+15 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+16 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+17 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+18 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+19 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+20 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+21 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+22 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+23 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+24 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+25 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+26 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+27 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+28 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+29 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+30 ✓ G3=✓ G4=110/110 G6=✓ nút: 2 chương, 3 bệnh, 19 mục, 3 mục con · cảnh báo 0 [] []
+ĐẠT 30/30
+
+## 2. Mutation check (đột biến code → test phải FAIL; mỗi đột biến đã xác nhận áp dụng được)
+T1 tiêu đề cùng cấp không đóng nút: BỊ BẮT ✓ · 8 failed, 15 passed in 14.44s · ['test_01_02_pilot_tree_matches_truth[7]', 'test_01_02_pilot_tree_matches_truth[1]', 'test_01_02_pilot_tree_matches_truth[6]', 'test_01b_paths_and_display_titles', 'test_04_table_in_treatment_of_disease_3', 'test_07_book_without_chapters', 'test_other_heading_empty_and_duplicate_path', 'test_11_tree_md_and_nested']
+T2 không tạo nút phần đầu: BỊ BẮT ✓ · 1 failed, 22 passed in 27.99s · ['test_08_front_matter_and_disease_intro']
+T3 bỏ cờ orphan_subsection: BỊ BẮT ✓ · 1 failed, 22 passed in 23.93s · ['test_09_orphans_flagged_and_warned']
+T4 bỏ cờ orphan_section: BỊ BẮT ✓ · 1 failed, 22 passed in 18.71s · ['test_09_orphans_flagged_and_warned']
+T5 phạm vi trang không gồm con: BỊ BẮT ✓ · 9 failed, 6 passed, 8 errors in 16.03s · ['test_01_02_pilot_tree_matches_truth[7]', 'test_01_02_pilot_tree_matches_truth[1]', 'test_01_02_pilot_tree_matches_truth[6]', 'test_07_book_without_chapters', 'test_08_front_matter_and_disease_intro', 'test_09_orphans_flagged_and_warned', 'test_10_toc_reconcile_both_directions', 'test_other_heading_empty_and_duplicate_path', 'test_cli_tree']
+T6 trang in không gồm con: BỊ BẮT ✓ · 1 failed, 22 passed in 19.75s · ['test_11_tree_md_and_nested']
+T7 bỏ cờ empty: BỊ BẮT ✓ · 1 failed, 22 passed in 21.81s · ['test_other_heading_empty_and_duplicate_path']
+T8 không xử lý path trùng: BỊ BẮT ✓ · 1 failed, 22 passed in 23.94s · ['test_other_heading_empty_and_duplicate_path']
+T9 ID phụ thuộc nội dung: BỊ BẮT ✓ · 2 failed, 21 passed in 15.92s · ['test_06_ids_stable_when_content_changes', 'test_other_heading_empty_and_duplicate_path']
+T10 bỏ ký hiệu gạch đầu dòng: BỊ BẮT ✓ · 2 failed, 21 passed in 15.32s · ['test_03_cross_page_block_in_clinical', 'test_other_heading_empty_and_duplicate_path']
+T11 bỏ số thứ tự khỏi tên mục: không: BỊ BẮT ✓ · 8 failed, 15 passed in 23.88s · ['test_01b_paths_and_display_titles', 'test_03_cross_page_block_in_clinical', 'test_07_book_without_chapters', 'test_09_orphans_flagged_and_warned', 'test_other_heading_empty_and_duplicate_path', 'test_display_title[3.', 'test_display_title[3.1.', 'test_11_tree_md_and_nested']
+T12 không viết hoa sau 'Chương n.': BỊ BẮT ✓ · 4 failed, 19 passed in 29.69s · ['test_01b_paths_and_display_titles', 'test_09_orphans_flagged_and_warned', 'test_display_title[CH\\u01af\\u01a0NG', 'test_11_tree_md_and_nested']
+T13 bỏ cảnh báo mục lục thiếu nút: BỊ BẮT ✓ · 1 failed, 22 passed in 29.39s · ['test_10_toc_reconcile_both_directions']
+T14 bỏ cảnh báo lệch trang mục lục: BỊ BẮT ✓ · 1 failed, 22 passed in 29.02s · ['test_10_toc_reconcile_both_directions']
+T15 bất biến bỏ kiểm thứ tự: BỊ BẮT ✓ · 1 failed, 22 passed in 28.53s · ['test_05_invariants_detect_corruption']
+T16 bất biến bỏ kiểm phạm vi cha: BỊ BẮT ✓ · 1 failed, 22 passed in 19.34s · ['test_05_invariants_detect_corruption']
+T17 bất biến bỏ kiểm block thuộc 1 nút: BỊ BẮT ✓ · 1 failed, 22 passed in 15.13s · ['test_05_invariants_detect_corruption']
+E1 G4 không so nút: BỊ BẮT ✓ · 1 failed, 22 passed in 15.12s · ['test_12_eval_fails_on_wrong_truth']
+E2 G3 bỏ so trang: BỊ BẮT ✓ · 1 failed, 22 passed in 15.34s · ['test_12_eval_fails_on_wrong_truth']
+E3 G3 bỏ đếm bệnh thừa: BỊ BẮT ✓ · 1 failed, 22 passed in 15.57s · ['test_12b_eval_fails_on_broken_tree']
+E4 G6 không dùng bất biến: BỊ BẮT ✓ · 1 failed, 22 passed in 15.28s · ['test_12b_eval_fails_on_broken_tree']
+E5 G4 hạ ngưỡng 90%: BỊ BẮT ✓ · 1 failed, 22 passed in 15.44s · ['test_12_eval_fails_on_wrong_truth']
+
+## 3. Test
+tests/unit/test_tree_builder.py::test_01_02_pilot_tree_matches_truth[7] PASSED
+tests/unit/test_tree_builder.py::test_01_02_pilot_tree_matches_truth[1] PASSED
+tests/unit/test_tree_builder.py::test_01_02_pilot_tree_matches_truth[6] PASSED
+tests/unit/test_tree_builder.py::test_01b_paths_and_display_titles PASSED
+tests/unit/test_tree_builder.py::test_03_cross_page_block_in_clinical PASSED
+tests/unit/test_tree_builder.py::test_04_table_in_treatment_of_disease_3 PASSED
+tests/unit/test_tree_builder.py::test_05_invariants_detect_corruption PASSED
+tests/unit/test_tree_builder.py::test_06_ids_stable_when_content_changes PASSED
+tests/unit/test_tree_builder.py::test_07_book_without_chapters PASSED
+tests/unit/test_tree_builder.py::test_08_front_matter_and_disease_intro PASSED
+tests/unit/test_tree_builder.py::test_09_orphans_flagged_and_warned PASSED
+tests/unit/test_tree_builder.py::test_10_toc_reconcile_both_directions PASSED
+tests/unit/test_tree_builder.py::test_other_heading_empty_and_duplicate_path PASSED
+tests/unit/test_tree_builder.py::test_display_title[3. TRI\u1ec6U CH\u1ee8NG-section-Tri\u1ec7u ch\u1ee9ng] PASSED
+tests/unit/test_tree_builder.py::test_display_title[3.1. L\xe2m s\xe0ng-subsection-L\xe2m s\xe0ng] PASSED
+tests/unit/test_tree_builder.py::test_display_title[CH\u01af\u01a0NG 1. B\u1ec6NH C\u01a0 X\u01af\u01a0NG KH\u1edaP-chapter-Ch\u01b0\u01a1ng 1. B\u1ec7nh c\u01a1 x\u01b0\u01a1ng kh\u1edbp] PASSED
+tests/unit/test_tree_builder.py::test_display_title[VI\xcaM KH\u1edaP D\u1ea0NG TH\u1ea4P-disease-Vi\xeam kh\u1edbp d\u1ea1ng th\u1ea5p] PASSED
+tests/unit/test_tree_builder.py::test_display_title[Nhi\u1ec5m Helicobacter pylori-disease-Nhi\u1ec5m Helicobacter pylori] PASSED
+tests/unit/test_tree_builder.py::test_display_title[  VI\xcaM   GAN B -disease-Vi\xeam gan b] PASSED
+tests/unit/test_tree_builder.py::test_11_tree_md_and_nested PASSED
+tests/unit/test_tree_builder.py::test_12_eval_fails_on_wrong_truth PASSED
+tests/unit/test_tree_builder.py::test_12b_eval_fails_on_broken_tree PASSED
+tests/unit/test_tree_builder.py::test_cli_tree PASSED
+============================= 23 passed in 15.33s =============================

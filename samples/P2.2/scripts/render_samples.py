@@ -84,13 +84,13 @@ def entry(title: str, level: str, pdf_page: int) -> TocEntry:
     return TocEntry(
         title=title,
         title_norm=norm_title(title),
-        level=level,
+        level=level,  # type: ignore[arg-type]
         printed_page=pdf_page - 3,
         pdf_page=pdf_page,
         toc_pdf_page=3,
         line_id="x",
         x0=48,
-    )  # type: ignore[arg-type]
+    )
 
 
 demo = [

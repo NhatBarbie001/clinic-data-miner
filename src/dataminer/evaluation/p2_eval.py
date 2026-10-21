@@ -8,8 +8,10 @@ import re
 from typing import Any
 
 from dataminer.core.text_vi import nfc
+from dataminer.evaluation.p1_eval import _line_key_map, _norm
 from dataminer.structure.heading_levels import HeadingDecision
 from dataminer.structure.toc import TocResult, match_key
+from dataminer.structure.tree_builder import Node, check_invariants
 
 
 def _ocr_title(ocr_line: str) -> str:
@@ -112,6 +114,108 @@ def eval_heading_levels(
             "problems": problems,
             "pass": not problems and len(expected) > 0,
         }
+    }
+
+
+def eval_tree(
+    nodes: list[Node],
+    blocks: list[Any],
+    lines: list[Any],
+    truth: dict[str, Any],
+    pages: tuple[int, int],
+) -> dict[str, Any]:
+    """G3 (bệnh trong cây ↔ mục lục đáp án), G4 (mỗi dòng nội dung đúng nút), G6 (bất biến).
+
+    G4 không so chữ tiêu đề (có thể còn lỗi OCR): "nút đúng" của một dòng nội dung = nút có
+    tiêu đề là dòng tiêu đề GẦN NHẤT phía trên nó trong đáp án. Dòng đáp án ↔ dòng đọc được
+    ghép bằng khóa (trang, văn bản OCR, lần xuất hiện) như P1.
+    """
+    lo, hi = pages
+    # ---- G3
+    diseases = [n for n in nodes if n.level == "disease"]
+    want = [e for e in truth["toc"] if e["level"] == "disease" and lo <= e["pdf_page"] <= hi]
+    g3_problems: list[str] = []
+    used: set[str] = set()
+    for e in want:
+        scored = [
+            (difflib.SequenceMatcher(None, match_key(n.title), match_key(e["title"])).ratio(), n)
+            for n in diseases
+            if n.id not in used
+        ]
+        score, node = max(scored, key=lambda x: x[0], default=(0.0, None))
+        if node is None or score < 0.85:
+            g3_problems.append(f"thiếu nút bệnh '{e['title']}'")
+            continue
+        used.add(node.id)
+        if node.page_start != e["pdf_page"]:
+            g3_problems.append(
+                f"'{e['title']}': nút bắt đầu trang {node.page_start} ≠ {e['pdf_page']}"
+            )
+    g3_problems.extend(f"thừa nút bệnh '{n.title}'" for n in diseases if n.id not in used)
+
+    # ---- G4
+    key_of = _line_key_map(lines)
+    line_of = {key: lid for lid, key in key_of.items()}
+    block_of_line = {lid: b.id for b in blocks for lid in b.line_ids}
+    node_of_block: dict[str, str] = {}
+    heading_node: dict[str, str] = {}
+    for n in nodes:
+        for bid in n.block_ids:
+            node_of_block[bid] = n.id
+        if n.heading_block_id:
+            heading_node[n.heading_block_id] = n.id
+            node_of_block[n.heading_block_id] = n.id
+    title_of = {n.id: " › ".join(n.path) for n in nodes}
+    seen: dict[tuple[int, str], int] = {}
+    current: str | None = None  # nút của tiêu đề đáp án gần nhất
+    total = correct = 0
+    g4_problems: list[str] = []
+    for ln in truth["lines"]:
+        if not lo <= ln["pdf_page"] <= hi or ln["role"] in ("header", "footer"):
+            continue
+        text = _norm(ln["ocr"])
+        occ = seen.get((ln["pdf_page"], text), 0)
+        seen[(ln["pdf_page"], text)] = occ + 1
+        lid = line_of.get((ln["pdf_page"], text, occ))
+        line_block = block_of_line.get(lid) if lid else None
+        if ln["role"] == "heading":
+            current = heading_node.get(line_block) if line_block else None
+            if current is None:
+                g4_problems.append(f"tiêu đề đáp án '{ln['text']}' không là tiêu đề nút nào")
+            continue
+        total += 1
+        got = node_of_block.get(line_block) if line_block else None
+        if got is not None and got == current:
+            correct += 1
+        elif len(g4_problems) < 20:
+            where = title_of.get(got or "", "không nút nào")
+            expected = title_of.get(current or "", "?")
+            g4_problems.append(
+                f"'{text[:50]}' (tr.PDF {ln['pdf_page']}): ở '{where}' ≠ '{expected}'"
+            )
+    ratio = correct / total if total else 0.0
+
+    # ---- G6
+    violations = check_invariants(nodes, blocks)
+    return {
+        "G3_diseases_vs_toc": {
+            "truth": len(want),
+            "found": len(diseases),
+            "problems": g3_problems,
+            "pass": not g3_problems and len(want) > 0,
+        },
+        "G4_content_in_node": {
+            "lines": total,
+            "correct": correct,
+            "ratio": round(ratio, 4),
+            "problems": g4_problems,
+            "pass": total > 0 and ratio >= 0.99 and not any("tiêu đề" in p for p in g4_problems),
+        },
+        "G6_invariants": {
+            "nodes": len(nodes),
+            "violations": violations,
+            "pass": not violations and len(nodes) > 1,
+        },
     }
 
 
