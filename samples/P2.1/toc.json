@@ -1,0 +1,65 @@
+{
+  "toc_pages": [
+    3
+  ],
+  "source": "auto",
+  "page_offset": 3,
+  "entries": [
+    {
+      "title": "Chương 1. Bệnh cơ xương khớp",
+      "title_norm": "chuong 1. benh co xuong khop",
+      "level": "chapter",
+      "printed_page": 1,
+      "pdf_page": 4,
+      "toc_pdf_page": 3,
+      "line_id": "ln_032142f15e642d1a",
+      "x0": 48.0,
+      "flags": []
+    },
+    {
+      "title": "Viêm khớp dạng thấp",
+      "title_norm": "viem khop dang thap",
+      "level": "disease",
+      "printed_page": 1,
+      "pdf_page": 4,
+      "toc_pdf_page": 3,
+      "line_id": "ln_606d6f05f63f1f99",
+      "x0": 62.0,
+      "flags": []
+    },
+    {
+      "title": "Thoái hóa khớp gối",
+      "title_norm": "thoai hoa khop goi",
+      "level": "disease",
+      "printed_page": 3,
+      "pdf_page": 6,
+      "toc_pdf_page": 3,
+      "line_id": "ln_07e835779bdf32f9",
+      "x0": 62.0,
+      "flags": []
+    },
+    {
+      "title": "Chương 2. Bệnh tiêu hỏa",
+      "title_norm": "chuong 2. benh tieu hoa",
+      "level": "chapter",
+      "printed_page": 5,
+      "pdf_page": 8,
+      "toc_pdf_page": 3,
+      "line_id": "ln_fa5c2c65542726a0",
+      "x0": 48.0,
+      "flags": []
+    },
+    {
+      "title": "Viêm loét dạ dày tá tràng",
+      "title_norm": "viem loet da day ta trang",
+      "level": "disease",
+      "printed_page": 5,
+      "pdf_page": 8,
+      "toc_pdf_page": 3,
+      "line_id": "ln_b38d4d2bab1ecd4d",
+      "x0": 62.0,
+      "flags": []
+    }
+  ],
+  "warnings": []
+}

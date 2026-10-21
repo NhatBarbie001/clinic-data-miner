@@ -179,6 +179,26 @@ class P1Cfg(_Strict):
     fix: FixCfg = Field(default_factory=FixCfg)
 
 
+class TocCfg(_Strict):
+    """P2.1 - mục lục."""
+
+    pages: Literal["auto"] | tuple[int, int] = "auto"  # auto = tự tìm; hoặc [a, b] (trang PDF)
+    search_pages: int = Field(default=15, ge=1)  # tìm trong n trang đầu
+    min_entries: int = Field(default=2, ge=1)  # trang có ≥ n dòng chấm dẫn → trang mục lục
+
+    @model_validator(mode="after")
+    def _check_pages(self) -> "TocCfg":
+        if self.pages != "auto" and not 1 <= self.pages[0] <= self.pages[1]:
+            raise ValueError(f"pages phải là 'auto' hoặc [a, b] với 1 ≤ a ≤ b, nhận {self.pages}")
+        return self
+
+
+class P2Cfg(_Strict):
+    """Phase P2 - dựng cây cấu trúc (các task sau bổ sung nhóm của mình)."""
+
+    toc: TocCfg = Field(default_factory=TocCfg)
+
+
 class Settings(_Strict):
     project: ProjectCfg
     paths: PathsCfg
@@ -187,6 +207,7 @@ class Settings(_Strict):
     models: dict[str, ModelSpec]
     pilot: PilotCfg = Field(default_factory=PilotCfg)
     p1: P1Cfg = Field(default_factory=P1Cfg)
+    p2: P2Cfg = Field(default_factory=P2Cfg)
 
     _fingerprint: str = PrivateAttr(default="")
     _sources: list[str] = PrivateAttr(default_factory=list)

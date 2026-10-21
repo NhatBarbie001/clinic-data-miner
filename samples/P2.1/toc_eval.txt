@@ -1,0 +1,4 @@
+Đánh giá G1 (sách mẫu seed 7) - dm p2 toc --eval
+
+✓ G1_toc: truth=5, found=5, title_clean_match=5
+    toc_pages: 3

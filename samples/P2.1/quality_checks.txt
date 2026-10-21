@@ -1,0 +1,82 @@
+# P2.1 - kiểm tra chất lượng (chạy 2026-10-21)
+
+## 1. Quét 30 seed sách mẫu (mỗi seed cài lỗi OCR khác nhau lên trang mục lục)
+Cột: seed · G1 · tiêu đề sạch khớp (match_key) · lỗi G1 · tiêu đề còn lỗi nhầm ký tự (P2.2 phải chịu) · cờ
+1 ✓ sạch 4/5 [] ["'Cbương 2. Bệnh tiêu hóa' (sạch: 'Chương 2. Bệnh tiêu hóa')"] [('Cbương 2. Bệnh tiêu hóa', ['level_conflict'])]
+2 ✓ sạch 4/5 [] ["'Viêrn loét dạ dày tá tràng' (sạch: 'Viêm loét dạ dày tá tràng')"] []
+3 ✓ sạch 5/5 [] [] []
+4 ✓ sạch 5/5 [] [] []
+5 ✓ sạch 5/5 [] [] []
+6 ✓ sạch 3/5 [] ["'Chương 1. Bệnh cơ xương kbớp' (sạch: 'Chương 1. Bệnh cơ xương khớp')", "'Viêm 1oét dạ dày tá tràng' (sạch: 'Viêm loét dạ dày tá tràng')"] []
+7 ✓ sạch 5/5 [] [] []
+8 ✓ sạch 5/5 [] [] []
+9 ✓ sạch 5/5 [] [] []
+10 ✓ sạch 5/5 [] [] []
+11 ✓ sạch 5/5 [] [] []
+12 ✓ sạch 5/5 [] [] []
+13 ✓ sạch 5/5 [] [] []
+14 ✓ sạch 5/5 [] [] []
+15 ✓ sạch 5/5 [] [] []
+16 ✓ sạch 5/5 [] [] []
+17 ✓ sạch 5/5 [] [] []
+18 ✓ sạch 5/5 [] [] []
+19 ✓ sạch 4/5 [] ["'Cbương 2. Bệnh tiêu hóa' (sạch: 'Chương 2. Bệnh tiêu hóa')"] [('Cbương 2. Bệnh tiêu hóa', ['level_conflict'])]
+20 ✓ sạch 4/5 [] ["'Viêrn loét dạ dày tá tràng' (sạch: 'Viêm loét dạ dày tá tràng')"] []
+21 ✓ sạch 4/5 [] ["'Thoái hóa kbớp gối' (sạch: 'Thoái hóa khớp gối')"] []
+22 ✓ sạch 5/5 [] [] []
+23 ✓ sạch 5/5 [] [] []
+24 ✓ sạch 5/5 [] [] []
+25 ✓ sạch 5/5 [] [] []
+26 ✓ sạch 4/5 [] ["'Viêm kbớp dạng thấp' (sạch: 'Viêm khớp dạng thấp')"] []
+27 ✓ sạch 3/5 [] ["'Thoái bóa khớp gối' (sạch: 'Thoái hóa khớp gối')", "'Chương 2. Bệnb tiêu hóa' (sạch: 'Chương 2. Bệnh tiêu hóa')"] []
+28 ✓ sạch 5/5 [] [] []
+29 ✓ sạch 5/5 [] [] []
+30 ✓ sạch 5/5 [] [] []
+ĐẠT 30/30
+
+## 2. Mutation check (đột biến code → test phải FAIL; mỗi đột biến đã xác nhận áp dụng được)
+M1 bỏ thụt lề khi mẫu chữ trượt: BỊ BẮT ✓ · 1 failed, 1 passed in 7.35s · ['test_01_sample_book_matches_truth[1]']
+M2 không nối tiêu đề ngắt dòng: BỊ BẮT ✓ · 1 failed, 8 passed in 10.95s · ['test_04_wrapped_title_is_joined']
+M3 coi 'MỤC LỤC' là dòng thường: BỊ BẮT ✓ · 1 failed, 9 passed in 11.44s · ['test_04b_toc_title_and_distant_lines_not_joined']
+M4 gộp trang mục lục không liên tiếp: BỊ BẮT ✓ · 1 failed, 10 passed in 12.28s · ['test_05_multi_page_toc_and_isolated_page']
+M5 bỏ cảnh báo số trang giảm: BỊ BẮT ✓ · 1 failed, 11 passed in 11.27s · ['test_06_decreasing_page_warns_not_fails']
+M6 ánh xạ trang lệch 1: BỊ BẮT ✓ · 1 failed in 3.59s · ['test_01_sample_book_matches_truth[7]']
+M7 không cho dòng không chấm dẫn: BỊ BẮT ✓ · 1 failed, 21 passed in 11.52s · ['test_07b_toc_page_without_leaders_needs_config']
+M8 bỏ cờ level_conflict: BỊ BẮT ✓ · 1 failed, 3 passed in 11.29s · ['test_01b_ocr_broken_chapter_word_uses_indent']
+M9 eval bỏ so tiêu đề: BỊ BẮT ✓ · 1 failed, 28 passed in 11.20s · ['test_09b_eval_fails_on_wrong_title_missing_or_extra']
+M10 eval bỏ đếm mục thừa: BỊ BẮT ✓ · 1 failed, 28 passed in 10.54s · ['test_09b_eval_fails_on_wrong_title_missing_or_extra']
+M11 eval bỏ so trang mục lục: BỊ BẮT ✓ · 1 failed, 28 passed in 11.85s · ['test_09b_eval_fails_on_wrong_title_missing_or_extra']
+M12 eval bỏ so cấp: BỊ BẮT ✓ · 1 failed, 25 passed in 11.68s · ['test_09_eval_fails_on_wrong_truth[level-disease]']
+
+## 3. Test
+tests/unit/test_toc.py::test_01_sample_book_matches_truth[7] PASSED
+tests/unit/test_toc.py::test_01_sample_book_matches_truth[1] PASSED
+tests/unit/test_toc.py::test_01_sample_book_matches_truth[4] PASSED
+tests/unit/test_toc.py::test_01b_ocr_broken_chapter_word_uses_indent PASSED
+tests/unit/test_toc.py::test_02_ocr_tone_error_still_matches PASSED
+tests/unit/test_toc.py::test_02b_match_key_tolerates_merged_words PASSED
+tests/unit/test_toc.py::test_03_config_pages_skips_detection PASSED
+tests/unit/test_toc.py::test_03b_config_pages_validated PASSED
+tests/unit/test_toc.py::test_04_wrapped_title_is_joined PASSED
+tests/unit/test_toc.py::test_04b_toc_title_and_distant_lines_not_joined PASSED
+tests/unit/test_toc.py::test_05_multi_page_toc_and_isolated_page PASSED
+tests/unit/test_toc.py::test_06_decreasing_page_warns_not_fails PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Ch\u01b0\u01a1ng 1. B\u1ec7nh c\u01a1 x\u01b0\u01a1ng kh\u1edbp ....... 1-False-expected0] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Vi\xeam gan B . . . . . . 12-False-expected1] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Gout \u2026\u2026 9-False-expected2] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Gout\u2026\u20269-False-expected3] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Hen ph\u1ebf qu\u1ea3n 57-False-None] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[Hen ph\u1ebf qu\u1ea3n 57-True-expected5] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[\u0110\xe1i th\xe1o \u0111\u01b0\u1eddng type 2 61-True-expected6] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[2026-True-None] PASSED
+tests/unit/test_toc.py::test_07_leader_variants[M\u1ee4C L\u1ee4C-True-None] PASSED
+tests/unit/test_toc.py::test_07b_toc_page_without_leaders_needs_config PASSED
+tests/unit/test_toc.py::test_level_rules_single_indent_and_conflict PASSED
+tests/unit/test_toc.py::test_page_mapping_and_out_of_range PASSED
+tests/unit/test_toc.py::test_08_no_toc PASSED
+tests/unit/test_toc.py::test_09_eval_fails_on_wrong_truth[level-disease] PASSED
+tests/unit/test_toc.py::test_09_eval_fails_on_wrong_truth[printed_page-4] PASSED
+tests/unit/test_toc.py::test_09_eval_fails_on_wrong_truth[pdf_page-7] PASSED
+tests/unit/test_toc.py::test_09b_eval_fails_on_wrong_title_missing_or_extra PASSED
+tests/unit/test_toc.py::test_cli_toc PASSED
+============================= 30 passed in 12.86s =============================

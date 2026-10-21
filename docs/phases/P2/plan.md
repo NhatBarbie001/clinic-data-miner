@@ -1,6 +1,6 @@
 # Plan P2: Dựng cấu trúc tài liệu
 
-> Trạng thái: `Draft`, chờ duyệt
+> Trạng thái: `Đã duyệt`, đang triển khai (P2.1 ✅)
 > Ngày tạo: 2026-10-21 · Tham chiếu: [plan.md](../../../plan.md) mục P2 · Đầu vào từ P1: [P1 gate_report](../P1/gate_report.md) · Hồ sơ sách: [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -176,11 +176,12 @@ p2:
 | R2 | Tiêu đề còn lỗi OCR sau P1 (`3. TRIỆU CHUNG`) | So khớp **không dấu** với từ điển; kiểm tra bằng test |
 | R3 | Cấp tiêu đề mơ hồ (chữ IN HOA không đánh số giữa mục, vd. `LƯU Ý`) | Đối chiếu mục lục trước; còn mơ hồ → LLM (`classify`) với nhãn đóng; ghi cờ để duyệt |
 | R4 | Golden set do mình sinh từ đáp án, có thể "dễ" hơn câu hỏi thật | Ghi rõ người tạo `auto (sách mẫu)`; với sách thật cần người chuyên môn viết hoặc duyệt; **golden set không bao giờ được dùng để huấn luyện** (P7) |
-| Q1 | **Quyết định:** mục lục nằm ngoài pilot. P2.1 tự tìm và đọc trang mục lục (chỉ bằng quy tắc, không LLM) | Đề xuất **đồng ý** |
-| Q2 | **Quyết định:** đơn vị trích dẫn ở các phase sau là `node_id` của mục/mục con (không phải block) | Đề xuất **đồng ý**: ổn định, có nghĩa với người đọc |
+| Q1 | ✅ **Đã duyệt 2026-10-21.** **Quyết định:** mục lục nằm ngoài pilot. P2.1 tự tìm và đọc trang mục lục (chỉ bằng quy tắc, không LLM) | Đề xuất **đồng ý** |
+| Q2 | ✅ **Đã duyệt 2026-10-21.** **Quyết định:** đơn vị trích dẫn ở các phase sau là `node_id` của mục/mục con (không phải block) | Đề xuất **đồng ý**: ổn định, có nghĩa với người đọc |
 
 ## 9. Lịch sử thay đổi plan
 
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
+| 2026-10-21 | P2.1 xong. Phát hiện: tiêu đề mục lục có thể còn lỗi nhầm ký tự (`Viêrn`, `Cbương`; 9/30 seed) → P2.2 phải so khớp gần đúng, không chỉ so `match_key` | Báo cáo P2.1 |
 | 2026-10-21 | Tạo plan. So với plan tổng: tách thêm P2.5 (EV.1) và P2.6 (CLI/gate); P2.2 thêm đối chiếu mục lục; chỉ tiêu đo tự động bằng đáp án | Áp dụng cấu trúc đã hiệu quả ở P1 |

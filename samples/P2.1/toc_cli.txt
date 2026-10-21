@@ -1,0 +1,10 @@
+Mục lục: trang PDF 3 (auto) · 5 mục · trang PDF = trang in +3
+  [chapter] Chương 1. Bệnh cơ xương khớp  · tr.in 1 → PDF 4
+    [disease] Viêm khớp dạng thấp  · tr.in 1 → PDF 4
+    [disease] Thoái hóa khớp gối  · tr.in 3 → PDF 6
+  [chapter] Chương 2. Bệnh tiêu hỏa  · tr.in 5 → PDF 8
+    [disease] Viêm loét dạ dày tá tràng  · tr.in 5 → PDF 8
+  đầu ra: data/p2_tree/toc.json
+
+✓ G1_toc: truth=5, found=5, title_clean_match=5
+    toc_pages: 3

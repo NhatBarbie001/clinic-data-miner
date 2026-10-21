@@ -59,3 +59,9 @@ p1:                          # P1 - trích xuất và làm sạch text (docs/pha
     max_changed_ratio: 0.35  # LLM đổi > 35% số từ của block → từ chối cả block
     min_similarity: 0.6      # từ mới phải giống từ cũ (sau khi bỏ dấu) ≥ 60%
     glossary: configs/glossary.yaml
+
+p2:                          # P2 - dựng cây cấu trúc (docs/phases/P2/plan.md)
+  toc:                       # P2.1 - mục lục
+    pages: auto              # auto = tự tìm trong search_pages trang đầu; hoặc [3, 3] (trang PDF)
+    search_pages: 15
+    min_entries: 2           # trang có ≥ 2 dòng chấm dẫn → trang mục lục
