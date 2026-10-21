@@ -1,0 +1,12 @@
+# Lần 1 (sau duyệt)
+7313a271195e6caa82c8f41798c51a4942dd2cd5e11cc5fd13170d56f898b0aa *data/p1_clean/blocks.jsonl
+e6fd169f25b900cda96c6e85d1532356c8e131b07979c949b558dd269dc79b4d *data/p1_clean/blocks_fixed.jsonl
+
+# Lần chạy lại
+7313a271195e6caa82c8f41798c51a4942dd2cd5e11cc5fd13170d56f898b0aa *data/p1_clean/blocks.jsonl
+e6fd169f25b900cda96c6e85d1532356c8e131b07979c949b558dd269dc79b4d *data/p1_clean/blocks_fixed.jsonl
+
+✓ P1 xong: trang PDF 4-9 · 147 dòng · bỏ 10 header/footer · 85 block
+  sửa OCR: 36 chấp nhận, 2 từ chối · đã duyệt 6 · chờ duyệt 0
+  chi phí LLM: $0.000000 · manifest: p1_clean_20261021-121839-889_67e8
+  đầu ra: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\data\p1_clean/blocks.jsonl

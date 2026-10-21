@@ -14,12 +14,13 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMError
 from dataminer.core.prompts import PromptError, load_prompt
 from dataminer.devtools.oracle_fix import oracle_outputs
-from dataminer.devtools.sample_book import SampleBook, make_sample_book
+from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_ocr
 from dataminer.ingest.blocks import Block, build_blocks
 from dataminer.ingest.ocr_fixer import OCRFixer, plan_batches
 from dataminer.ingest.page_furniture import strip_furniture
 from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 
 PILOT = (4, 9)
@@ -35,8 +36,8 @@ def project(tmp: Path, **env: str) -> Settings:
 
 
 @pytest.fixture(scope="module")
-def book(tmp_path_factory: pytest.TempPathFactory) -> SampleBook:
-    return make_sample_book(tmp_path_factory.mktemp("book"), seed=7)
+def book(sample_book_for: SampleBookFor) -> SampleBook:
+    return sample_book_for(7)
 
 
 @pytest.fixture(scope="module")

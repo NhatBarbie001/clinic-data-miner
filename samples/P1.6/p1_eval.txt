@@ -1,0 +1,17 @@
+✓ G1_furniture: truth=10, removed=10
+✓ G2_printed_pages: pages=6
+✓ G3_blocks: truth_blocks=85, exact=85, recall=1.0, target=0.97
+✓ G4_tables: truth_tables=1, found_tables=1
+✓ G5_wer: words=1004, before=0.0408, after=0.003, target=0.01
+✓ G6_errors_fixed: fixed=35, total=38, rate=0.9211, by_kind={'char_confusion': '7/7', 'digit_confusion': '2/2', 'drop_diacritics': '22/24', 'merge_words': '1/1', 'nfd_line': '2/2', 'wrong_tone': '5/6'}, target=0.8
+    unfixed: tr.5 drop_diacritics: điển → dien
+    unfixed: tr.6 drop_diacritics: CHỨNG → CHUNG
+    unfixed: tr.9 wrong_tone: đồ → độ
+    miscorrected: tr.5 drop_diacritics: điển → dien
+✓ G7_introduced: tokens=0, rate=0.0, target=0.003
+✓ G8_numbers: 
+    dose_errors: {'error': 'Paracetamol 500 mg → Paracetamol 5OO mg', 'kept': False, 'flagged': False, 'fixed_by_review': True}
+    dose_errors: {'error': '1 g → l g', 'kept': False, 'flagged': False, 'fixed_by_review': True}
+✓ G9_nfc: 
+
+KẾT LUẬN: ĐẠT mọi chỉ tiêu G1-G9

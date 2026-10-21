@@ -1,5 +1,6 @@
 """P0.6 - Kiểm tra chương mẫu (pilot). Mục 4 của docs/phases/P0/P0.6_plan.md."""
 
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -9,9 +10,9 @@ from typer.testing import CliRunner
 from dataminer.cli import app
 from dataminer.core.config import PilotCfg
 from dataminer.core.io import write_json
-from dataminer.devtools.sample_book import make_sample_book
 from dataminer.ingest.pilot import check_pilot, format_pilot_report, name_key
 from dataminer.ingest.survey import survey_pdf
+from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import make_settings
 
 runner = CliRunner()
@@ -127,10 +128,12 @@ def test_survey_missing(tmp_path: Path) -> None:
     assert "chạy `dm survey` trước" in report.errors[0]
 
 
-def test_on_real_sample_book_and_cli(tmp_path: Path) -> None:
+def test_on_real_sample_book_and_cli(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     """Đầu-cuối: sách mẫu thật → khảo sát → `dm pilot check` với cấu hình thật trong configs/."""
     make_settings(tmp_path)
-    make_sample_book(tmp_path / "data" / "raw", seed=7)
+    book = sample_book_for(7)
+    (tmp_path / "data" / "raw").mkdir(parents=True)
+    shutil.copy(book.pdf_path, tmp_path / "data" / "raw" / "book01.pdf")
     survey_pdf(tmp_path / "data/raw/book01.pdf", tmp_path / "data" / "p0_survey")
     ok = runner.invoke(app, ["pilot", "check", "--root", str(tmp_path)])
     assert ok.exit_code == 0, ok.output

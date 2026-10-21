@@ -6,7 +6,7 @@ import pytest
 
 from dataminer.core.config import FurnitureCfg
 from dataminer.core.io import read_json
-from dataminer.devtools.sample_book import SampleBook, make_sample_book
+from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_furniture
 from dataminer.ingest.page_furniture import (
     page_number_of,
@@ -14,6 +14,7 @@ from dataminer.ingest.page_furniture import (
     strip_furniture,
 )
 from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from tests.conftest import SampleBookFor
 
 ALL_PAGES = list(range(1, 10))
 
@@ -24,8 +25,8 @@ def run(book: SampleBook, lines: list[Line] | None = None):  # type: ignore[no-u
 
 
 @pytest.fixture(scope="module")
-def book(tmp_path_factory: pytest.TempPathFactory) -> SampleBook:
-    return make_sample_book(tmp_path_factory.mktemp("book"), seed=7)
+def book(sample_book_for: SampleBookFor) -> SampleBook:
+    return sample_book_for(7)
 
 
 def line(
@@ -54,8 +55,8 @@ def line(
 
 
 @pytest.mark.parametrize("seed", [7, 2, 6])
-def test_01_all_furniture_removed_nothing_else(tmp_path: Path, seed: int) -> None:
-    sample = make_sample_book(tmp_path, seed=seed)
+def test_01_all_furniture_removed_nothing_else(sample_book_for: SampleBookFor, seed: int) -> None:
+    sample = sample_book_for(seed)
     result = run(sample)
     report = eval_furniture(result, sample.truth)
     assert report["G1_furniture"]["pass"], report["G1_furniture"]

@@ -377,7 +377,7 @@ Golden set **chỉ được thêm câu, không sửa câu cũ** (nếu buộc ph
 
 | Milestone | Gồm | Kết quả có thể demo |
 |---|---|---|
-| **M1: Nền móng** | P0, P1, P2 trên chương mẫu + EV.1 | Xem được cây cấu trúc chương mẫu và text sạch |
+| **M1: Nền móng** ✅ (P0 + P1.1–P1.3) | P0, P1, P2 trên chương mẫu + EV.1 | Xem được cây cấu trúc chương mẫu và text sạch |
 | **M2: MVP hỏi đáp** | P3 + P5 (chỉ `search_text`) trên chương mẫu | Hỏi đáp có trích dẫn trên một chương |
 | **M3: Truy vấn tổng hợp** | P4 + P5 đầy đủ trên chương mẫu | Trả lời được câu liệt kê/lọc |
 | **M4: Dữ liệu huấn luyện mẫu** | P7 trên chương mẫu | Bộ dữ liệu mẫu D1–D8 + báo cáo chất lượng |

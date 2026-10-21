@@ -9,11 +9,12 @@ from pathlib import Path
 import pytest
 
 from dataminer.core.config import BlocksCfg
-from dataminer.devtools.sample_book import SampleBook, make_sample_book
+from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_blocks
 from dataminer.ingest.blocks import Block, build_blocks, classify_line, join_text
 from dataminer.ingest.page_furniture import strip_furniture
 from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from tests.conftest import SampleBookFor
 
 CFG = BlocksCfg()
 
@@ -27,8 +28,8 @@ def pipeline(pdf: Path, pages: tuple[int, int] = (1, 9)) -> tuple[list[Block], l
 
 
 @pytest.fixture(scope="module")
-def book(tmp_path_factory: pytest.TempPathFactory) -> SampleBook:
-    return make_sample_book(tmp_path_factory.mktemp("book"), seed=7)
+def book(sample_book_for: SampleBookFor) -> SampleBook:
+    return sample_book_for(7)
 
 
 @pytest.fixture(scope="module")
@@ -65,8 +66,8 @@ def texts(blocks: list[Block]) -> list[tuple[str, str]]:
 
 
 @pytest.mark.parametrize("seed", [7, 2, 6])
-def test_01_blocks_match_truth(tmp_path: Path, seed: int) -> None:
-    sample = make_sample_book(tmp_path, seed=seed)
+def test_01_blocks_match_truth(sample_book_for: SampleBookFor, seed: int) -> None:
+    sample = sample_book_for(seed)
     blocks, content = pipeline(sample.pdf_path)
     report = eval_blocks(blocks, content, sample.truth)
     g3 = report["G3_blocks"]

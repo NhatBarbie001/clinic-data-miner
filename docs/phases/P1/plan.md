@@ -1,6 +1,6 @@
 # Plan P1: Trích xuất và làm sạch text
 
-> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅, P1.3 ✅, P1.4 ✅, P1.5 ✅; P1.6 chưa làm.
+> Trạng thái: `Hoàn thành` ✅ - qua gate 2026-10-21, xem [gate_report.md](gate_report.md). P1.1–P1.6 ✅ (trên pilot sách mẫu).
 > Ngày tạo: 2026-10-20 · Tham chiếu: [plan.md](../../../plan.md) mục P1 · [problem.md](../../../problem.md) mục 4.1, 5 · Đầu vào từ P0: [gate_report.md](../P0/gate_report.md), [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -156,3 +156,4 @@ Chạy lại dùng cache nên $0. Chế độ `replay` cho phép tái lập mà 
 | 2026-10-20 | P1.3: `para_gap_ratio` 0.6 → 0.25 (ngưỡng trên khoảng DÔI RA), thêm `heading_size_delta`; G3 97% quá rộng → khi có sách thật cần duyệt tay | Đo khoảng cách thực tế trên sách mẫu; sách mẫu không có 2 đoạn liền nhau |
 | 2026-10-21 | P1.4: G-num có ngoại lệ hẹp (1à→là); G-ratio chỉ block ≥ 5 từ, đếm thay đổi thực chất; G-sim quy rn→m; G-protect chặn cả đổi sang thuật ngữ khác; đánh giá: lỗi không đối chiếu được = không đạt, thêm chỉ số sửa sai | Đối chứng dương ("LLM hoàn hảo") và chạy thật lộ ra 7 lỗi (P1.4_report mục 8) |
 | 2026-10-21 | P1.5: `Block.reviews` (danh sách); có dòng CSV sai → không nhập dòng nào; đầu ra P1.4 = `blocks_fixed.jsonl`, `blocks.jsonl` = sau duyệt; G8 = "0 số đổi mà không qua duyệt" | Một block có nhiều mục duyệt; tránh nhập dở dang; giữ P1.4 tái lập |
+| 2026-10-21 | P1.6: thêm `--audit` (mẫu kiểm tra thay đổi đã chấp nhận, đề xuất ở P1.5); fixture sách mẫu dùng chung cho test (87s → 35s); gate P1 đạt | N10; tốc độ test |

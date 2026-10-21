@@ -1,0 +1,5 @@
+﻿item_id,priority,page,printed_page,block_id,kind,cell,position,context,current,suggestion,reason,decision,edited_value,reviewer,comment
+rv_137a522dcaef4f2f,4-KIỂM TRA MẪU,4,1,blk_0a91331fd4d26fb1,paragraph,,13,… bệnh chưa được biết rõ. Bệnh được cho «là» kết quả của sự tương tác giữa yếu …,là,,kiểm tra mẫu: LLM đã sửa `1à` → `là` (digit_letter),keep,,auto-truth (sách mẫu),theo đáp án: «là»
+rv_593c653a18cefe03,4-KIỂM TRA MẪU,5,2,blk_155d86c418568af3,list_item,,4,Tốc độ máu lắng «và» protein phản ứng C (CRP) tăng.,và,,kiểm tra mẫu: LLM đã sửa `vá` → `và` (ok),keep,,auto-truth (sách mẫu),theo đáp án: «và»
+rv_860433b842da846a,4-KIỂM TRA MẪU,8,5,blk_21f5b768925785b5,paragraph,,33,"… niêm. Bệnh có tính chất mạn tính, hay «tái» phát.",tái,,kiểm tra mẫu: LLM đã sửa `tai` → `tái` (ok),keep,,auto-truth (sách mẫu),theo đáp án: «tái»
+rv_5bed33db848eff26,4-KIỂM TRA MẪU,9,6,blk_6c0c429ca7968c34,list_item,,12,… proton: omeprazol 20 mg uống 2 lần mỗi «ngày.»,ngày.,,kiểm tra mẫu: LLM đã sửa `ngay.` → `ngày.` (ok),keep,,auto-truth (sách mẫu),theo đáp án: «ngày.»

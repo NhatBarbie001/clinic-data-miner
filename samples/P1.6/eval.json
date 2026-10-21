@@ -1,0 +1,91 @@
+{
+  "G1_furniture": {
+    "truth": 10,
+    "removed": 10,
+    "missed": [],
+    "wrongly_removed": [],
+    "pass": true
+  },
+  "G2_printed_pages": {
+    "pages": 6,
+    "wrong": [],
+    "pass": true
+  },
+  "G3_blocks": {
+    "truth_blocks": 85,
+    "exact": 85,
+    "recall": 1.0,
+    "target": 0.97,
+    "wrong": [],
+    "merged_across_headings": [],
+    "unmatched_lines": [],
+    "pass": true
+  },
+  "G4_tables": {
+    "truth_tables": 1,
+    "found_tables": 1,
+    "errors": [],
+    "extra_tables": [],
+    "pass": true
+  },
+  "G5_wer": {
+    "words": 1004,
+    "before": 0.0408,
+    "after": 0.003,
+    "target": 0.01,
+    "unaligned_blocks": [],
+    "pass": true
+  },
+  "G6_errors_fixed": {
+    "fixed": 35,
+    "total": 38,
+    "rate": 0.9211,
+    "by_kind": {
+      "char_confusion": "7/7",
+      "digit_confusion": "2/2",
+      "drop_diacritics": "22/24",
+      "merge_words": "1/1",
+      "nfd_line": "2/2",
+      "wrong_tone": "5/6"
+    },
+    "unfixed": [
+      "tr.5 drop_diacritics: điển → dien",
+      "tr.6 drop_diacritics: CHỨNG → CHUNG",
+      "tr.9 wrong_tone: đồ → độ"
+    ],
+    "miscorrected": [
+      "tr.5 drop_diacritics: điển → dien"
+    ],
+    "unmatched_errors": [],
+    "target": 0.8,
+    "pass": true
+  },
+  "G7_introduced": {
+    "tokens": 0,
+    "rate": 0.0,
+    "target": 0.003,
+    "pass": true
+  },
+  "G8_numbers": {
+    "number_changes": [],
+    "dose_errors": [
+      {
+        "error": "Paracetamol 500 mg → Paracetamol 5OO mg",
+        "kept": false,
+        "flagged": false,
+        "fixed_by_review": true
+      },
+      {
+        "error": "1 g → l g",
+        "kept": false,
+        "flagged": false,
+        "fixed_by_review": true
+      }
+    ],
+    "pass": true
+  },
+  "G9_nfc": {
+    "not_nfc": [],
+    "pass": true
+  }
+}

@@ -385,3 +385,34 @@ def eval_ocr(blocks: list[Any], lines: list[Any], truth: dict[str, Any]) -> dict
         },
         "G9_nfc": {"not_nfc": not_nfc, "pass": not not_nfc},
     }
+
+
+def evaluate_p1(out_dir: Any, truth: dict[str, Any]) -> dict[str, Any]:
+    """Đánh giá trọn P1 từ các file trong `data/p1_clean/` (G1-G9)."""
+    from pathlib import Path
+
+    from dataminer.core.io import read_json, read_jsonl
+    from dataminer.ingest.blocks import Block
+    from dataminer.ingest.page_furniture import FurnitureItem, PageInfo
+    from dataminer.ingest.pdf_reader import Line
+
+    out = Path(out_dir)
+    content = list(read_jsonl(out / "content_lines.jsonl", Line))
+    furn = read_json(out / "furniture.json")
+    furniture = FurnitureResult(
+        content=content,
+        removed=[FurnitureItem.model_validate(x) for x in furn["removed"]],
+        pages=[PageInfo.model_validate(x) for x in furn["pages"]],
+        warnings=furn.get("warnings", []),
+    )
+    rules = list(read_jsonl(out / "blocks_rules.jsonl", Block))
+    final = list(read_jsonl(out / "blocks.jsonl", Block))
+    report: dict[str, Any] = {}
+    report.update(eval_furniture(furniture, truth))
+    report.update(eval_blocks(rules, content, truth))
+    report.update(eval_ocr(final, content, truth))
+    return report
+
+
+def all_pass(report: dict[str, Any]) -> bool:
+    return all(item.get("pass") for item in report.values())

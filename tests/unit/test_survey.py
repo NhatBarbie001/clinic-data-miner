@@ -9,7 +9,6 @@ from typer.testing import CliRunner
 
 from dataminer.cli import app
 from dataminer.core.io import read_json
-from dataminer.devtools.sample_book import make_sample_book
 from dataminer.devtools.survey_check import check_survey
 from dataminer.ingest.survey import (
     SurveyLine,
@@ -18,6 +17,7 @@ from dataminer.ingest.survey import (
     find_ocr_signals,
     survey_pdf,
 )
+from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import make_settings
 
 runner = CliRunner()
@@ -43,9 +43,11 @@ def line(
 
 
 @pytest.mark.parametrize("seed", [7, 2, 6])
-def test_survey_meets_all_targets_vs_truth(tmp_path: Path, seed: int) -> None:
+def test_survey_meets_all_targets_vs_truth(
+    tmp_path: Path, sample_book_for: SampleBookFor, seed: int
+) -> None:
     """Chỉ tiêu ở P0.5_plan mục 4 - chạy với nhiều seed để tránh khớp quá mức một sách."""
-    book = make_sample_book(tmp_path, seed=seed)
+    book = sample_book_for(seed)
     result = survey_pdf(book.pdf_path, tmp_path / "survey")
     checks = check_survey(result, book.truth)
     failed = [k for k, v in checks.items() if isinstance(v, dict) and v.get("pass") is False]
@@ -53,8 +55,8 @@ def test_survey_meets_all_targets_vs_truth(tmp_path: Path, seed: int) -> None:
     assert checks["all_pass"], failed
 
 
-def test_survey_outputs_written(tmp_path: Path) -> None:
-    book = make_sample_book(tmp_path, seed=7)
+def test_survey_outputs_written(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
+    book = sample_book_for(7)
     out = tmp_path / "survey"
     result = survey_pdf(book.pdf_path, out, book_id="book01")
     for name in (
@@ -206,9 +208,11 @@ def test_cli_survey_missing_pdf(tmp_path: Path) -> None:
     assert "make-sample-book" in result.output
 
 
-def test_check_survey_fails_when_truth_disagrees(tmp_path: Path) -> None:
+def test_check_survey_fails_when_truth_disagrees(
+    tmp_path: Path, sample_book_for: SampleBookFor
+) -> None:
     """Đối chiếu phải biết nói KHÔNG: sửa đáp án cho sai → không đạt."""
-    book = make_sample_book(tmp_path, seed=7)
+    book = sample_book_for(7)
     result = survey_pdf(book.pdf_path, tmp_path / "survey")
     wrong = json.loads(json.dumps(book.truth))
     wrong["body_size"] = 14.0

@@ -1,0 +1,93 @@
+{
+  "run_id": "p1_clean_20261021-121839-889_67e8",
+  "phase": "p1_clean",
+  "status": "success",
+  "started_at": "2026-10-21T12:18:39.946+07:00",
+  "finished_at": "2026-10-21T12:18:40.074+07:00",
+  "duration_s": 0.128,
+  "git_commit": "0d0e4042b0464d01d1b0b61b7050689359db7e4b",
+  "git_dirty": true,
+  "config_fingerprint": "77fc3c404a58",
+  "models": {
+    "ping": "deepseek/deepseek-v4.1-flash-1017",
+    "fix_ocr": "deepseek/deepseek-v4.1-flash-1017",
+    "classify": "deepseek/deepseek-v4.1-flash-1017",
+    "extract": "deepseek/deepseek-v4.1-flash-1017",
+    "qa": "deepseek/deepseek-v4.1-flash-1017",
+    "judge": "deepseek/deepseek-v4.1-flash-1017",
+    "datagen": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "prompts": {
+    "p1_fix_ocr": "v1"
+  },
+  "inputs": [
+    {
+      "path": "data/raw/book01.pdf",
+      "records": null,
+      "sha256": "152cf48194486101cb5f3a8be1918548f478b8daeb5055a3a925dca836c020d0",
+      "bytes": 413881
+    }
+  ],
+  "outputs": [
+    {
+      "path": "data/p1_clean/lines.jsonl",
+      "records": 147,
+      "sha256": "1b95324024484b6d0dea7a09bf959188b934033e96e52d8ccbad1e8953347471",
+      "bytes": 52260
+    },
+    {
+      "path": "data/p1_clean/content_lines.jsonl",
+      "records": 137,
+      "sha256": "f5ba10a02781800b9e5359eeb9bb0f978d5cbe7a1d7308251048f850c33b22a0",
+      "bytes": 49163
+    },
+    {
+      "path": "data/p1_clean/blocks_rules.jsonl",
+      "records": 85,
+      "sha256": "8f74f5a0edbb8255e501e41f509f042bee706b3f672b9f5051e2a0512089a4f6",
+      "bytes": 46384
+    },
+    {
+      "path": "data/p1_clean/blocks_fixed.jsonl",
+      "records": 85,
+      "sha256": "e6fd169f25b900cda96c6e85d1532356c8e131b07979c949b558dd269dc79b4d",
+      "bytes": 51046
+    },
+    {
+      "path": "data/p1_clean/blocks.jsonl",
+      "records": 85,
+      "sha256": "7313a271195e6caa82c8f41798c51a4942dd2cd5e11cc5fd13170d56f898b0aa",
+      "bytes": 52427
+    },
+    {
+      "path": "data/p1_clean/furniture.json",
+      "records": null,
+      "sha256": "47a5ff430ea852f8552214a8557167d47f3593c55ed5de5809b5e2710569665c",
+      "bytes": 3457
+    }
+  ],
+  "llm": {
+    "calls": 0,
+    "cost_usd": 0.0
+  },
+  "counts": {
+    "pages": 6,
+    "lines": 147,
+    "furniture_removed": 10,
+    "content_lines": 137,
+    "blocks": 85,
+    "blocks_heading": 27,
+    "blocks_paragraph": 7,
+    "blocks_list_item": 49,
+    "blocks_caption": 1,
+    "blocks_table": 1,
+    "fixes_accepted": 36,
+    "fixes_rejected": 2,
+    "reviews_applied": 6,
+    "pending_review": 0
+  },
+  "notes": [
+    "phạm vi: trang PDF 4-9 (pilot)"
+  ],
+  "error": null
+}

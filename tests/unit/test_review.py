@@ -13,7 +13,7 @@ from dataminer.core.config import FixCfg
 from dataminer.core.prompts import Prompt
 from dataminer.devtools.auto_review import REVIEWER, fill_from_truth
 from dataminer.devtools.oracle_fix import oracle_outputs
-from dataminer.devtools.sample_book import SampleBook, make_sample_book
+from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_ocr
 from dataminer.ingest.blocks import Block, build_blocks
 from dataminer.ingest.guards import Fix, GlossaryIndex
@@ -28,11 +28,12 @@ from dataminer.ingest.review import (
     import_csv,
     save_decisions,
 )
+from tests.conftest import SampleBookFor
 
 
 @pytest.fixture(scope="module")
-def book(tmp_path_factory: pytest.TempPathFactory) -> SampleBook:
-    return make_sample_book(tmp_path_factory.mktemp("book"), seed=7)
+def book(sample_book_for: SampleBookFor) -> SampleBook:
+    return sample_book_for(7)
 
 
 @pytest.fixture(scope="module")

@@ -9,11 +9,12 @@ import pymupdf
 import pytest
 
 from dataminer.devtools.sample_book import FRONT_PAGES, SampleBook, make_sample_book
+from tests.conftest import SampleBookFor
 
 
 @pytest.fixture(scope="module")
-def book(tmp_path_factory: pytest.TempPathFactory) -> SampleBook:
-    return make_sample_book(tmp_path_factory.mktemp("book"), seed=7)
+def book(sample_book_for: SampleBookFor) -> SampleBook:
+    return sample_book_for(7)
 
 
 def _words(text: str) -> Counter[str]:

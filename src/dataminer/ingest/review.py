@@ -24,7 +24,7 @@ from dataminer.ingest.blocks import Block, Review
 from dataminer.ingest.guards import Fix
 from dataminer.ingest.survey import text_ocr_signals
 
-Priority = Literal["1-SỐ LIỆU", "2-BỊ TỪ CHỐI", "3-NGHI LỖI"]
+Priority = Literal["1-SỐ LIỆU", "2-BỊ TỪ CHỐI", "3-NGHI LỖI", "4-KIỂM TRA MẪU"]
 DecisionKind = Literal["accept", "keep", "edit"]
 RE_NUMBER_VALUE = re.compile(r"\d+(?:[.,]\d+)?(?:[-–]\d+(?:[.,]\d+)?)?%?")
 COLUMNS = [
@@ -235,8 +235,52 @@ def build_queue(blocks: list[Block]) -> list[ReviewItem]:
         for item in candidates:
             if item.item_id not in reviewed:
                 items.setdefault(item.item_id, item)
-    order = {"1-SỐ LIỆU": 0, "2-BỊ TỪ CHỐI": 1, "3-NGHI LỖI": 2}
+    order = {"1-SỐ LIỆU": 0, "2-BỊ TỪ CHỐI": 1, "3-NGHI LỖI": 2, "4-KIỂM TRA MẪU": 3}
     return sorted(items.values(), key=lambda i: (order[i.priority], i.page, i.block_id, i.position))
+
+
+AUDITABLE_RULES = ("ok", "digit_letter")  # thay đổi 1 token LLM đã được chấp nhận
+
+
+def audit_sample(blocks: list[Block], rate: float) -> list[ReviewItem]:
+    """Mẫu NGẪU NHIÊN-TẤT ĐỊNH các thay đổi LLM ĐÃ ĐƯỢC CHẤP NHẬN để người duyệt kiểm tra
+    chất lượng (N10: duyệt 2-5%). Lý do: sửa sai thành một từ sai khác (gặp thật ở P1.4:
+    "kinh dien" → "kinh diễn") không có tín hiệu nào - chỉ kiểm tra mẫu mới thấy.
+    Chọn theo thứ tự hash của item_id → cùng block/rate luôn ra cùng mẫu; rate=1 → tất cả.
+    Quyết định hợp lệ: keep (LLM đúng) hoặc edit (sửa lại)."""
+    if rate <= 0:
+        return []
+    candidates: list[ReviewItem] = []
+    for block in blocks:
+        reviewed = {r.item_id for r in block.reviews}
+        for fix in block.fixes:
+            if not (fix.accepted and fix.rule in AUDITABLE_RULES and len(fix.after.split()) == 1):
+                continue
+            tokens = _cell_text(block, fix.cell).split()
+            pos = _locate(tokens, fix.after, fix.position)
+            if pos is None:
+                continue
+            item = _item(
+                block,
+                "4-KIỂM TRA MẪU",
+                fix.cell,
+                pos,
+                fix.after,
+                None,
+                f"kiểm tra mẫu: LLM đã sửa `{fix.before}` → `{fix.after}` ({fix.rule})",
+            )
+            if item.item_id not in reviewed:
+                candidates.append(item)
+    if not candidates:
+        return []
+    count = max(1, round(rate * len(candidates))) if rate < 1 else len(candidates)
+    chosen = sorted(candidates, key=lambda i: stable_id(i.item_id))[:count]
+    return sorted(chosen, key=lambda i: (i.page, i.block_id, i.position))
+
+
+def known_items(blocks: list[Block]) -> list[ReviewItem]:
+    """Mọi mục có thể xuất hiện trong CSV (hàng đợi + toàn bộ mẫu kiểm tra) - dùng khi nhập."""
+    return [*build_queue(blocks), *audit_sample(blocks, 1.0)]
 
 
 # --------------------------------------------------------------------------- CSV
