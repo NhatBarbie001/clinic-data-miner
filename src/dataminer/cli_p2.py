@@ -14,7 +14,7 @@ p2_app = typer.Typer(help="P2 - dựng cây cấu trúc sách.", no_args_is_help
 
 RootOption = typer.Option(None, "--root", help="Gốc dự án.", show_default=False)
 TruthOption = typer.Option(None, "--truth", help="Đáp án (mặc định <pdf>.truth.json).")
-EvalOption = typer.Option(False, "--eval", help="So với đáp án sách mẫu (G1), exit 1 nếu sai.")
+EvalOption = typer.Option(False, "--eval", help="So với đáp án sách mẫu, exit 1 nếu chưa đạt.")
 
 
 def _load(root: Path | None) -> Settings:
@@ -243,3 +243,142 @@ def tree_cmd(
         typer.echo("\n" + format_eval(report))
         if not all_pass(report):
             raise typer.Exit(1)
+
+
+sections_app = typer.Typer(
+    help="P2.4 - loại mục (section_type) + vòng duyệt.", no_args_is_help=True
+)
+p2_app.add_typer(sections_app, name="sections")
+ReviewerOption = typer.Option("reviewer", "--reviewer", help="Tên người duyệt (ghi vào từ điển).")
+OutOption = typer.Option(
+    None, "--out", help="File CSV (mặc định data/p2_tree/section_proposals.csv)."
+)
+
+
+def _proposals_path(settings: Settings) -> Path:
+    return p2_dir(settings) / "section_proposals.jsonl"
+
+
+def _map_path(settings: Settings) -> Path:
+    return settings.paths.data_dir.parent / settings.p2.sections.map
+
+
+@sections_app.command("map")
+def sections_map_cmd(
+    root: Path | None = RootOption,
+    evaluate: bool = EvalOption,
+    truth: Path | None = TruthOption,
+    no_llm: bool = NoLLMOption,
+) -> None:
+    """Gán loại mục cho nodes.jsonl (cập nhật tại chỗ) + đề xuất chờ duyệt (cần `dm p2 tree`)."""
+    from dataminer.core.io import read_jsonl, write_jsonl
+    from dataminer.core.llm_client import LLMClient
+    from dataminer.core.llm_types import LLMError
+    from dataminer.core.prompts import PromptError, load_prompt
+    from dataminer.evaluation.p1_eval import format_eval
+    from dataminer.evaluation.p2_eval import all_pass, eval_sections
+    from dataminer.ingest.blocks import Block
+    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.structure.section_mapper import SectionMapError, load_section_map, map_sections
+    from dataminer.structure.tree_builder import Node, render_tree_md
+
+    settings = _load(root)
+    out_dir = p2_dir(settings)
+    nodes_path = out_dir / "nodes.jsonl"
+    if not nodes_path.is_file():
+        typer.echo(f"Chưa có {nodes_path} - chạy `dm p2 tree` trước.", err=True)
+        raise typer.Exit(1)
+    nodes = list(read_jsonl(nodes_path, Node))
+    cfg = settings.p2.sections
+    use_llm = cfg.llm_fallback and not no_llm
+    try:
+        mapping = load_section_map(_map_path(settings))
+        prompt = load_prompt(settings.paths.prompts_dir, cfg.prompt) if use_llm else None
+        client = LLMClient(settings) if use_llm else None
+        result = map_sections(nodes, mapping, cfg, client=client, prompt=prompt)
+    except (SectionMapError, LLMError, PromptError, ConfigError) as exc:
+        typer.echo(f"✗ {exc}", err=True)
+        raise typer.Exit(1) from None
+    write_jsonl(nodes_path, nodes)
+    write_jsonl(_proposals_path(settings), result.proposals)
+    blocks = list(read_jsonl(p1_dir(settings) / "blocks.jsonl", Block))
+    (out_dir / "tree.md").write_text(render_tree_md(nodes, blocks), encoding="utf-8")
+
+    c = result.counts
+    typer.echo(
+        f"Loại mục: {sum(c.values())} mục · từ điển {c['map']} · khớp gần {c['map_fuzzy']} · "
+        f"kế thừa {c['inherited']} · LLM {c['llm']} · chưa rõ {c['none']} "
+        f"({result.llm_calls} lời gọi mới, ${result.llm_cost_usd:.6f})"
+    )
+    for p in result.proposals:
+        typer.echo(f"  ⚑ chờ duyệt [{p.source}] '{p.titles[0]}' → {p.proposal} ({p.reason})")
+    for w in result.warnings:
+        typer.echo(f"  ⚠ {w}")
+    if result.proposals:
+        typer.echo("  → `dm p2 sections export`, điền decision, rồi `dm p2 sections import <csv>`")
+    typer.echo(f"  đầu ra: {nodes_path} (cập nhật), {_proposals_path(settings).name}, tree.md")
+
+    if evaluate:
+        truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(
+            ".truth.json"
+        )
+        if not truth_path.is_file():
+            typer.echo(f"Không có đáp án {truth_path} - chỉ đánh giá được với sách mẫu.", err=True)
+            raise typer.Exit(1)
+        pages = (min(b.page_start for b in blocks), max(b.page_end for b in blocks))
+        report = eval_sections(nodes, json.loads(truth_path.read_text(encoding="utf-8")), pages)
+        typer.echo("\n" + format_eval(report))
+        if not all_pass(report):
+            raise typer.Exit(1)
+
+
+@sections_app.command("export")
+def sections_export_cmd(root: Path | None = RootOption, out: Path | None = OutOption) -> None:
+    """Xuất các đề xuất chờ duyệt ra CSV (mở bằng Excel)."""
+    from dataminer.core.io import read_jsonl
+    from dataminer.structure.section_mapper import SectionProposal, export_proposals
+
+    settings = _load(root)
+    src = _proposals_path(settings)
+    if not src.is_file():
+        typer.echo("Chưa có đề xuất - chạy `dm p2 sections map` trước.", err=True)
+        raise typer.Exit(1)
+    proposals = list(read_jsonl(src, SectionProposal))
+    path = out or p2_dir(settings) / "section_proposals.csv"
+    export_proposals(proposals, path)
+    typer.echo(
+        f"✓ {path}: {len(proposals)} đề xuất. Điền cột decision = accept | edit | skip "
+        "(edit: ghi loại đúng vào edited_value)."
+    )
+
+
+@sections_app.command("import")
+def sections_import_cmd(
+    csv_path: Path, root: Path | None = RootOption, reviewer: str = ReviewerOption
+) -> None:
+    """Nhập CSV đã duyệt → GHI THÊM vào từ điển tên mục (chạy lại `map` để áp dụng)."""
+    from dataminer.core.io import read_jsonl
+    from dataminer.structure.section_mapper import (
+        SectionMapError,
+        SectionProposal,
+        import_proposals,
+    )
+
+    settings = _load(root)
+    src = _proposals_path(settings)
+    if not src.is_file():
+        typer.echo("Chưa có đề xuất - chạy `dm p2 sections map` trước.", err=True)
+        raise typer.Exit(1)
+    try:
+        added = import_proposals(
+            csv_path, list(read_jsonl(src, SectionProposal)), _map_path(settings), reviewer=reviewer
+        )
+    except SectionMapError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from None
+    for key, value in added:
+        typer.echo(f"  + {key}: {value}")
+    typer.echo(
+        f"✓ thêm {len(added)} khóa vào {_map_path(settings).name}. "
+        "Chạy lại `dm p2 sections map` để áp dụng."
+    )

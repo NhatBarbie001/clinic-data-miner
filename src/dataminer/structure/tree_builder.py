@@ -40,6 +40,7 @@ class Node(BaseRecord):
     display_title: str  # dạng đọc được, vd. "Triệu chứng"
     numbering: str | None = None
     section_type: str | None = None  # P2.4 điền cho section/subsection
+    section_source: str | None = None  # P2.4: map | map_fuzzy | inherited | llm | none
     path: list[str]
     heading_block_id: str | None = None
     block_ids: list[str] = Field(default_factory=list)  # nội dung RIÊNG của nút (không gồm con)

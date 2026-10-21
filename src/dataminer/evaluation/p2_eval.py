@@ -219,5 +219,61 @@ def eval_tree(
     }
 
 
+def eval_sections(
+    nodes: list[Node], truth: dict[str, Any], pages: tuple[int, int]
+) -> dict[str, Any]:
+    """G5: `section_type` của mọi nút mục/mục con đúng như đáp án (≥ 95%), `other` < 5%.
+
+    Ghép nút (thứ tự duyệt trước = thứ tự đọc) với tiêu đề mục của đáp án theo thứ tự, kiểm văn
+    bản trùng (khóa không dấu giống ≥ 0.8) - lệch thì không đạt, không ghép mò.
+    """
+    lo, hi = pages
+    expected = [
+        h
+        for h in truth["headings"]
+        if lo <= h["pdf_page"] <= hi and h["level"] in ("section", "subsection")
+    ]
+    got = [n for n in nodes if n.level in ("section", "subsection")]
+    problems: list[str] = []
+    correct = 0
+    misaligned = False
+    for i, want in enumerate(expected):
+        if i >= len(got):
+            problems.append(f"thiếu mục #{i + 1} '{want['text']}'")
+            misaligned = True
+            continue
+        n = got[i]
+        similar = difflib.SequenceMatcher(None, match_key(n.title), match_key(want["text"]))
+        if similar.ratio() < 0.8:
+            problems.append(f"#{i + 1} lệch thứ tự: '{n.title}' ↔ đáp án '{want['text']}'")
+            misaligned = True
+            break
+        if n.section_type == want["section_type"]:
+            correct += 1
+        else:
+            problems.append(f"#{i + 1} '{n.title}': {n.section_type} ≠ {want['section_type']}")
+    extra = [f"thừa mục '{n.title}'" for n in got[len(expected) :]]
+    problems.extend(extra)
+    accuracy = correct / len(expected) if expected else 0.0
+    other = sum(n.section_type in (None, "other") for n in got) / len(got) if got else 1.0
+    sources = [n.section_source or "chưa gán" for n in got]
+    return {
+        "G5_section_types": {
+            "truth": len(expected),
+            "found": len(got),
+            "correct": correct,
+            "accuracy": round(accuracy, 4),
+            "other_ratio": round(other, 4),
+            "by_source": {s: sources.count(s) for s in dict.fromkeys(sources)},
+            "problems": problems,
+            "pass": bool(expected)
+            and accuracy >= 0.95
+            and other < 0.05
+            and not misaligned
+            and not extra,
+        }
+    }
+
+
 def all_pass(report: dict[str, Any]) -> bool:
     return all(item.get("pass") for item in report.values())

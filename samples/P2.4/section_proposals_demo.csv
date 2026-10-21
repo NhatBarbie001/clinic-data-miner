@@ -1,0 +1,4 @@
+﻿item_id,source,disease,title,normalized,proposal,reason,decision,edited_value
+sp_50e6deab06f35a14,map_fuzzy,Đái tháo đường,2. NGUYÊN NHÂU,nguyen nhau,cause,khớp gần 'nguyen nhan' (0.91),,
+sp_8adaa8b2edaf994a,llm,Đái tháo đường,5. ĐIỀU KHIỂN,dieu khien,prevention,"nội dung là tái khám, theo dõi biến chứng",,
+sp_1ebdeb9387b32283,llm,Đái tháo đường,7. THEO DÕI SAU ĐIỀU TRỊ,theo doi sau dieu tri,prevention,"nội dung là tái khám, theo dõi biến chứng",,

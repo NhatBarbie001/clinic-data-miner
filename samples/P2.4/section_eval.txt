@@ -1,0 +1,3 @@
+Đánh giá G5 (sách mẫu seed 7, pilot trang PDF 4-9) - dm p2 sections map --eval
+
+✓ G5_section_types: truth=22, found=22, correct=22, accuracy=1.0, other_ratio=0.0, by_source={'map': 22}

@@ -203,11 +203,22 @@ class HeadingsCfg(_Strict):
     prompt: str = "p2_classify_heading"
 
 
+class SectionsCfg(_Strict):
+    """P2.4 - ánh xạ loại mục."""
+
+    map: str = "configs/section_map.yaml"  # từ điển tên mục → loại (tương đối gốc repo)
+    fuzzy_min: float = Field(default=0.9, gt=0, le=1)  # khớp gần (chịu lỗi OCR nhầm 1 ký tự)
+    llm_fallback: bool = True  # tên mục lạ → LLM đề xuất → hàng đợi duyệt
+    prompt: str = "p2_classify_section"
+    context_chars: int = Field(default=400, ge=0)  # phần đầu nội dung mục gửi kèm cho LLM
+
+
 class P2Cfg(_Strict):
     """Phase P2 - dựng cây cấu trúc (các task sau bổ sung nhóm của mình)."""
 
     toc: TocCfg = Field(default_factory=TocCfg)
     headings: HeadingsCfg = Field(default_factory=HeadingsCfg)
+    sections: SectionsCfg = Field(default_factory=SectionsCfg)
 
 
 class Settings(_Strict):

@@ -72,3 +72,9 @@ p2:                          # P2 - dựng cây cấu trúc (docs/phases/P2/plan
     toc_match_min: 0.85      # khớp gần với mục lục (tiêu đề mục lục có thể còn lỗi OCR)
     llm_fallback: true       # tiêu đề còn tin cậy thấp → hỏi LLM (tác vụ `classify`)
     prompt: p2_classify_heading
+  sections:                  # P2.4 - ánh xạ loại mục (section_type)
+    map: configs/section_map.yaml   # tên mục KHÔNG DẤU → loại; người duyệt bổ sung dần
+    fuzzy_min: 0.9           # khớp gần với khóa từ điển (chịu lỗi OCR nhầm 1 ký tự)
+    llm_fallback: true       # tên mục lạ → LLM đề xuất → hàng đợi duyệt (CSV)
+    prompt: p2_classify_section
+    context_chars: 400       # phần đầu nội dung mục gửi kèm cho LLM

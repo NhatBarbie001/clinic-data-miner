@@ -1,0 +1,30 @@
+# Từ điển tên mục → loại mục (P2.4). Xem docs/phases/P2/P2.4_plan.md.
+#
+# Định dạng: mỗi dòng `khóa: loại`, có thể kèm `# ghi chú`.
+#   - khóa: tên mục KHÔNG DẤU, chữ thường, đã bỏ số thứ tự ("3. TRIỆU CHỨNG" → "trieu chung")
+#   - loại: definition, cause, risk_factor, pathophysiology, symptom, paraclinical, diagnosis,
+#           differential_diagnosis, treatment, complication, prognosis, prevention, other
+# `dm p2 sections import` GHI THÊM vào cuối file các tên mục đã được người duyệt chấp nhận.
+
+dai cuong: definition
+dinh nghia: definition
+nguyen nhan: cause
+benh nguyen: cause
+nguyen nhan - co che: cause
+yeu to nguy co: risk_factor
+co che benh sinh: pathophysiology
+sinh ly benh: pathophysiology
+trieu chung: symptom
+lam sang: symptom
+trieu chung lam sang: symptom
+can lam sang: paraclinical
+xet nghiem: paraclinical
+trieu chung can lam sang: paraclinical
+chan doan: diagnosis
+chan doan xac dinh: diagnosis
+chan doan phan biet: differential_diagnosis
+dieu tri: treatment
+bien chung: complication
+tien luong: prognosis
+phong benh: prevention
+du phong: prevention

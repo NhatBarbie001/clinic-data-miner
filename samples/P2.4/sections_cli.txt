@@ -1,0 +1,4 @@
+Loại mục: 22 mục · từ điển 22 · khớp gần 0 · kế thừa 0 · LLM 0 · chưa rõ 0 (0 lời gọi mới, $0.000000)
+  đầu ra: data/p2_tree/nodes.jsonl (cập nhật), section_proposals.jsonl, tree.md
+
+✓ G5_section_types: truth=22, found=22, correct=22, accuracy=1.0, other_ratio=0.0, by_source={'map': 22}
