@@ -1,0 +1,11 @@
+Số lời gọi API thật: 10
+Tổng đã chi: $0.002938 / ngân sách $20.0 (còn $19.9971)
+
+Theo tác vụ:
+  - fix_ocr   $0.002838 / $2.0
+  - ping      $0.000100 / $1.0
+
+Theo model:
+  - deepseek/deepseek-v4.1-flash-1017        $0.002938
+
+Cache: 10 response, 72.0 KB

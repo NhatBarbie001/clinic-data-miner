@@ -1,0 +1,15 @@
+# P1.4 - đánh giá sửa lỗi OCR (DeepSeek thật, pilot trang 4-9, prompt p1_fix_ocr@v1)
+
+Thống kê: {'blocks_changed': 31, 'fixes_accepted': 36, 'fixes_rejected': {'G-num': 2}, 'flags': {'joined_across_pages': 1, 'nfd_fixed': 2, 'dose_suspect': 2, 'fix_partially_rejected': 2}}
+
+✓ G5_wer: words=1004, before=0.0408, after=0.005, target=0.01
+✓ G6_errors_fixed: fixed=35, total=38, rate=0.9211, by_kind={'char_confusion': '7/7', 'digit_confusion': '2/2', 'drop_diacritics': '22/24', 'merge_words': '1/1', 'nfd_line': '2/2', 'wrong_tone': '5/6'}, target=0.8
+    unfixed: tr.5 drop_diacritics: điển → dien
+    unfixed: tr.6 drop_diacritics: CHỨNG → CHUNG
+    unfixed: tr.9 wrong_tone: đồ → độ
+    miscorrected: tr.5 drop_diacritics: điển → dien
+✓ G7_introduced: tokens=0, rate=0.0, target=0.003
+✓ G8_numbers: 
+    dose_errors: {'error': 'Paracetamol 500 mg → Paracetamol 5OO mg', 'kept': True, 'flagged': True}
+    dose_errors: {'error': '1 g → l g', 'kept': True, 'flagged': True}
+✓ G9_nfc: 

@@ -160,11 +160,23 @@ class BlocksCfg(_Strict):
     heading_size_delta: float = Field(default=1.5, gt=0)  # chỉ dựa cỡ chữ: phải ≥ thân bài + delta
 
 
+class FixCfg(_Strict):
+    """P1.4 - sửa lỗi OCR bằng LLM + guard theo token."""
+
+    enabled: bool = True
+    prompt: str = "p1_fix_ocr"  # file prompts/<prompt>.md
+    blocks_per_call: int = Field(default=25, ge=1, le=200)
+    max_changed_ratio: float = Field(default=0.35, gt=0, le=1)  # > tỉ lệ này → từ chối cả block
+    min_similarity: float = Field(default=0.6, ge=0, le=1)  # giống nhau (đã bỏ dấu) tối thiểu
+    glossary: str = "configs/glossary.yaml"  # thuật ngữ được bảo vệ (tương đối gốc repo)
+
+
 class P1Cfg(_Strict):
     """Phase P1 - trích xuất và làm sạch text (các task sau bổ sung nhóm của mình)."""
 
     furniture: FurnitureCfg = Field(default_factory=FurnitureCfg)
     blocks: BlocksCfg = Field(default_factory=BlocksCfg)
+    fix: FixCfg = Field(default_factory=FixCfg)
 
 
 class Settings(_Strict):

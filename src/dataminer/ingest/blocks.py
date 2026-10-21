@@ -16,6 +16,7 @@ from pydantic import Field
 from dataminer.core.config import BlocksCfg
 from dataminer.core.schemas import BaseRecord, stable_id
 from dataminer.core.text_vi import has_vietnamese_marks, nfc
+from dataminer.ingest.guards import Fix
 from dataminer.ingest.pdf_reader import ROW_TOLERANCE, Line
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
@@ -132,6 +133,7 @@ class Block(BaseRecord):
     marker: str | None = None  # ký hiệu gạch đầu dòng ("-", "1."...) - không nằm trong text
     rows: list[list[str]] | None = None
     flags: list[str] = Field(default_factory=list)
+    fixes: list[Fix] = Field(default_factory=list)  # P1.4: từng sửa đổi token (chấp nhận/từ chối)
 
 
 def join_text(prev: str, nxt: str) -> str:

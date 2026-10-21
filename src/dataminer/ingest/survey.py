@@ -122,51 +122,52 @@ def find_heading_candidates(lines: list[SurveyLine], body_size: float) -> dict[s
     return {"candidates": candidates, "toc_entries": toc_entries}
 
 
-def find_ocr_signals(lines: list[SurveyLine]) -> list[dict[str, Any]]:
-    """Dấu hiệu lỗi OCR phát hiện được KHÔNG cần từ điển. Lỗi mất dấu/sai dấu tạo ra từ
-    hợp lệ (vd. "khop", "đáu") không bắt được ở đây - việc của P1."""
-    signals: list[dict[str, Any]] = []
-
-    def add(ln: SurveyLine, kind: str, token: str, detail: str) -> None:
-        signals.append(
-            {
-                "page": ln.page,
-                "index": ln.index,
-                "kind": kind,
-                "token": token,
-                "detail": detail,
-                "line": ln.text,
-            }
-        )
-
-    for ln in lines:
-        if not is_nfc(ln.text_raw):
-            add(ln, "nfd_line", "", "dòng mã hóa Unicode tổ hợp (NFD) - cần chuẩn hóa NFC")
-        text = nfc(ln.text)
-        tokens = text.split()
-        for i, tok in enumerate(tokens):
-            core = tok.strip(".,;:!?()[]\"'“”-–")
-            if RE_DIGIT_LOOKALIKE.search(core) and any(c.isdigit() for c in core):
-                add(ln, "digit_lookalike", core, "chữ O/I/l lẫn trong số (vd. 5OO)")
-            elif core in ("l", "I", "O") and i + 1 < len(tokens) and tokens[i + 1].lower() in UNITS:
-                add(
-                    ln,
-                    "digit_lookalike",
-                    f"{core} {tokens[i + 1]}",
-                    "chữ cái đứng thay số trước đơn vị",
-                )
-            elif RE_DIGIT_IN_WORD.search(core.lower()) and not core.isupper():
-                add(ln, "digit_in_word", core, "chữ số dính trong từ (vd. 1à)")
-            if RE_MISSING_SPACE.search(tok):
-                add(ln, "missing_space", tok, "thiếu khoảng trắng quanh dấu câu (dính từ?)")
-        for word in RE_LETTERS.findall(text):
-            if has_vietnamese_marks(word) and not is_valid_syllable(word):
-                add(
-                    ln,
+def text_ocr_signals(text: str) -> list[tuple[str, str, str]]:
+    """Dấu hiệu lỗi OCR trong một chuỗi (đã NFC): [(loại, token, mô tả)]. Dùng cho khảo sát
+    (P0.5) và để gắn cờ phần còn sót sau khi sửa (P1.4)."""
+    found: list[tuple[str, str, str]] = []
+    tokens = text.split()
+    for i, tok in enumerate(tokens):
+        core = tok.strip(".,;:!?()[]\"'“”-–")
+        if RE_DIGIT_LOOKALIKE.search(core) and any(c.isdigit() for c in core):
+            found.append(("digit_lookalike", core, "chữ O/I/l lẫn trong số (vd. 5OO)"))
+        elif core in ("l", "I", "O") and i + 1 < len(tokens) and tokens[i + 1].lower() in UNITS:
+            found.append(
+                ("digit_lookalike", f"{core} {tokens[i + 1]}", "chữ cái đứng thay số trước đơn vị")
+            )
+        elif RE_DIGIT_IN_WORD.search(core.lower()) and not core.isupper():
+            found.append(("digit_in_word", core, "chữ số dính trong từ (vd. 1à)"))
+        if RE_MISSING_SPACE.search(tok):
+            found.append(("missing_space", tok, "thiếu khoảng trắng quanh dấu câu (dính từ?)"))
+    for word in RE_LETTERS.findall(text):
+        if has_vietnamese_marks(word) and not is_valid_syllable(word):
+            found.append(
+                (
                     "invalid_syllable",
                     word,
                     "không phải âm tiết tiếng Việt hợp lệ (nhầm ký tự hoặc dính từ)",
                 )
+            )
+    return found
+
+
+def find_ocr_signals(lines: list[SurveyLine]) -> list[dict[str, Any]]:
+    """Dấu hiệu lỗi OCR phát hiện được KHÔNG cần từ điển. Lỗi mất dấu/sai dấu tạo ra từ
+    hợp lệ (vd. "khop", "đáu") không bắt được ở đây - việc của P1."""
+    signals: list[dict[str, Any]] = []
+    for ln in lines:
+        base = {"page": ln.page, "index": ln.index, "line": ln.text}
+        if not is_nfc(ln.text_raw):
+            signals.append(
+                {
+                    **base,
+                    "kind": "nfd_line",
+                    "token": "",
+                    "detail": "dòng mã hóa Unicode tổ hợp (NFD) - cần chuẩn hóa NFC",
+                }
+            )
+        for kind, token, detail in text_ocr_signals(nfc(ln.text)):
+            signals.append({**base, "kind": kind, "token": token, "detail": detail})
     return signals
 
 

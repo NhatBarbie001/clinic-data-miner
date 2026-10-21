@@ -28,6 +28,7 @@ budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
   total_usd: 20.0
   per_task_usd:
     ping: 1.0                # P0 chỉ dùng ping → P0 tối đa $1
+    fix_ocr: 2.0             # P1.4 sửa lỗi OCR (dự kiến pilot < $0.01)
 
 pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
   page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
@@ -51,3 +52,10 @@ p1:                          # P1 - trích xuất và làm sạch text (docs/pha
     table_min_rows: 2        # bảng = ≥ 2 hàng liên tiếp...
     table_min_cells: 2       # ...mỗi hàng ≥ 2 dòng cùng dải dọc
     heading_size_delta: 1.5  # tiêu đề chỉ dựa vào cỡ chữ: phải ≥ thân bài + 1.5pt
+  fix:                       # P1.4 - sửa lỗi OCR bằng LLM (tác vụ `fix_ocr` trong models.yaml)
+    enabled: true
+    prompt: p1_fix_ocr       # prompts/p1_fix_ocr.md (có version, ghi vào manifest)
+    blocks_per_call: 25      # số block mỗi lời gọi (gửi theo trang để có ngữ cảnh)
+    max_changed_ratio: 0.35  # LLM đổi > 35% số từ của block → từ chối cả block
+    min_similarity: 0.6      # từ mới phải giống từ cũ (sau khi bỏ dấu) ≥ 60%
+    glossary: configs/glossary.yaml

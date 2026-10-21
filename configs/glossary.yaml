@@ -1,0 +1,27 @@
+# Thuật ngữ ĐƯỢC BẢO VỆ khi sửa lỗi OCR (P1.4): nếu từ gốc nằm trong danh sách này, LLM
+# không được đổi. So khớp không phân biệt hoa/thường, bỏ dấu câu bao quanh.
+# Ngoài danh sách, guard còn tự bảo vệ: từ có chữ số, có chữ HOA ở giữa từ, gạch nối giữa chữ
+# Latin (HLA-DR4, anti-CCP). Bổ sung khi có sách thật (tên thuốc, hoạt chất, vi khuẩn...).
+terms:
+  # thuốc / hoạt chất
+  - paracetamol
+  - prednisolon
+  - methotrexat
+  - omeprazol
+  - amoxicilin
+  - clarithromycin
+  - aspirin
+  - corticoid
+  - steroid
+  # vi sinh, thuật ngữ Latin/Anh
+  - helicobacter
+  - pylori
+  - urease
+  - dmard
+  - crp
+  - rf
+  # đơn vị
+  - mg
+  - g
+  - ml
+  - mcg
