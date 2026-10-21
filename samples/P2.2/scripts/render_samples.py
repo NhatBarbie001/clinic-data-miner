@@ -39,7 +39,7 @@ for i, d in enumerate(decisions, 1):
     )
 (OUT / "heading_levels.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
 
-# ------------------------------------------------ tình huống ngoài sách mẫu (block tự dựng, không LLM)
+# ----------------------------- tình huống ngoài sách mẫu (block tự dựng, không LLM)
 n = 0
 
 
@@ -122,10 +122,11 @@ lines = [
     "| Trang | Tiêu đề | Cỡ | → Cấp | Tin cậy | Nguồn | Cờ | Lý do |",
     "|---|---|---|---|---|---|---|---|",
 ]
+size_of = {b.id: b.font_size for b in demo}
 for d in res.decisions:
     lines.append(
-        f"| {d.page} | `{d.text}` | {by_size if (by_size := next(b.font_size for b in demo if b.id == d.block_id)) else ''} | "
-        f"**{d.level}** | {d.confidence} | {d.source} | {', '.join(d.flags)} | {' · '.join(d.reasons)} |"
+        f"| {d.page} | `{d.text}` | {size_of[d.block_id]} | **{d.level}** | {d.confidence} | "
+        f"{d.source} | {', '.join(d.flags)} | {' · '.join(d.reasons)} |"
     )
 lines.append("\n**Cảnh báo:**\n")
 lines += [f"- {w}" for w in res.warnings]

@@ -1,3 +1,7 @@
+"""P2.1 - mutation check: cài từng đột biến vào code → test phải FAIL; xác nhận đột biến áp dụng
+được (chuỗi gốc khớp đúng 1 lần), luôn khôi phục file. Chạy từ gốc repo:
+uv run python samples/P2.1/scripts/mutation_check.py [Mn]"""
+
 import subprocess
 import sys
 from pathlib import Path
@@ -43,9 +47,7 @@ M = [
     ("M11 eval bỏ so trang mục lục", E, "if result.toc_pages != truth_pages:", "if False:"),
     ("M12 eval bỏ so cấp", E, '("level", want["level"]),', ""),
 ]
-import os
-
-only = os.environ.get("ONLY")
+only = sys.argv[1] if len(sys.argv) > 1 else None
 for name, f, old, new in M:
     if only and not name.startswith(only + " "):
         continue
@@ -74,7 +76,9 @@ for name, f, old, new in M:
         )
         last = r.stdout.strip().splitlines()[-1]
         failed = [
-            l.split("::")[1].split(" ")[0] for l in r.stdout.splitlines() if l.startswith("FAILED")
+            ln.split("::")[1].split(" ")[0]
+            for ln in r.stdout.splitlines()
+            if ln.startswith("FAILED")
         ]
         print(f"{name}: {'BỊ BẮT ✓' if r.returncode else 'SỐNG SÓT ✗'} · {last} · {failed}")
     finally:
