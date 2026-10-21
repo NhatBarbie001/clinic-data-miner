@@ -5,6 +5,108 @@
 > **Kết luận: ✅ P1 QUA GATE trên pilot sách mẫu** (trang PDF 4–9, 85 block, khoảng 1.000 từ).
 > Lưu ý lớn: sách mẫu do chính mình sinh. Xem mục 4 về những gì **phải kiểm lại khi có sách thật**.
 
+## 0. P1 đã xây dựng những gì
+
+### 0.1. Bức tranh chung
+
+P1 biến **lớp chữ OCR thô** trong PDF scan thành **các đoạn văn bản sạch, có cấu trúc, truy vết được**:
+- Thô nghĩa là còn header/footer, câu bị ngắt dòng, mất dấu, `5OO mg`.
+- Đơn vị đầu ra là **block**: một tiêu đề, một đoạn văn, một gạch đầu dòng, hoặc một bảng.
+- Mỗi block biết mình nằm ở trang nào và gồm những dòng PDF nào.
+- Chữ đã được sửa lỗi OCR bằng LLM, nhưng **số liệu không bao giờ bị đổi nếu chưa qua người duyệt**.
+
+Kết quả `data/p1_clean/blocks.jsonl` là đầu vào của P2 (dựng cây chương → bệnh → mục).
+
+### 0.2. Sơ đồ luồng dữ liệu
+
+```
+ data/raw/book01.pdf  (ảnh scan + lớp chữ OCR ẩn)
+        │
+        │  P1.1  pdf_reader.read_lines()        đọc từng dòng, chuẩn hóa Unicode, sắp đúng thứ tự đọc
+        ▼
+ lines.jsonl ─────────── 147 dòng (trang 4–9)
+        │
+        │  P1.2  page_furniture.strip_furniture() bỏ header/footer/số trang, ghi số trang in
+        ▼
+ content_lines.jsonl ─── 137 dòng nội dung        furniture.json ── 10 dòng đã bỏ (kèm lý do) + bảng số trang
+        │
+        │  P1.3  blocks.build_blocks()           nối dòng → đoạn / gạch đầu dòng / tiêu đề / bảng
+        ▼
+ blocks_rules.jsonl ──── 85 block (chưa sửa chữ)
+        │
+        │  P1.4  ocr_fixer.OCRFixer  ──► DeepSeek (theo trang) ──► guards.apply_guarded_fix()
+        │                                    đề xuất sửa             lọc TỪNG TỪ: chặn đổi số, tên thuốc,
+        ▼                                                            dấu câu, thêm/bớt từ, viết lại câu
+ blocks_fixed.jsonl ──── 36 sửa chấp nhận, 2 bị chặn (số liệu → chờ người duyệt)
+        │
+        │  P1.5  review: xuất CSV → người duyệt điền → nhập → apply_decisions()
+        ▼                         └─ decisions.jsonl (bền: chạy lại tự áp lại)
+ blocks.jsonl ────────── 85 block SẠCH  ──►  P2
+        │
+        └─ P1.6  dm p1 run / eval / report     chạy cả chuỗi, manifest, đánh giá G1–G9, báo cáo trước/sau
+```
+
+### 0.3. Một câu đi qua từng bước (dữ liệu thật của pilot)
+
+**Ví dụ 1: số liệu bị OCR đọc sai** (trang PDF 7, trang in 4)
+
+| Bước | Dữ liệu |
+|---|---|
+| PDF (lớp OCR) | `- Paracetamol 5OO mg mỗi lần, không quá 3 g mỗi ngày.`, dòng 3, toạ độ x=58, cỡ chữ 10.2 |
+| P1.3 block | `list_item`, ký hiệu `-` tách riêng → `Paracetamol 5OO mg mỗi lần, …` |
+| P1.4 LLM đề xuất | `5OO` → `500` |
+| P1.4 guard | **⛔ chặn** (luật G-num: token có chữ số), giữ `5OO`, gắn cờ `dose_suspect`, lưu gợi ý `500` |
+| P1.5 người duyệt | `accept` → `Paracetamol 500 mg mỗi lần, không quá 3 g mỗi ngày.`, cờ `reviewed` |
+
+**Ví dụ 2: gạch đầu dòng bị ngắt qua trang**
+
+| Bước | Dữ liệu |
+|---|---|
+| Trang 4, dòng 23 | `- Khớp sưng, đau, nóng; về sau có thể biến dạng như bàn tay` (x=58) |
+| Trang 5 | Header `Bệnh học nội khoa (sách mẫu)` → P1.2 bỏ (lý do: lặp lại ở 3 trang) |
+| Trang 5, dòng 1 | `gió thổi.` (x=64, thụt vào so với dấu `-`) |
+| P1.3 block | **1 block** `Khớp sưng, đau, nóng; về sau có thể biến dạng như bàn tay gió thổi.`, trang 4–5, trang in 1–2, cờ `joined_across_pages` |
+
+**Ví dụ 3: lỗi OCR thông thường** được LLM sửa và guard chấp nhận: `viêrn`→`viêm`, `NGUYEN`→`NGUYÊN`, `1à`→`là`, `phảnứng`→`phản ứng`, `Thuộc`→`Thuốc` (ô bảng). Xem [fix_diff.md](../../../samples/P1.4/fix_diff.md).
+
+### 0.4. Mỗi block chứa gì (đầu vào của P2)
+
+```json
+{"id": "blk_28c4…", "kind": "list_item", "marker": "-",
+ "text": "Paracetamol 500 mg mỗi lần, không quá 3 g mỗi ngày.",      // bản cuối
+ "text_rules": "Paracetamol 5OO mg mỗi lần, không quá 3 g mỗi ngày.",// trước khi sửa
+ "page_start": 7, "page_end": 7, "printed_start": 4, "printed_end": 4,
+ "line_ids": ["ln_…"],                // truy ngược về dòng PDF
+ "font_size": 10.2, "x0": 58.0, "is_upper": false, "numbering": null,  // đặc trưng cho P2
+ "fixes": [{"before": "5OO", "after": "500", "accepted": false, "rule": "G-num", "suggestion": "500"},
+           {"before": "5OO", "after": "500", "accepted": true,  "rule": "review"}],
+ "reviews": [{"decision": "accept", "reviewer": "auto-truth (sách mẫu)", …}],
+ "flags": ["reviewed"]}
+```
+Block bảng có thêm `rows` (hàng × cột). Block tiêu đề có `numbering` (`CHƯƠNG 1`, `3`, `3.1`).
+
+### 0.5. File code và chức năng
+
+| File | Task | Chức năng |
+|---|---|---|
+| [ingest/pdf_reader.py](../../../src/dataminer/ingest/pdf_reader.py) | P1.1 | `read_lines`: đọc lớp chữ PDF thành `Line` (văn bản NFC + bản gốc, toạ độ, cỡ chữ, vùng đầu/thân/chân trang). `reading_order`: gom dòng cùng hàng, sắp trái → phải. `detect_columns`: cảnh báo trang 2 cột. `body_font_size`: cỡ chữ thân bài |
+| [ingest/page_furniture.py](../../../src/dataminer/ingest/page_furniture.py) | P1.2 | Tách header/footer/số trang khỏi nội dung (kèm lý do); ánh xạ trang PDF → số trang in (suy ra khi thiếu, phát hiện khi mâu thuẫn) |
+| [ingest/blocks.py](../../../src/dataminer/ingest/blocks.py) | P1.3 | Định nghĩa `Block`, `Review`. `classify_line`: tiêu đề / gạch đầu dòng / danh sách số / chú thích / mục lục / thân bài. `build_blocks`: nối dòng (kể cả qua trang), gom bảng (kể cả ô thiếu), nối tiêu đề dài. `heading_signals`: dùng chung với khảo sát |
+| [ingest/guards.py](../../../src/dataminer/ingest/guards.py) | P1.4 | **Lớp an toàn**, không dùng LLM: so từng từ giữa bản gốc và bản LLM, áp 6 luật (G-num, G-protect, G-punct, G-sim, G-insdel, G-ratio); ghi mỗi thay đổi thành `Fix` |
+| [ingest/ocr_fixer.py](../../../src/dataminer/ingest/ocr_fixer.py) | P1.4 | Gom block theo trang (bảng gửi từng ô), gọi LLM qua `chat_json`, nhắc lại khi thiếu id, ghi tiến độ theo lô (chạy tiếp được), áp guard, gắn cờ phần nghi lỗi còn sót |
+| [core/prompts.py](../../../src/dataminer/core/prompts.py) · [prompts/p1_fix_ocr.md](../../../prompts/p1_fix_ocr.md) | P1.4 | Nạp prompt có version (`p1_fix_ocr@v1`), version ghi vào manifest |
+| [configs/glossary.yaml](../../../configs/glossary.yaml) | P1.4 | Thuật ngữ LLM không được đổi (thuốc, Latin, đơn vị) |
+| [ingest/review.py](../../../src/dataminer/ingest/review.py) | P1.5 | Hàng đợi duyệt (3 mức ưu tiên + mẫu kiểm tra), xuất/nhập CSV cho Excel có kiểm tra, lưu quyết định bền, áp quyết định (phát hiện stale) |
+| [ingest/pipeline.py](../../../src/dataminer/ingest/pipeline.py) | P1.6 | `run_p1`: chạy cả chuỗi, ghi 6 file + manifest, chạy tiếp và tái lập |
+| [ingest/report.py](../../../src/dataminer/ingest/report.py) | P1.6 | `report.md`: tổng quan, chỉ tiêu, trước/sau theo trang (in đậm từ đã đổi), mục chờ duyệt |
+| [cli_p1.py](../../../src/dataminer/cli_p1.py) | P1.6 | Lệnh `dm p1 run / eval / report / review export / review import` |
+| [evaluation/p1_eval.py](../../../src/dataminer/evaluation/p1_eval.py) | P1.2–P1.6 | Đo G1–G9 so với đáp án sách mẫu (header/footer, số trang, block, bảng, WER, lỗi đã sửa / chưa sửa / sửa sai, số liệu, NFC). **Không đối chiếu được thì báo không đạt**, không bỏ qua im lặng |
+| [devtools/oracle_fix.py](../../../src/dataminer/devtools/oracle_fix.py) | P1.4 | "LLM hoàn hảo" (trả đúng đáp án) làm **đối chứng dương**: tìm ra 3 lỗi của guard/đánh giá trước khi chạy thật |
+| [devtools/auto_review.py](../../../src/dataminer/devtools/auto_review.py) | P1.5 | Điền quyết định duyệt từ đáp án, **chỉ cho sách mẫu** (người duyệt ghi `auto-truth`) |
+| [core/text_vi.py](../../../src/dataminer/core/text_vi.py) | (P0.5) | Dùng trong P1: NFC, bỏ dấu, kiểm tra âm tiết tiếng Việt hợp lệ |
+
+Cấu hình liên quan nằm trong `configs/default.yaml`, nhóm `p1:` (`furniture`, `blocks`, `fix`) và `budget.per_task_usd.fix_ocr`.
+
 ## 1. Đối chiếu từng chỉ tiêu (plan P1, mục 8)
 
 | # | Chỉ tiêu | Ngưỡng | Kết quả | Bằng chứng |
