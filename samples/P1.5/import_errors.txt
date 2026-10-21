@@ -1,0 +1,10 @@
+# Thông báo khi nhập CSV duyệt có dòng sai (không dòng nào được nhập)
+
+## decision sai + edit trống
+bad.csv: 2 dòng không hợp lệ:
+  - dòng 2: decision 'ok' không hợp lệ (accept / keep / edit)
+  - dòng 3: 'edit' nhưng edited_value trống
+
+## mục SỐ LIỆU sửa thành không phải số
+bad.csv: 1 dòng không hợp lệ:
+  - dòng 2: mục SỐ LIỆU phải là số (vd. 500, 7,5-15) - nhận '5O0'

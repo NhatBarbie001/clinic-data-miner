@@ -1,6 +1,6 @@
 # Plan P1: Trích xuất và làm sạch text
 
-> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅, P1.3 ✅, P1.4 ✅; P1.5–P1.6 chưa làm.
+> Trạng thái: `Đang làm` (duyệt 2026-10-20). P1.1 ✅, P1.2 ✅, P1.3 ✅, P1.4 ✅, P1.5 ✅; P1.6 chưa làm.
 > Ngày tạo: 2026-10-20 · Tham chiếu: [plan.md](../../../plan.md) mục P1 · [problem.md](../../../problem.md) mục 4.1, 5 · Đầu vào từ P0: [gate_report.md](../P0/gate_report.md), [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -43,7 +43,7 @@ class Block(BaseRecord):
     rows: list[list[str]] | None  # chỉ với kind="table"
     flags: list[str]              # ocr_suspect, dose_suspect, fix_rejected, nfd_fixed, joined_across_pages...
     fixes: list[Fix]              # từng sửa đổi token: before, after, accepted, reason
-    review: Review | None         # quyết định của người duyệt (P1.5)
+    reviews: list[Review]         # các quyết định của người duyệt (P1.5)
 ```
 
 ## 3. Thay đổi so với plan tổng (plan.md mục P1)
@@ -155,3 +155,4 @@ Chạy lại dùng cache nên $0. Chế độ `replay` cho phép tái lập mà 
 | 2026-10-20 | Duyệt plan (đồng ý Q1, Q2: gửi mọi block qua LLM; lỗi số liệu chỉ gắn cờ). P1.1 xong; thêm quy tắc: mỗi quy tắc cần ít nhất 1 test không dựa trên sách mẫu | Sách mẫu không kiểm được thứ tự đọc (P1.1_report mục 7) |
 | 2026-10-20 | P1.3: `para_gap_ratio` 0.6 → 0.25 (ngưỡng trên khoảng DÔI RA), thêm `heading_size_delta`; G3 97% quá rộng → khi có sách thật cần duyệt tay | Đo khoảng cách thực tế trên sách mẫu; sách mẫu không có 2 đoạn liền nhau |
 | 2026-10-21 | P1.4: G-num có ngoại lệ hẹp (1à→là); G-ratio chỉ block ≥ 5 từ, đếm thay đổi thực chất; G-sim quy rn→m; G-protect chặn cả đổi sang thuật ngữ khác; đánh giá: lỗi không đối chiếu được = không đạt, thêm chỉ số sửa sai | Đối chứng dương ("LLM hoàn hảo") và chạy thật lộ ra 7 lỗi (P1.4_report mục 8) |
+| 2026-10-21 | P1.5: `Block.reviews` (danh sách); có dòng CSV sai → không nhập dòng nào; đầu ra P1.4 = `blocks_fixed.jsonl`, `blocks.jsonl` = sau duyệt; G8 = "0 số đổi mà không qua duyệt" | Một block có nhiều mục duyệt; tránh nhập dở dang; giữ P1.4 tái lập |

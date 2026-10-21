@@ -5,6 +5,7 @@ Chỉ tiêu gate xem docs/phases/P1/plan.md mục 8.
 
 import difflib
 import re
+from collections import Counter
 from typing import Any
 
 from dataminer.core.text_vi import is_nfc, nfc
@@ -279,7 +280,12 @@ def eval_ocr(blocks: list[Any], lines: list[Any], truth: dict[str, Any]) -> dict
         introduced += len(ok_before - ok_after)
         num_before = sorted(t for t in before if _is_number(t))
         num_after = sorted(t for t in after if _is_number(t))
-        if num_before != num_after:
+        # Thay đổi số liệu chỉ hợp lệ khi đi qua NGƯỜI DUYỆT (Fix rule="review", P1.5)
+        reviewed = Counter(f.after for f in block.fixes if f.rule == "review")
+        unexplained = Counter(num_after) - Counter(num_before) - reviewed
+        if unexplained or Counter(num_before) - Counter(num_after) - Counter(
+            f.before for f in block.fixes if f.rule == "review"
+        ):
             number_changes.append(f"{block.id}: {num_before} → {num_after}")
 
     # lỗi đã cài: tìm block chứa dòng lỗi, so số lần xuất hiện bản lỗi/bản đúng trước và sau
@@ -310,14 +316,21 @@ def eval_ocr(blocks: list[Any], lines: list[Any], truth: dict[str, Any]) -> dict
             )
             still = _count_token(block.text, bad_tok) > 0
             flagged = "dose_suspect" in block.flags
+            good_tok = err["original"].split()[err["corrupted"].split().index(bad_tok)]
+            by_review = any(
+                f.rule == "review" and f.before == bad_tok and f.after == good_tok
+                for f in block.fixes
+            )
             dose.append(
                 {
                     "error": f"{err['original']} → {err['corrupted']}",
                     "kept": still,
                     "flagged": flagged,
+                    "fixed_by_review": by_review,
                 }
             )
-            stats[0] += still and flagged
+            # đạt khi: chưa duyệt → giữ nguyên + gắn cờ; đã duyệt → sửa đúng qua người duyệt
+            stats[0] += (still and flagged) or by_review
             continue
         fewer_bad = _count_token(block.text, err["corrupted"]) < _count_token(
             block.text_rules, err["corrupted"]
@@ -367,7 +380,8 @@ def eval_ocr(blocks: list[Any], lines: list[Any], truth: dict[str, Any]) -> dict
         "G8_numbers": {
             "number_changes": number_changes,
             "dose_errors": dose,
-            "pass": not number_changes and all(d["kept"] and d["flagged"] for d in dose),
+            "pass": not number_changes
+            and all((d["kept"] and d["flagged"]) or d["fixed_by_review"] for d in dose),
         },
         "G9_nfc": {"not_nfc": not_nfc, "pass": not not_nfc},
     }

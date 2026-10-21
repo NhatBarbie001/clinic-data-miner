@@ -11,7 +11,7 @@ import statistics
 from collections.abc import Iterable
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from dataminer.core.config import BlocksCfg
 from dataminer.core.schemas import BaseRecord, stable_id
@@ -114,6 +114,19 @@ def classify_line(ln: Line, body_size: float, cfg: BlocksCfg) -> LineKind:
 # --------------------------------------------------------------------------- block
 
 
+class Review(BaseModel):
+    """Một quyết định đã áp vào block."""
+
+    item_id: str
+    decision: Literal["accept", "keep", "edit"]
+    before: str
+    after: str
+    reviewer: str
+    at: str
+    cell: str | None = None
+    position: int = 0  # -1 = quyết định cho cả block / cả ô
+
+
 class Block(BaseRecord):
     """Đơn vị văn bản sau P1 - đầu vào của P2. Schema ở docs/phases/P1/plan.md mục 2."""
 
@@ -134,6 +147,7 @@ class Block(BaseRecord):
     rows: list[list[str]] | None = None
     flags: list[str] = Field(default_factory=list)
     fixes: list[Fix] = Field(default_factory=list)  # P1.4: từng sửa đổi token (chấp nhận/từ chối)
+    reviews: list[Review] = Field(default_factory=list)  # P1.5: quyết định duyệt tay
 
 
 def join_text(prev: str, nxt: str) -> str:

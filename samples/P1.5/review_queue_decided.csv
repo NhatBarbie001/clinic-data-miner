@@ -1,0 +1,3 @@
+﻿item_id,priority,page,printed_page,block_id,kind,cell,position,context,current,suggestion,reason,decision,edited_value,reviewer,comment
+rv_b92961d41d28946f,1-SỐ LIỆU,7,4,blk_28c4eedc4b6892b8,list_item,,1,"Paracetamol «5OO» mg mỗi lần, không quá 3 g mỗi …",5OO,500,số liệu nghi nhận nhầm (OCR) - KHÔNG tự sửa,accept,,auto-truth (sách mẫu),theo đáp án: «500»
+rv_18ee0709fddffe17,1-SỐ LIỆU,9,6,blk_b63749e08465c4e1,table,r2c1,0,«l» g,l,1,số liệu nghi nhận nhầm (OCR) - KHÔNG tự sửa,accept,,auto-truth (sách mẫu),theo đáp án: «1»
