@@ -1,0 +1,68 @@
+# P2.5 - kiểm tra chất lượng (chạy 2026-10-22)
+
+## 1. Quét 30 seed: cây dựng với P1 hoàn hảo → sinh bộ câu hỏi → G7 (và nội dung giống nhau giữa các seed)
+ 1 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 2 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 3 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 4 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 5 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 6 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 7 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 8 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ 9 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+10 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+11 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+12 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+13 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+14 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+15 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+16 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+17 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+18 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+19 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+20 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+21 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+22 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+23 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+24 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+25 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+26 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+27 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+28 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+29 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+30 ✓ 30 câu {'specific': 20, 'list': 5, 'refusal': 5} cảnh báo=0 giống_seed_1=True []
+ĐẠT 30/30
+
+## 2. Mutation check (đột biến code → test phải FAIL; mỗi đột biến đã xác nhận áp dụng được)
+G1 so trích dẫn phân biệt khoảng trắng: BỊ BẮT ✓ · 1 failed, 12 passed in 7.08s · ['test_07_numbers_must_be_reviewed_values']
+G2 so số liệu kiểu chuỗi con: BỊ BẮT ✓ · 1 failed, 12 passed in 7.30s · ['test_07b_numbers_in_node_rule']
+G3 bỏ so theo tập từ (ý ghép từ bảng): BỊ BẮT ✓ · 3 failed, 10 passed in 7.20s · ['test_02_committed_v1_valid_against_committed_tree', 'test_02b_oracle_tree_draft_is_valid_and_matches_committed', 'test_cli_golden']
+G4 tách ý gồm cả hàng bảng/chú thích: BỊ BẮT ✓ · 4 failed, 9 passed in 6.99s · ['test_02_committed_v1_valid_against_committed_tree', 'test_02b_oracle_tree_draft_is_valid_and_matches_committed', 'test_items_of_splits_bullets_sentences_skips_tables', 'test_cli_golden']
+G5 văn bản 'sạch' lấy từ OCR: BỊ BẮT ✓ · 1 failed, 12 passed in 7.01s · ['test_02c_unfixed_ocr_tree_is_rejected']
+G6 liệt kê không lọc loại mục: BỊ BẮT ✓ · 4 failed, 9 passed in 6.61s · ['test_02_committed_v1_valid_against_committed_tree', 'test_02b_oracle_tree_draft_is_valid_and_matches_committed', 'test_04_list_answers_recomputed_from_tree', 'test_cli_golden']
+G7 bỏ kiểm hạn ngạch: BỊ BẮT ✓ · 1 failed, 12 passed in 7.45s · ['test_05_near_duplicate_questions']
+G8 câu từ chối được có nguồn: BỊ BẮT ✓ · 1 failed, 12 passed in 6.93s · ['test_03_refusal_items']
+G9 bỏ kiểm từ khóa câu từ chối: BỊ BẮT ✓ · 1 failed, 12 passed in 7.34s · ['test_03_refusal_items']
+G10 câu từ chối không cần từ khóa: BỊ BẮT ✓ · 1 failed, 12 passed in 6.95s · ['test_03_refusal_items']
+G11 bỏ lỗi nút nguồn không tồn tại: BỊ BẮT ✓ · 1 failed, 12 passed in 7.15s · ['test_06_validate_detects_broken_sources']
+G12 bỏ kiểm path: BỊ BẮT ✓ · 1 failed, 12 passed in 6.95s · ['test_06_validate_detects_broken_sources']
+G13 bỏ kiểm câu gần trùng: BỊ BẮT ✓ · 1 failed, 12 passed in 7.11s · ['test_05_near_duplicate_questions']
+G14 bỏ kiểm ý ↔ nội dung nút: BỊ BẮT ✓ · 1 failed, 12 passed in 6.90s · ['test_04_list_answers_recomputed_from_tree']
+G15 bỏ tính lại tập bệnh: BỊ BẮT ✓ · 1 failed, 12 passed in 7.26s · ['test_04_list_answers_recomputed_from_tree']
+G16 CLI ghi đè v1 đã khóa: BỊ BẮT ✓ · 1 failed, 12 passed in 6.60s · ['test_cli_golden']
+
+## 3. Test
+tests/unit/test_golden.py::test_01_committed_v1_distribution PASSED
+tests/unit/test_golden.py::test_02_committed_v1_valid_against_committed_tree PASSED
+tests/unit/test_golden.py::test_02b_oracle_tree_draft_is_valid_and_matches_committed PASSED
+tests/unit/test_golden.py::test_02c_unfixed_ocr_tree_is_rejected PASSED
+tests/unit/test_golden.py::test_03_refusal_items PASSED
+tests/unit/test_golden.py::test_04_list_answers_recomputed_from_tree PASSED
+tests/unit/test_golden.py::test_05_near_duplicate_questions PASSED
+tests/unit/test_golden.py::test_06_validate_detects_broken_sources PASSED
+tests/unit/test_golden.py::test_07_numbers_must_be_reviewed_values PASSED
+tests/unit/test_golden.py::test_07b_numbers_in_node_rule PASSED
+tests/unit/test_golden.py::test_items_of_splits_bullets_sentences_skips_tables PASSED
+tests/unit/test_golden.py::test_08_deterministic PASSED
+tests/unit/test_golden.py::test_cli_golden PASSED
+============================= 13 passed in 6.90s ==============================

@@ -382,3 +382,85 @@ def sections_import_cmd(
         f"✓ thêm {len(added)} khóa vào {_map_path(settings).name}. "
         "Chạy lại `dm p2 sections map` để áp dụng."
     )
+
+
+CheckOption = typer.Option(False, "--check", help="Chỉ kiểm file golden hiện có với cây (G7).")
+
+
+@p2_app.command("golden")
+def golden_cmd(
+    root: Path | None = RootOption, check: bool = CheckOption, truth: Path | None = TruthOption
+) -> None:
+    """Sinh (hoặc --check) bộ câu hỏi chuẩn eval/golden_qa_v1.jsonl từ cây + đáp án sách mẫu."""
+    from dataminer.core.io import read_jsonl, write_jsonl
+    from dataminer.evaluation.p1_eval import format_eval
+    from dataminer.evaluation.p2_eval import all_pass, eval_golden
+    from dataminer.ingest.blocks import Block
+    from dataminer.ingest.pdf_reader import Line
+    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem, clean_texts, draft_golden
+    from dataminer.structure.tree_builder import Node
+
+    settings = _load(root)
+    nodes_path = p2_dir(settings) / "nodes.jsonl"
+    if not nodes_path.is_file():
+        typer.echo(
+            f"Chưa có {nodes_path} - chạy `dm p2 tree` và `dm p2 sections map` trước.", err=True
+        )
+        raise typer.Exit(1)
+    nodes = list(read_jsonl(nodes_path, Node))
+    if not any(n.section_type for n in nodes):
+        typer.echo("Cây chưa có loại mục - chạy `dm p2 sections map` trước.", err=True)
+        raise typer.Exit(1)
+    golden_path = settings.paths.eval_dir / f"golden_qa_{GOLDEN_VERSION}.jsonl"
+
+    if check:
+        if not golden_path.is_file():
+            typer.echo(f"Chưa có {golden_path} - chạy `dm p2 golden` trước.", err=True)
+            raise typer.Exit(1)
+        items = list(read_jsonl(golden_path, GoldenItem))
+    else:
+        truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(
+            ".truth.json"
+        )
+        if not truth_path.is_file():
+            typer.echo(
+                f"Không có đáp án {truth_path}. Sinh tự động chỉ dùng cho sách mẫu; với sách thật "
+                "câu hỏi phải do người chuyên môn viết (xem eval/README.md).",
+                err=True,
+            )
+            raise typer.Exit(1)
+        p1 = p1_dir(settings)
+        blocks = list(read_jsonl(p1 / "blocks.jsonl", Block))
+        lines = list(read_jsonl(p1 / "content_lines.jsonl", Line))
+        texts = clean_texts(
+            nodes, blocks, lines, json.loads(truth_path.read_text(encoding="utf-8"))
+        )
+        items = draft_golden(nodes, texts)
+
+    report = eval_golden(items, nodes)
+    g7 = report["G7_golden"]
+    typer.echo(
+        f"Golden {GOLDEN_VERSION}: {g7['items']} câu · cụ thể {g7['by_type']['specific']} · "
+        f"liệt kê {g7['by_type']['list']} · từ chối {g7['by_type']['refusal']}"
+    )
+    typer.echo(format_eval(report))
+    if not all_pass(report):
+        typer.echo("✗ Bộ câu hỏi chưa đạt G7 - không ghi file.", err=True)
+        raise typer.Exit(1)
+    if check:
+        typer.echo(f"✓ {golden_path} khớp với cây hiện tại.")
+        return
+    if golden_path.is_file():
+        old = list(read_jsonl(golden_path, GoldenItem))
+        if [i.model_dump() for i in old] == [i.model_dump() for i in items]:
+            typer.echo(f"✓ {golden_path} đã có, nội dung không đổi.")
+            return
+        typer.echo(
+            f"✗ {golden_path} đã khóa và khác bản vừa sinh. Quy tắc version (eval/README.md): "
+            "không sửa câu cũ - tạo golden_qa_v2.jsonl.",
+            err=True,
+        )
+        raise typer.Exit(1)
+    write_jsonl(golden_path, items)
+    typer.echo(f"✓ ghi {golden_path} ({len(items)} câu).")

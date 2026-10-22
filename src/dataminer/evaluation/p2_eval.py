@@ -275,5 +275,21 @@ def eval_sections(
     }
 
 
+def eval_golden(items: list[Any], nodes: list[Node]) -> dict[str, Any]:
+    """G7: bộ câu hỏi chuẩn hợp lệ với cây hiện tại (xem `golden.validate_golden`)."""
+    from dataminer.structure.golden import validate_golden
+
+    report = validate_golden(items, nodes)
+    return {
+        "G7_golden": {
+            "items": report.items,
+            "by_type": report.by_type,
+            "errors": report.errors,
+            "warnings": report.warnings,
+            "pass": report.ok and report.items > 0,
+        }
+    }
+
+
 def all_pass(report: dict[str, Any]) -> bool:
     return all(item.get("pass") for item in report.values())
