@@ -1,0 +1,25 @@
+# P2.6 - kiểm tra chất lượng (chạy 2026-10-22)
+
+## 1. Tái lập (G8): xem p2_run_again.txt - 6/6 file ra giống hệt sha256
+
+## 2. Mutation check (đột biến code → test phải FAIL; mỗi đột biến đã xác nhận áp dụng được)
+R1 thiếu golden vẫn đạt G7: BỊ BẮT ✓ · 1 failed, 7 passed in 22.87s · ['test_03_eval_exit_codes']
+R2 eval bỏ G3/G4/G6: BỊ BẮT ✓ · 1 failed, 7 passed in 22.80s · ['test_03_eval_exit_codes']
+R3 ma trận luôn ✓: BỊ BẮT ✓ · 1 failed, 7 passed in 22.89s · ['test_04_report_sections_and_matrix']
+R4 báo cáo bỏ cờ của nút: BỊ BẮT ✓ · 1 failed, 7 passed in 22.52s · ['test_04b_report_lists_warnings']
+R5 báo cáo bỏ mục quá dài: BỊ BẮT ✓ · 1 failed, 7 passed in 22.33s · ['test_04b_report_lists_warnings']
+R6 báo cáo không so trang mục lục: BỊ BẮT ✓ · 1 failed, 7 passed in 22.62s · ['test_04b_report_lists_warnings']
+R7 báo cáo dùng ghép cũ của P2.2: BỊ BẮT ✓ · 1 failed, 7 passed in 21.86s · ['test_04b_report_lists_warnings']
+R8 manifest thiếu file ra: BỊ BẮT ✓ · 1 failed, 7 passed in 21.64s · ['test_01_run_writes_outputs_and_manifest']
+R9 eval chưa đạt vẫn exit 0: BỊ BẮT ✓ · 1 failed, 7 passed in 22.37s · ['test_03_eval_exit_codes']
+
+## 3. Test
+tests/unit/test_p2_pipeline.py::test_01_run_writes_outputs_and_manifest PASSED
+tests/unit/test_p2_pipeline.py::test_02_rerun_is_byte_identical PASSED
+tests/unit/test_p2_pipeline.py::test_03_eval_exit_codes PASSED
+tests/unit/test_p2_pipeline.py::test_04_report_sections_and_matrix PASSED
+tests/unit/test_p2_pipeline.py::test_04b_report_lists_warnings PASSED
+tests/unit/test_p2_pipeline.py::test_05_missing_p1_output PASSED
+tests/unit/test_p2_pipeline.py::test_06_end_to_end_p1_oracle_to_p2_gate PASSED
+tests/unit/test_p2_pipeline.py::test_07_cli_startup_does_not_load_heavy_modules PASSED
+============================= 8 passed in 20.27s ==============================

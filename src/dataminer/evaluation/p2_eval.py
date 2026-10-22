@@ -291,5 +291,48 @@ def eval_golden(items: list[Any], nodes: list[Node]) -> dict[str, Any]:
     }
 
 
+GATE_NAMES = {
+    "G1_toc": "G1 mục lục (số mục, tiêu đề, cấp, trang)",
+    "G2_heading_levels": "G2 cấp tiêu đề",
+    "G3_diseases_vs_toc": "G3 bệnh trong cây khớp mục lục + trang",
+    "G4_content_in_node": "G4 nội dung đúng nút (≥ 99% dòng)",
+    "G5_section_types": "G5 loại mục (≥ 95%, other < 5%)",
+    "G6_invariants": "G6 bất biến cây",
+    "G7_golden": "G7 bộ câu hỏi chuẩn hợp lệ với cây",
+}
+
+
+def evaluate_p2(out_dir: Any, p1_dir: Any, truth: dict[str, Any], golden: Any) -> dict[str, Any]:
+    """Đánh giá trọn P2 từ file đầu ra (G1-G7). Thiếu file golden → G7 KHÔNG đạt (không bỏ qua)."""
+    from pathlib import Path
+
+    from dataminer.core.io import read_jsonl
+    from dataminer.ingest.blocks import Block
+    from dataminer.ingest.pdf_reader import Line
+    from dataminer.structure.golden import GoldenItem
+
+    out, p1 = Path(out_dir), Path(p1_dir)
+    toc = TocResult.model_validate_json((out / "toc.json").read_text(encoding="utf-8"))
+    decisions = list(read_jsonl(out / "heading_levels.jsonl", HeadingDecision))
+    nodes = list(read_jsonl(out / "nodes.jsonl", Node))
+    blocks = list(read_jsonl(p1 / "blocks.jsonl", Block))
+    lines = list(read_jsonl(p1 / "content_lines.jsonl", Line))
+    pages = (min(b.page_start for b in blocks), max(b.page_end for b in blocks))
+    report: dict[str, Any] = {}
+    report.update(eval_toc(toc, truth))
+    report.update(eval_heading_levels(decisions, truth, pages))
+    report.update(eval_tree(nodes, blocks, lines, truth, pages))
+    report.update(eval_sections(nodes, truth, pages))
+    golden_path = Path(golden)
+    if golden_path.is_file():
+        report.update(eval_golden(list(read_jsonl(golden_path, GoldenItem)), nodes))
+    else:
+        report["G7_golden"] = {
+            "errors": [f"chưa có {golden_path.name} - chạy `dm p2 golden`"],
+            "pass": False,
+        }
+    return {key: report[key] for key in GATE_NAMES if key in report}
+
+
 def all_pass(report: dict[str, Any]) -> bool:
     return all(item.get("pass") for item in report.values())

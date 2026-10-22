@@ -1,0 +1,108 @@
+{
+  "run_id": "p2_tree_20261022-100225-556_a6da",
+  "phase": "p2_tree",
+  "status": "success",
+  "started_at": "2026-10-22T10:02:25.613+07:00",
+  "finished_at": "2026-10-22T10:02:25.722+07:00",
+  "duration_s": 0.109,
+  "git_commit": "ae011dd98a1734d51b47bfcafe5c26af4f12bd07",
+  "git_dirty": true,
+  "config_fingerprint": "3f57c2007ecf",
+  "models": {
+    "ping": "deepseek/deepseek-v4.1-flash-1017",
+    "fix_ocr": "deepseek/deepseek-v4.1-flash-1017",
+    "classify": "deepseek/deepseek-v4.1-flash-1017",
+    "extract": "deepseek/deepseek-v4.1-flash-1017",
+    "qa": "deepseek/deepseek-v4.1-flash-1017",
+    "judge": "deepseek/deepseek-v4.1-flash-1017",
+    "datagen": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "prompts": {},
+  "inputs": [
+    {
+      "path": "data/p1_clean/blocks.jsonl",
+      "records": 85,
+      "sha256": "7313a271195e6caa82c8f41798c51a4942dd2cd5e11cc5fd13170d56f898b0aa",
+      "bytes": 52427
+    },
+    {
+      "path": "data/raw/book01.pdf",
+      "records": null,
+      "sha256": "152cf48194486101cb5f3a8be1918548f478b8daeb5055a3a925dca836c020d0",
+      "bytes": 413881
+    },
+    {
+      "path": "configs/section_map.yaml",
+      "records": null,
+      "sha256": "19a4d42f991cb7bececbd075a5df713952d32ba01bfb5f25889b2353fdf0bc57",
+      "bytes": 1156
+    }
+  ],
+  "outputs": [
+    {
+      "path": "data/p2_tree/toc.json",
+      "records": null,
+      "sha256": "e0137a1687b0f05cbb722877bdb6f143caa60b617852d7fc0abe3cfc7435e1cd",
+      "bytes": 1515
+    },
+    {
+      "path": "data/p2_tree/heading_levels.jsonl",
+      "records": 27,
+      "sha256": "161e08bd348c8c10743674e9f64229a8a27c40f3650247bbb0e2221f89c429e2",
+      "bytes": 7000
+    },
+    {
+      "path": "data/p2_tree/nodes.jsonl",
+      "records": 28,
+      "sha256": "e11ff1325add8b8bf48d2bd0c097c8f7c5b6fc5a44f15743a74afd147df81002",
+      "bytes": 22182
+    },
+    {
+      "path": "data/p2_tree/tree.json",
+      "records": null,
+      "sha256": "71fed14d47dcb040f6e807882c8166846c7bca3fdae7bec423b26b60343b2c57",
+      "bytes": 23861
+    },
+    {
+      "path": "data/p2_tree/tree.md",
+      "records": null,
+      "sha256": "a65d40648cde2402fb0b2c9886f532629c9ed28ca769855d27deed5258f86106",
+      "bytes": 2103
+    },
+    {
+      "path": "data/p2_tree/section_proposals.jsonl",
+      "records": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "llm": {
+    "calls": 0,
+    "cost_usd": 0.0
+  },
+  "counts": {
+    "blocks": 85,
+    "toc_entries": 5,
+    "headings": 27,
+    "headings_rules": 22,
+    "headings_toc": 5,
+    "headings_llm": 0,
+    "nodes": 28,
+    "nodes_chapter": 2,
+    "nodes_disease": 3,
+    "nodes_section": 19,
+    "nodes_subsection": 3,
+    "nodes_front": 0,
+    "sections_map": 22,
+    "sections_map_fuzzy": 0,
+    "sections_inherited": 0,
+    "sections_llm": 0,
+    "sections_none": 0,
+    "section_proposals": 0,
+    "warnings": 0
+  },
+  "notes": [
+    "nodes.jsonl sha256 e11ff1325add8b8bf48d2bd0c097c8f7c5b6fc5a44f15743a74afd147df81002"
+  ],
+  "error": null
+}

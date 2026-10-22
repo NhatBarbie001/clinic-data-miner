@@ -1,0 +1,21 @@
+$ uv run dm p2 run   # lần 2: mọi file ra phải giống hệt
+✓ P2 xong: 2 chương · 3 bệnh · 19 mục · 3 mục con · 85 block
+  mục lục 5 mục · cấp tiêu đề: quy tắc 22, mục lục 5, LLM 0 · loại mục: từ điển 22, khớp gần 0, kế thừa 0, LLM 0, chưa rõ 0
+  chi phí LLM: $0.000000 · đề xuất chờ duyệt 0 · manifest: p2_tree_20261022-100225-556_a6da
+  nodes.jsonl sha256 e11ff1325add8b8bf48d2bd0c097c8f7c5b6fc5a44f15743a74afd147df81002
+  đầu ra: data\p2_tree
+
+$ sha256sum (lần 1) → so với lần 2:
+e0137a1687b0f05cbb722877bdb6f143caa60b617852d7fc0abe3cfc7435e1cd *toc.json
+161e08bd348c8c10743674e9f64229a8a27c40f3650247bbb0e2221f89c429e2 *heading_levels.jsonl
+e11ff1325add8b8bf48d2bd0c097c8f7c5b6fc5a44f15743a74afd147df81002 *nodes.jsonl
+71fed14d47dcb040f6e807882c8166846c7bca3fdae7bec423b26b60343b2c57 *tree.json
+a65d40648cde2402fb0b2c9886f532629c9ed28ca769855d27deed5258f86106 *tree.md
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 *section_proposals.jsonl
+
+toc.json: OK
+heading_levels.jsonl: OK
+nodes.jsonl: OK
+tree.json: OK
+tree.md: OK
+section_proposals.jsonl: OK

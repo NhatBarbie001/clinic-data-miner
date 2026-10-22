@@ -464,3 +464,95 @@ def golden_cmd(
         raise typer.Exit(1)
     write_jsonl(golden_path, items)
     typer.echo(f"✓ ghi {golden_path} ({len(items)} câu).")
+
+
+@p2_app.command("run")
+def run_cmd(root: Path | None = RootOption, no_llm: bool = NoLLMOption) -> None:
+    """Chạy P2: mục lục → cấp tiêu đề → cây → loại mục → nodes.jsonl, tree.md (+ manifest)."""
+    from dataminer.core.llm_types import LLMError
+    from dataminer.core.prompts import PromptError
+    from dataminer.structure.pipeline import run_p2
+    from dataminer.structure.section_mapper import SectionMapError
+    from dataminer.structure.tree_builder import TreeInvariantError
+
+    settings = _load(root)
+    try:
+        result = run_p2(settings, use_llm=not no_llm)
+    except (
+        FileNotFoundError,
+        LLMError,
+        PromptError,
+        SectionMapError,
+        TreeInvariantError,
+        ConfigError,
+    ) as exc:
+        typer.echo(f"✗ {exc}", err=True)
+        raise typer.Exit(1) from None
+    c = result.counts
+    typer.echo(
+        f"✓ P2 xong: {c['nodes_chapter']} chương · {c['nodes_disease']} bệnh · "
+        f"{c['nodes_section']} mục · {c['nodes_subsection']} mục con · {c['blocks']} block"
+    )
+    typer.echo(
+        f"  mục lục {c['toc_entries']} mục · cấp tiêu đề: quy tắc {c['headings_rules']}, "
+        f"mục lục {c['headings_toc']}, LLM {c['headings_llm']} · loại mục: từ điển "
+        f"{c['sections_map']}, khớp gần {c['sections_map_fuzzy']}, kế thừa "
+        f"{c['sections_inherited']}, LLM {c['sections_llm']}, chưa rõ {c['sections_none']}"
+    )
+    typer.echo(
+        f"  chi phí LLM: ${result.llm_cost_usd:.6f} · đề xuất chờ duyệt {c['section_proposals']}"
+        f" · manifest: {result.run_id}"
+    )
+    for w in result.warnings:
+        typer.echo(f"  ⚠ {w}")
+    typer.echo(f"  nodes.jsonl sha256 {result.nodes_sha256}")
+    typer.echo(f"  đầu ra: {result.out_dir}")
+
+
+@p2_app.command("eval")
+def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -> None:
+    """So với đáp án → eval.json + bảng chỉ tiêu G1-G7 (exit 1 nếu chưa đạt)."""
+    from dataminer.core.io import write_json
+    from dataminer.evaluation.p1_eval import format_eval
+    from dataminer.evaluation.p2_eval import all_pass, evaluate_p2
+    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.structure.golden import GOLDEN_VERSION
+
+    settings = _load(root)
+    truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(
+        ".truth.json"
+    )
+    if not truth_path.is_file():
+        typer.echo(
+            f"Không có đáp án {truth_path} - chỉ đánh giá tự động được với sách mẫu "
+            "(sách thật: duyệt tay tree_report.md).",
+            err=True,
+        )
+        raise typer.Exit(1)
+    out = p2_dir(settings)
+    if not (out / "nodes.jsonl").is_file():
+        typer.echo("Chưa có kết quả P2 - chạy `dm p2 run` trước.", err=True)
+        raise typer.Exit(1)
+    golden = settings.paths.eval_dir / f"golden_qa_{GOLDEN_VERSION}.jsonl"
+    report = evaluate_p2(
+        out, p1_dir(settings), json.loads(truth_path.read_text(encoding="utf-8")), golden
+    )
+    write_json(out / "eval.json", report)
+    typer.echo(format_eval(report))
+    ok = all_pass(report)
+    typer.echo(f"\nKẾT LUẬN: {'ĐẠT mọi chỉ tiêu G1-G7' if ok else 'CHƯA ĐẠT'}")
+    if not ok:
+        raise typer.Exit(1)
+
+
+@p2_app.command("report")
+def report_cmd(root: Path | None = RootOption) -> None:
+    """Sinh data/p2_tree/tree_report.md (tổng quan, đối chiếu mục lục, ma trận, cảnh báo, cây)."""
+    from dataminer.structure.report import render_tree_report
+
+    out = p2_dir(_load(root))
+    if not (out / "manifest.json").is_file():
+        typer.echo("Chưa có kết quả P2 - chạy `dm p2 run` trước.", err=True)
+        raise typer.Exit(1)
+    (out / "tree_report.md").write_text(render_tree_report(out), encoding="utf-8")
+    typer.echo(f"✓ {out / 'tree_report.md'}")

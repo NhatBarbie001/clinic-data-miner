@@ -1,0 +1,11 @@
+$ uv run dm p2 eval
+✓ G1_toc: truth=5, found=5, title_clean_match=5
+    toc_pages: 3
+✓ G2_heading_levels: truth=27, found=27, correct=27, by_source={'rules': 22, 'toc': 5, 'llm': 0}
+✓ G3_diseases_vs_toc: truth=3, found=3
+✓ G4_content_in_node: lines=110, correct=110, ratio=1.0
+✓ G5_section_types: truth=22, found=22, correct=22, accuracy=1.0, other_ratio=0.0, by_source={'map': 22}
+✓ G6_invariants: nodes=28
+✓ G7_golden: items=30, by_type={'specific': 20, 'list': 5, 'refusal': 5}
+
+KẾT LUẬN: ĐẠT mọi chỉ tiêu G1-G7

@@ -1,0 +1,6 @@
+$ uv run dm p2 run
+✓ P2 xong: 2 chương · 3 bệnh · 19 mục · 3 mục con · 85 block
+  mục lục 5 mục · cấp tiêu đề: quy tắc 22, mục lục 5, LLM 0 · loại mục: từ điển 22, khớp gần 0, kế thừa 0, LLM 0, chưa rõ 0
+  chi phí LLM: $0.000000 · đề xuất chờ duyệt 0 · manifest: p2_tree_20261022-100222-837_c816
+  nodes.jsonl sha256 e11ff1325add8b8bf48d2bd0c097c8f7c5b6fc5a44f15743a74afd147df81002
+  đầu ra: data\p2_tree

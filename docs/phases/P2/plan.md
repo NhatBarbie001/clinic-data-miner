@@ -1,6 +1,6 @@
 # Plan P2: Dựng cấu trúc tài liệu
 
-> Trạng thái: `Đã duyệt`, đang triển khai (P2.1 ✅, P2.2 ✅, P2.3 ✅, P2.4 ✅, P2.5 ✅)
+> Trạng thái: `Hoàn thành` ✅ QUA GATE (2026-10-22) · [gate_report.md](gate_report.md)
 > Ngày tạo: 2026-10-21 · Tham chiếu: [plan.md](../../../plan.md) mục P2 · Đầu vào từ P1: [P1 gate_report](../P1/gate_report.md) · Hồ sơ sách: [book_profile.md](../../book_profile.md)
 
 ## 1. Mục tiêu
@@ -183,6 +183,7 @@ p2:
 
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
+| 2026-10-22 | P2.6 xong, **P2 qua gate** (G1–G9). `dm p2 run/eval/report`; 6/6 file ra tái lập byte-exact | [gate_report.md](gate_report.md) |
 | 2026-10-22 | P2.5 xong. Mỗi câu golden có `check` (luật tính lại đáp án từ cây); trích dẫn khớp nguyên văn hoặc khi bỏ dấu (cảnh báo); v1 khóa, sửa → v2 | Báo cáo P2.5 |
 | 2026-10-22 | P2.4 xong. Thêm `Node.section_source`; khớp gần cũng vào hàng duyệt; sách mẫu chỉ kiểm được đường "từ điển" (khớp gần/kế thừa/LLM kiểm bằng cây tự dựng) | Báo cáo P2.4 |
 | 2026-10-21 | P2.3 xong. `display_title` lấy từ thân sách (mục lục không được sửa OCR); ID phụ thuộc chữ tiêu đề → chốt cây trước P3, P2.6 ghi sha256 `nodes.jsonl` | Báo cáo P2.3 |
