@@ -14,9 +14,9 @@ from typing import Any, Literal
 from dataminer.core.config import BlocksCfg
 from dataminer.core.schemas import stable_id
 from dataminer.core.text_vi import has_vietnamese_marks, nfc
-from dataminer.ingest.pdf_reader import ROW_TOLERANCE
 from dataminer.model.block import Block, BlockKind
 from dataminer.model.line import Line
+from dataminer.pdf.layout import ROW_TOLERANCE
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^(\d{1,2}\.\d{1,2})\.?\s+\S")

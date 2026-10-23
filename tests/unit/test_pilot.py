@@ -10,8 +10,8 @@ from typer.testing import CliRunner
 from dataminer.cli import app
 from dataminer.core.config import PilotCfg
 from dataminer.core.io import write_json
-from dataminer.ingest.pilot import check_pilot, format_pilot_report, name_key
-from dataminer.ingest.survey import survey_pdf
+from dataminer.survey.pilot import check_pilot, format_pilot_report, name_key
+from dataminer.survey.survey import survey_pdf
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import make_settings
 

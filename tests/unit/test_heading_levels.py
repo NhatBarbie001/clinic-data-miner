@@ -19,14 +19,14 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMJSONError
 from dataminer.core.prompts import load_prompt
 from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
-from dataminer.ingest.blocks import build_blocks
-from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision
+from dataminer.pdf.furniture import strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
 from dataminer.structure.heading_levels import check_numbering, classify_headings, rule_level
 from dataminer.structure.toc import extract_toc, norm_title
+from dataminer.text.blocks import build_blocks
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 
@@ -48,7 +48,7 @@ _counter = iter(range(100_000))
 
 def hb(text: str, size: float = 11.5, *, page: int = 4, numbering: str | None = None) -> Block:
     """Block tiêu đề tự dựng (numbering/IN HOA suy từ text như P1)."""
-    from dataminer.ingest.blocks import is_upper_text, numbering_of
+    from dataminer.text.blocks import is_upper_text, numbering_of
 
     n = next(_counter)
     return Block(

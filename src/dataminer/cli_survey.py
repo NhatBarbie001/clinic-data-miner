@@ -38,7 +38,7 @@ def survey_cmd(
     root: Path | None = RootOption, pdf: Path | None = PdfOption, out: Path | None = OutOption
 ) -> None:
     """Khảo sát PDF sách: thống kê, header/footer, ứng viên tiêu đề, dấu hiệu lỗi OCR."""
-    from dataminer.ingest.survey import survey_pdf
+    from dataminer.survey.survey import survey_pdf
 
     settings = _load(root)
     pdf_path = pdf or settings.paths.raw_dir / settings.project.book_file
@@ -109,7 +109,7 @@ def check_cmd(
 ) -> None:
     """Chạy khảo sát rồi đối chiếu với đáp án của sách mẫu (exit 1 nếu chưa đạt chỉ tiêu)."""
     from dataminer.devtools.survey_check import check_survey, format_check
-    from dataminer.ingest.survey import survey_pdf
+    from dataminer.survey.survey import survey_pdf
 
     settings = _load(root)
     pdf_path = pdf or settings.paths.raw_dir / settings.project.book_file
@@ -134,7 +134,7 @@ SurveyDirOption = typer.Option(None, "--survey", help="Thư mục kết quả `d
 @pilot_app.command("check")
 def pilot_check_cmd(root: Path | None = RootOption, survey: Path | None = SurveyDirOption) -> None:
     """Kiểm tra pilot: trang tồn tại, có text, mỗi bệnh có tiêu đề trong phạm vi trang."""
-    from dataminer.ingest.pilot import check_pilot, format_pilot_report
+    from dataminer.survey.pilot import check_pilot, format_pilot_report
 
     settings = _load(root)
     report = check_pilot(settings.pilot, survey or settings.paths.data_dir / PHASE)

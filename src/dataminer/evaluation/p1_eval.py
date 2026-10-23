@@ -9,7 +9,7 @@ from collections import Counter
 from typing import Any
 
 from dataminer.core.text_vi import is_nfc, nfc
-from dataminer.ingest.page_furniture import FurnitureResult
+from dataminer.pdf.furniture import FurnitureResult
 
 
 def _norm(text: str) -> str:
@@ -191,7 +191,7 @@ def _expected_tokens(
     truth_rows: dict[int, list[list[str]]],
 ) -> list[str] | None:
     """Token văn bản SẠCH (đáp án) tương ứng với block; None nếu không đối chiếu được."""
-    from dataminer.ingest.blocks import join_text  # tránh vòng import ở mức module
+    from dataminer.text.blocks import join_text
 
     if block.kind == "table":
         grid = truth_rows.get(block.page_start)
@@ -392,9 +392,9 @@ def evaluate_p1(out_dir: Any, truth: dict[str, Any]) -> dict[str, Any]:
     from pathlib import Path
 
     from dataminer.core.io import read_json, read_jsonl
-    from dataminer.ingest.page_furniture import FurnitureItem, PageInfo
     from dataminer.model.block import Block
     from dataminer.model.line import Line
+    from dataminer.pdf.furniture import FurnitureItem, PageInfo
 
     out = Path(out_dir)
     content = list(read_jsonl(out / "content_lines.jsonl", Line))

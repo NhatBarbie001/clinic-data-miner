@@ -15,11 +15,11 @@ from pydantic import BaseModel, Field
 
 from dataminer.core.schemas import stable_id
 from dataminer.core.text_vi import nfc
-from dataminer.ingest.blocks import is_upper_text
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.toc import norm_title
+from dataminer.text.blocks import is_upper_text
 
 RANK: dict[str, int] = {"book": 0, "front": 1, "chapter": 1, "disease": 2, "section": 3,
                         "subsection": 4}  # fmt: skip

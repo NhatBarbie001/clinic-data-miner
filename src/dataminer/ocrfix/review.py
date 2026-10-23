@@ -20,8 +20,8 @@ from pydantic import BaseModel
 from dataminer.core.io import read_jsonl, write_jsonl
 from dataminer.core.schemas import BaseRecord, stable_id
 from dataminer.core.text_vi import nfc
-from dataminer.ingest.survey import text_ocr_signals
 from dataminer.model.block import Block, Fix, Review
+from dataminer.survey.survey import text_ocr_signals
 
 Priority = Literal["1-SỐ LIỆU", "2-BỊ TỪ CHỐI", "3-NGHI LỖI", "4-KIỂM TRA MẪU"]
 DecisionKind = Literal["accept", "keep", "edit"]

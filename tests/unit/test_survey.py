@@ -10,7 +10,7 @@ from typer.testing import CliRunner
 from dataminer.cli import app
 from dataminer.core.io import read_json
 from dataminer.devtools.survey_check import check_survey
-from dataminer.ingest.survey import (
+from dataminer.survey.survey import (
     SurveyLine,
     find_header_footer,
     find_heading_candidates,

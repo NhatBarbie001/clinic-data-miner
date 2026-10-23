@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import Any
 
 from dataminer.core.text_vi import has_vietnamese_marks
-from dataminer.ingest.survey import RE_MISSING_SPACE, SurveyResult
+from dataminer.survey.survey import RE_MISSING_SPACE, SurveyResult
 
 # Lỗi OCR mà khảo sát (không từ điển) có thể phát hiện, và chỉ tiêu recall.
 DETECTABLE_TARGETS = {

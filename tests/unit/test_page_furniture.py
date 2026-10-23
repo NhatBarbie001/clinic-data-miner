@@ -8,13 +8,9 @@ from dataminer.core.config import FurnitureCfg
 from dataminer.core.io import read_json
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_furniture
-from dataminer.ingest.page_furniture import (
-    page_number_of,
-    save_furniture,
-    strip_furniture,
-)
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
 from dataminer.model.line import Line
+from dataminer.pdf.furniture import page_number_of, save_furniture, strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
 from tests.conftest import SampleBookFor
 
 ALL_PAGES = list(range(1, 10))

@@ -95,9 +95,9 @@ def headings_cmd(
     from dataminer.core.prompts import PromptError, load_prompt
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
-    from dataminer.ingest.pipeline import p1_dir
     from dataminer.model.block import Block
     from dataminer.model.toc import TocResult
+    from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.heading_levels import classify_headings
     from dataminer.structure.toc import extract_toc
 
@@ -177,11 +177,11 @@ def tree_cmd(
     from dataminer.core.io import read_jsonl, write_json, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_tree
-    from dataminer.ingest.pipeline import p1_dir
     from dataminer.model.block import Block
     from dataminer.model.line import Line
     from dataminer.model.toc import TocResult
     from dataminer.model.tree import HeadingDecision
+    from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.tree_builder import (
         TreeInvariantError,
         build_tree,
@@ -278,9 +278,9 @@ def sections_map_cmd(
     from dataminer.core.prompts import PromptError, load_prompt
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_sections
-    from dataminer.ingest.pipeline import p1_dir
     from dataminer.model.block import Block
     from dataminer.model.tree import Node
+    from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.section_mapper import SectionMapError, load_section_map, map_sections
     from dataminer.structure.tree_builder import render_tree_md
 
@@ -397,10 +397,10 @@ def golden_cmd(
     from dataminer.core.io import read_jsonl, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_golden
-    from dataminer.ingest.pipeline import p1_dir
     from dataminer.model.block import Block
     from dataminer.model.line import Line
     from dataminer.model.tree import Node
+    from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem, clean_texts, draft_golden
 
     settings = _load(root)
@@ -473,7 +473,7 @@ def run_cmd(root: Path | None = RootOption, no_llm: bool = NoLLMOption) -> None:
     """Chạy P2: mục lục → cấp tiêu đề → cây → loại mục → nodes.jsonl, tree.md (+ manifest)."""
     from dataminer.core.llm_types import LLMError
     from dataminer.core.prompts import PromptError
-    from dataminer.structure.pipeline import run_p2
+    from dataminer.pipeline.p2 import run_p2
     from dataminer.structure.section_mapper import SectionMapError
     from dataminer.structure.tree_builder import TreeInvariantError
 
@@ -517,7 +517,7 @@ def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -
     from dataminer.core.io import write_json
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, evaluate_p2
-    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.golden import GOLDEN_VERSION
 
     settings = _load(root)

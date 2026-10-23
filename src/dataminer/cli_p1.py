@@ -59,7 +59,7 @@ def run_cmd(
 ) -> None:
     """Chạy P1: đọc PDF → bỏ header/footer → dựng block → sửa OCR → áp duyệt → blocks.jsonl."""
     from dataminer.core.llm_types import LLMError
-    from dataminer.ingest.pipeline import run_p1
+    from dataminer.pipeline.p1 import run_p1
 
     settings = _load(root)
     if scope not in ("pilot", "all"):
@@ -96,7 +96,7 @@ def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -
     """So với đáp án → eval.json + bảng chỉ tiêu G1-G9 (exit 1 nếu chưa đạt)."""
     from dataminer.core.io import write_json
     from dataminer.evaluation.p1_eval import all_pass, evaluate_p1, format_eval
-    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.pipeline.p1 import p1_dir
 
     settings = _load(root)
     truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(
@@ -123,8 +123,8 @@ def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -
 @p1_app.command("report")
 def report_cmd(root: Path | None = RootOption) -> None:
     """Sinh data/p1_clean/report.md (tổng quan, chỉ tiêu, trước/sau, chờ duyệt)."""
-    from dataminer.ingest.pipeline import p1_dir
-    from dataminer.ingest.report import render_report
+    from dataminer.pipeline.p1 import p1_dir
+    from dataminer.pipeline.p1_report import render_report
 
     out = p1_dir(_load(root))
     if not (out / "manifest.json").is_file():
@@ -140,9 +140,9 @@ def review_export_cmd(
 ) -> None:
     """Xuất hàng đợi duyệt ra CSV (Excel), kèm mẫu kiểm tra nếu --audit > 0."""
     from dataminer.core.io import read_jsonl
-    from dataminer.ingest.pipeline import p1_dir
-    from dataminer.ingest.review import audit_sample, build_queue, export_csv
     from dataminer.model.block import Block
+    from dataminer.ocrfix.review import audit_sample, build_queue, export_csv
+    from dataminer.pipeline.p1 import p1_dir
 
     base = p1_dir(_load(root))
     blocks = list(read_jsonl(base / "blocks.jsonl", Block))
@@ -157,15 +157,15 @@ def review_export_cmd(
 def review_import_cmd(csv_path: Path, root: Path | None = RootOption) -> None:
     """Nhập quyết định từ CSV đã điền → decisions.jsonl → áp lại → blocks.jsonl."""
     from dataminer.core.io import read_jsonl
-    from dataminer.ingest.pipeline import finalize, p1_dir
-    from dataminer.ingest.review import (
+    from dataminer.model.block import Block
+    from dataminer.ocrfix.review import (
         ReviewError,
         build_queue,
         import_csv,
         known_items,
         save_decisions,
     )
-    from dataminer.model.block import Block
+    from dataminer.pipeline.p1 import finalize, p1_dir
 
     settings = _load(root)
     base = p1_dir(settings)

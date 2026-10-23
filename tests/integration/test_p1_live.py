@@ -13,7 +13,7 @@ import pytest
 from dataminer.core.config import load_settings
 from dataminer.devtools.sample_book import make_sample_book
 from dataminer.evaluation.p1_eval import evaluate_p1
-from dataminer.ingest.pipeline import p1_dir, run_p1
+from dataminer.pipeline.p1 import p1_dir, run_p1
 
 ROOT = Path(__file__).resolve().parents[2]
 pytestmark = pytest.mark.live

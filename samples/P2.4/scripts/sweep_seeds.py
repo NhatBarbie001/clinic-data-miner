@@ -7,13 +7,13 @@ from pathlib import Path
 from dataminer.core.config import BlocksCfg
 from dataminer.devtools.sample_book import make_sample_book
 from dataminer.evaluation.p2_eval import eval_sections
-from dataminer.ingest.blocks import build_blocks
-from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
+from dataminer.pdf.furniture import strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
 from dataminer.structure.heading_levels import classify_headings
 from dataminer.structure.section_mapper import load_section_map, map_sections
 from dataminer.structure.toc import extract_toc
 from dataminer.structure.tree_builder import build_tree
+from dataminer.text.blocks import build_blocks
 
 PILOT = (4, 9)
 MAPPING = load_section_map(Path("configs/section_map.yaml"))

@@ -8,7 +8,7 @@ from pathlib import Path
 
 E = "src/dataminer/evaluation/p2_eval.py"
 R = "src/dataminer/structure/report.py"
-P = "src/dataminer/structure/pipeline.py"
+P = "src/dataminer/pipeline/p2.py"
 C = "src/dataminer/cli_p2.py"
 TESTS = "tests/unit/test_p2_pipeline.py"
 M = [

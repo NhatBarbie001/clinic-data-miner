@@ -16,13 +16,12 @@ from dataminer.core.config import BlocksCfg
 from dataminer.core.io import write_jsonl
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p2_eval import all_pass, eval_tree
-from dataminer.ingest.blocks import build_blocks, is_upper_text, numbering_of
-from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision, Node
+from dataminer.pdf.furniture import strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
 from dataminer.structure.heading_levels import classify_headings
 from dataminer.structure.toc import extract_toc, norm_title
 from dataminer.structure.tree_builder import (
@@ -33,6 +32,7 @@ from dataminer.structure.tree_builder import (
     render_tree_md,
     to_nested,
 )
+from dataminer.text.blocks import build_blocks, is_upper_text, numbering_of
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, make_settings
 

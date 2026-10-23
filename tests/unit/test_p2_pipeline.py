@@ -17,9 +17,9 @@ from dataminer.core.config import Settings
 from dataminer.core.io import read_json, read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.evaluation.p2_eval import GATE_NAMES
-from dataminer.ingest.pipeline import p1_dir, run_p1
 from dataminer.model.tree import Node
-from dataminer.structure.pipeline import OUTPUTS, p2_dir, run_p2
+from dataminer.pipeline.p1 import p1_dir, run_p1
+from dataminer.pipeline.p2 import OUTPUTS, p2_dir, run_p2
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 from tests.unit.test_p1_pipeline import client as p1_client

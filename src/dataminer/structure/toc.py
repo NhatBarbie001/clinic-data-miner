@@ -14,10 +14,10 @@ from typing import Literal
 
 from dataminer.core.config import FurnitureCfg, TocCfg
 from dataminer.core.text_vi import nfc, strip_diacritics
-from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
 from dataminer.model.line import Line
 from dataminer.model.toc import TocEntry, TocLevel, TocResult
+from dataminer.pdf.furniture import strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
 
 # Chấm dẫn: "....", ". . . .", "……" (≥ 3 dấu chấm, có thể cách nhau 1 khoảng trắng) + số trang.
 RE_LEADER_ENTRY = re.compile(

@@ -2,7 +2,7 @@
 
 import pytest
 
-from dataminer.ingest.guards import GlossaryIndex, apply_guarded_fix, similarity
+from dataminer.ocrfix.guards import GlossaryIndex, apply_guarded_fix, similarity
 
 GLOSSARY = GlossaryIndex(["Helicobacter", "pylori", "omeprazol", "mg", "g", "corticoid"])
 

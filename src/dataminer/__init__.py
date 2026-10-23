@@ -3,8 +3,12 @@
 Các module con theo phase (xem plan.md):
     core        dùng chung (cấu hình, AI, cache, manifest, I/O)
     model       hợp đồng dữ liệu giữa các bước: Line, Block, TocEntry, HeadingDecision, Node
-    ingest      P1 trích xuất & làm sạch
-    structure   P2 dựng cây cấu trúc
+    pdf         đọc PDF: dòng, thứ tự đọc, đầu/chân trang, số trang in
+    text        ghép dòng → block (đoạn, tiêu đề, gạch đầu dòng, bảng)
+    ocrfix      sửa lỗi OCR bằng LLM + bộ lọc an toàn + duyệt CSV
+    structure   P2 dựng cây cấu trúc (mục lục, cấp tiêu đề, cây, loại mục)
+    pipeline    chạy cả chuỗi P1, P2 (manifest, đầu ra, báo cáo)
+    survey      khảo sát sách mới, chương mẫu (pilot)
     index       P3 index & retrieval
     kb          P4 knowledge base
     qa          P5 hỏi đáp
@@ -24,8 +28,12 @@ except PackageNotFoundError:  # chạy từ source chưa cài đặt
 SUBMODULES: tuple[str, ...] = (
     "core",
     "model",
-    "ingest",
+    "pdf",
+    "text",
+    "ocrfix",
     "structure",
+    "pipeline",
+    "survey",
     "index",
     "kb",
     "qa",

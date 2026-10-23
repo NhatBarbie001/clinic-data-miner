@@ -48,7 +48,7 @@ def run_p2(
     settings: Settings, *, use_llm: bool = True, client: LLMClient | None = None
 ) -> P2Result:
     """Chạy P2 trên đầu ra của P1 (`data/p1_clean/blocks.jsonl`)."""
-    from dataminer.ingest.pipeline import p1_dir
+    from dataminer.pipeline.p1 import p1_dir
 
     blocks_path = p1_dir(settings) / "blocks.jsonl"
     if not blocks_path.is_file():

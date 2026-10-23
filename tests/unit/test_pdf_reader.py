@@ -9,8 +9,9 @@ import pymupdf
 import pytest
 
 from dataminer.devtools.sample_book import SampleBook
-from dataminer.ingest.pdf_reader import detect_columns, read_lines, reading_order
 from dataminer.model.line import Line
+from dataminer.pdf.layout import detect_columns, reading_order
+from dataminer.pdf.reader import read_lines
 from tests.conftest import SampleBookFor
 
 

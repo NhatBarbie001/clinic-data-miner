@@ -21,9 +21,9 @@ from dataminer.core.io import read_json, read_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.devtools.oracle_fix import oracle_outputs
 from dataminer.evaluation.p1_eval import all_pass, evaluate_p1
-from dataminer.ingest.pipeline import p1_dir, run_p1
 from dataminer.model.block import Block
 from dataminer.model.line import Line
+from dataminer.pipeline.p1 import p1_dir, run_p1
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 
@@ -288,7 +288,7 @@ def test_cli_review_roundtrip_with_audit(tmp_path: Path, sample_book_for: Sample
 def test_audit_sample_deterministic_and_keep_edit_only(
     tmp_path: Path, sample_book_for: SampleBookFor
 ) -> None:
-    from dataminer.ingest.review import ReviewError, audit_sample, export_csv, import_csv
+    from dataminer.ocrfix.review import ReviewError, audit_sample, export_csv, import_csv
 
     settings = project(tmp_path, sample_book_for)
     fake = oracle_for(settings, truth_of(settings))

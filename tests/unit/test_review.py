@@ -15,12 +15,11 @@ from dataminer.devtools.auto_review import REVIEWER, fill_from_truth
 from dataminer.devtools.oracle_fix import oracle_outputs
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_ocr
-from dataminer.ingest.blocks import build_blocks
-from dataminer.ingest.guards import GlossaryIndex
-from dataminer.ingest.ocr_fixer import OCRFixer
-from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import body_font_size, read_lines
-from dataminer.ingest.review import (
+from dataminer.model.block import Block, Fix
+from dataminer.model.line import Line
+from dataminer.ocrfix.fixer import OCRFixer
+from dataminer.ocrfix.guards import GlossaryIndex
+from dataminer.ocrfix.review import (
     ReviewError,
     apply_decisions,
     build_queue,
@@ -28,8 +27,9 @@ from dataminer.ingest.review import (
     import_csv,
     save_decisions,
 )
-from dataminer.model.block import Block, Fix
-from dataminer.model.line import Line
+from dataminer.pdf.furniture import strip_furniture
+from dataminer.pdf.reader import body_font_size, read_lines
+from dataminer.text.blocks import build_blocks
 from tests.conftest import SampleBookFor
 
 
