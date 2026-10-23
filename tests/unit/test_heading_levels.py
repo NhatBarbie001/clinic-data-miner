@@ -19,16 +19,14 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMJSONError
 from dataminer.core.prompts import load_prompt
 from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
-from dataminer.ingest.blocks import Block, build_blocks
+from dataminer.ingest.blocks import build_blocks
 from dataminer.ingest.page_furniture import strip_furniture
 from dataminer.ingest.pdf_reader import body_font_size, read_lines
-from dataminer.structure.heading_levels import (
-    HeadingDecision,
-    check_numbering,
-    classify_headings,
-    rule_level,
-)
-from dataminer.structure.toc import TocEntry, extract_toc, norm_title
+from dataminer.model.block import Block
+from dataminer.model.toc import TocEntry
+from dataminer.model.tree import HeadingDecision
+from dataminer.structure.heading_levels import check_numbering, classify_headings, rule_level
+from dataminer.structure.toc import extract_toc, norm_title
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 

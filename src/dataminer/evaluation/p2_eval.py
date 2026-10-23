@@ -9,9 +9,10 @@ from typing import Any
 
 from dataminer.core.text_vi import nfc
 from dataminer.evaluation.p1_eval import _line_key_map, _norm
-from dataminer.structure.heading_levels import HeadingDecision
-from dataminer.structure.toc import TocResult, match_key
-from dataminer.structure.tree_builder import Node, check_invariants
+from dataminer.model.toc import TocResult
+from dataminer.model.tree import HeadingDecision, Node
+from dataminer.structure.toc import match_key
+from dataminer.structure.tree_builder import check_invariants
 
 
 def _ocr_title(ocr_line: str) -> str:
@@ -307,8 +308,8 @@ def evaluate_p2(out_dir: Any, p1_dir: Any, truth: dict[str, Any], golden: Any) -
     from pathlib import Path
 
     from dataminer.core.io import read_jsonl
-    from dataminer.ingest.blocks import Block
-    from dataminer.ingest.pdf_reader import Line
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
     from dataminer.structure.golden import GoldenItem
 
     out, p1 = Path(out_dir), Path(p1_dir)

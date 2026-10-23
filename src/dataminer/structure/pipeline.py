@@ -14,7 +14,7 @@ from dataminer.core.io import read_jsonl, sha256_file, write_json, write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import load_prompt
 from dataminer.core.run import RunRecorder
-from dataminer.ingest.blocks import Block
+from dataminer.model.block import Block
 from dataminer.structure.heading_levels import classify_headings
 from dataminer.structure.section_mapper import load_section_map, map_sections
 from dataminer.structure.toc import extract_toc

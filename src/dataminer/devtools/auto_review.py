@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any
 
 from dataminer.devtools.oracle_fix import oracle_outputs
-from dataminer.ingest.blocks import Block
-from dataminer.ingest.pdf_reader import Line
+from dataminer.model.block import Block
+from dataminer.model.line import Line
 
 REVIEWER = "auto-truth (sách mẫu)"
 

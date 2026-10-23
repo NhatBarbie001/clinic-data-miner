@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from dataminer.core.config import FurnitureCfg
 from dataminer.core.io import write_json
 from dataminer.core.text_vi import nfc
-from dataminer.ingest.pdf_reader import Line
+from dataminer.model.line import Line
 
 # Chỉ gồm số trang và dấu: "12", "- 12 -", "– 12 –", "[12]"; có thể có chữ "Trang" phía trước.
 RE_PAGE_NUMBER = re.compile(r"^(?:trang\s*)?[^\w]*(\d{1,4})[^\w]*$", re.IGNORECASE)

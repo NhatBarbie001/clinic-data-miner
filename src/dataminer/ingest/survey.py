@@ -16,7 +16,8 @@ from dataminer.core.io import write_json, write_jsonl
 from dataminer.core.text_vi import has_vietnamese_marks, is_nfc, is_valid_syllable, nfc
 from dataminer.ingest.blocks import heading_signals
 from dataminer.ingest.page_furniture import classify_furniture, furniture_key
-from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from dataminer.ingest.pdf_reader import body_font_size, read_lines
+from dataminer.model.line import Line
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^\d{1,2}\.\d{1,2}\.?\s+\S")

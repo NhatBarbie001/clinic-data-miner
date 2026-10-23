@@ -19,40 +19,15 @@ Xem docs/phases/P1/P1.4_plan.md mục 3.3.
 import difflib
 import re
 from collections.abc import Iterable, Sequence
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from dataminer.core.text_vi import has_vietnamese_marks, is_valid_syllable, nfc, strip_diacritics
+from dataminer.model.block import Fix, Rule
 
 RE_DIGIT_LOOKALIKE = re.compile(r"\d[OoIl]|[OoIl]\d")  # 5OO, 1O, l0
 UNITS = {"g", "mg", "mcg", "µg", "ml", "l", "ui", "iu", "kg"}
 PUNCT = "\"'“”‘’()[]{}.,;:!?…-–—/"
-
-Rule = Literal[
-    "ok",
-    "digit_letter",
-    "split_merge",
-    "G-num",
-    "G-protect",
-    "G-punct",
-    "G-sim",
-    "G-insdel",
-    "G-ratio",
-    "review",
-]
-
-
-class Fix(BaseModel):
-    """Một thay đổi (đề xuất) ở mức token."""
-
-    position: int  # vị trí token đầu tiên trong văn bản gốc (text_rules)
-    before: str
-    after: str
-    accepted: bool
-    rule: Rule
-    suggestion: str | None = None  # gợi ý cho người duyệt (số liệu nghi sai)
-    cell: str | None = None  # với bảng: ô "r<hàng>c<cột>"
 
 
 class GuardResult(BaseModel):

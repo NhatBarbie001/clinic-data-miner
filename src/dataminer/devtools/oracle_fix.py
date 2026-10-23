@@ -8,9 +8,10 @@ không phải ở LLM. (Đối chứng này đã tìm ra 3 lỗi - xem P1.4_repo
 from typing import Any
 
 from dataminer.evaluation.p1_eval import _line_key_map, _norm, _truth_keys
-from dataminer.ingest.blocks import Block, join_text
+from dataminer.ingest.blocks import join_text
 from dataminer.ingest.ocr_fixer import block_items
-from dataminer.ingest.pdf_reader import Line
+from dataminer.model.block import Block
+from dataminer.model.line import Line
 
 
 def oracle_outputs(blocks: list[Block], lines: list[Line], truth: dict[str, Any]) -> dict[str, str]:

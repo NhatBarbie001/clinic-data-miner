@@ -140,9 +140,9 @@ def review_export_cmd(
 ) -> None:
     """Xuất hàng đợi duyệt ra CSV (Excel), kèm mẫu kiểm tra nếu --audit > 0."""
     from dataminer.core.io import read_jsonl
-    from dataminer.ingest.blocks import Block
     from dataminer.ingest.pipeline import p1_dir
     from dataminer.ingest.review import audit_sample, build_queue, export_csv
+    from dataminer.model.block import Block
 
     base = p1_dir(_load(root))
     blocks = list(read_jsonl(base / "blocks.jsonl", Block))
@@ -157,7 +157,6 @@ def review_export_cmd(
 def review_import_cmd(csv_path: Path, root: Path | None = RootOption) -> None:
     """Nhập quyết định từ CSV đã điền → decisions.jsonl → áp lại → blocks.jsonl."""
     from dataminer.core.io import read_jsonl
-    from dataminer.ingest.blocks import Block
     from dataminer.ingest.pipeline import finalize, p1_dir
     from dataminer.ingest.review import (
         ReviewError,
@@ -166,6 +165,7 @@ def review_import_cmd(csv_path: Path, root: Path | None = RootOption) -> None:
         known_items,
         save_decisions,
     )
+    from dataminer.model.block import Block
 
     settings = _load(root)
     base = p1_dir(settings)

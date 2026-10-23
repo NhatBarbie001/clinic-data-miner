@@ -6,8 +6,8 @@ from pathlib import Path
 from dataminer.core.io import read_jsonl
 from dataminer.evaluation.p1_eval import format_eval
 from dataminer.evaluation.p2_eval import eval_golden
+from dataminer.model.tree import Node
 from dataminer.structure.golden import GoldenItem
-from dataminer.structure.tree_builder import Node
 
 OUT = Path("samples/P2.5")
 items = list(read_jsonl(Path("eval/golden_qa_v1.jsonl"), GoldenItem))

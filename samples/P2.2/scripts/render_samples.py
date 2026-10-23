@@ -7,9 +7,12 @@ from pathlib import Path
 from dataminer.core.io import read_jsonl
 from dataminer.evaluation.p1_eval import format_eval
 from dataminer.evaluation.p2_eval import eval_heading_levels
-from dataminer.ingest.blocks import Block, is_upper_text, numbering_of
-from dataminer.structure.heading_levels import HeadingDecision, classify_headings
-from dataminer.structure.toc import TocEntry, norm_title
+from dataminer.ingest.blocks import is_upper_text, numbering_of
+from dataminer.model.block import Block
+from dataminer.model.toc import TocEntry
+from dataminer.model.tree import HeadingDecision
+from dataminer.structure.heading_levels import classify_headings
+from dataminer.structure.toc import norm_title
 
 OUT = Path("samples/P2.2")
 blocks = list(read_jsonl(Path("data/p1_clean/blocks.jsonl"), Block))

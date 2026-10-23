@@ -392,9 +392,9 @@ def evaluate_p1(out_dir: Any, truth: dict[str, Any]) -> dict[str, Any]:
     from pathlib import Path
 
     from dataminer.core.io import read_json, read_jsonl
-    from dataminer.ingest.blocks import Block
     from dataminer.ingest.page_furniture import FurnitureItem, PageInfo
-    from dataminer.ingest.pdf_reader import Line
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
 
     out = Path(out_dir)
     content = list(read_jsonl(out / "content_lines.jsonl", Line))

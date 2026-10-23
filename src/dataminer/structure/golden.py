@@ -16,8 +16,8 @@ from pydantic import BaseModel, Field
 
 from dataminer.core.schemas import BaseRecord, stable_id
 from dataminer.core.text_vi import nfc, strip_diacritics
-from dataminer.ingest.blocks import Block
-from dataminer.structure.tree_builder import Node
+from dataminer.model.block import Block
+from dataminer.model.tree import Node
 
 GOLDEN_VERSION = "v1"
 CREATED_BY = "auto (sách mẫu)"

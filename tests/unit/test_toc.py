@@ -16,7 +16,7 @@ from dataminer.cli import app
 from dataminer.core.config import TocCfg
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p2_eval import all_pass, eval_toc
-from dataminer.ingest.pdf_reader import Line, Zone
+from dataminer.model.line import Line, Zone
 from dataminer.structure.toc import (
     build_toc,
     extract_toc,

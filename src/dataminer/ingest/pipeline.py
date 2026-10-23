@@ -21,11 +21,12 @@ from dataminer.core.config import Settings
 from dataminer.core.io import read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.run import RunRecorder
-from dataminer.ingest.blocks import Block, blocks_summary, build_blocks
+from dataminer.ingest.blocks import blocks_summary, build_blocks
 from dataminer.ingest.ocr_fixer import OCRFixer, fix_stats
 from dataminer.ingest.page_furniture import save_furniture, strip_furniture
 from dataminer.ingest.pdf_reader import body_font_size, read_lines
 from dataminer.ingest.review import Decision, apply_decisions, build_queue
+from dataminer.model.block import Block
 
 PHASE = "p1_clean"
 Scope = Literal["pilot", "all"]

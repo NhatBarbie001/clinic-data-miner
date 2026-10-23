@@ -15,8 +15,9 @@ from typer.testing import CliRunner
 
 from dataminer.cli import app
 from dataminer.core.io import read_jsonl, write_jsonl
-from dataminer.ingest.blocks import Block
-from dataminer.ingest.pdf_reader import Line
+from dataminer.model.block import Block
+from dataminer.model.line import Line
+from dataminer.model.tree import Node
 from dataminer.structure.golden import (
     GoldenItem,
     Source,
@@ -28,7 +29,7 @@ from dataminer.structure.golden import (
 )
 from dataminer.structure.heading_levels import classify_headings
 from dataminer.structure.section_mapper import load_section_map, map_sections
-from dataminer.structure.tree_builder import Node, build_tree
+from dataminer.structure.tree_builder import build_tree
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, make_settings
 from tests.unit.test_tree_builder import pipeline

@@ -27,7 +27,8 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import Prompt
 from dataminer.core.schemas import stable_id
 from dataminer.core.text_vi import nfc, strip_diacritics
-from dataminer.structure.tree_builder import RE_SECTION_PREFIX, Node
+from dataminer.model.tree import Node
+from dataminer.structure.tree_builder import RE_SECTION_PREFIX
 
 SectionType = Literal[
     "definition",

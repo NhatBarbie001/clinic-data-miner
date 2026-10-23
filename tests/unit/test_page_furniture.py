@@ -13,7 +13,8 @@ from dataminer.ingest.page_furniture import (
     save_furniture,
     strip_furniture,
 )
-from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from dataminer.ingest.pdf_reader import body_font_size, read_lines
+from dataminer.model.line import Line
 from tests.conftest import SampleBookFor
 
 ALL_PAGES = list(range(1, 10))

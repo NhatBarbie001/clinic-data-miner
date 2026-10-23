@@ -11,13 +11,12 @@ import statistics
 from collections.abc import Iterable
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
-
 from dataminer.core.config import BlocksCfg
-from dataminer.core.schemas import BaseRecord, stable_id
+from dataminer.core.schemas import stable_id
 from dataminer.core.text_vi import has_vietnamese_marks, nfc
-from dataminer.ingest.guards import Fix
-from dataminer.ingest.pdf_reader import ROW_TOLERANCE, Line
+from dataminer.ingest.pdf_reader import ROW_TOLERANCE
+from dataminer.model.block import Block, BlockKind
+from dataminer.model.line import Line
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^(\d{1,2}\.\d{1,2})\.?\s+\S")
@@ -26,8 +25,6 @@ RE_NUMBERED_ITEM = re.compile(r"^(\d{1,2})[.)]\s+\S")
 RE_TOC_ENTRY = re.compile(r"(\.{4,}|…{2,})\s*\d+\s*$")
 RE_CAPTION = re.compile(r"^(Bảng|BẢNG|Hình|HÌNH|Biểu đồ|Sơ đồ)\s+\d+(\.\d+)*\.?(\s|$)")
 SENTENCE_END = (".", ":", ";", "?", "!", "…")
-
-BlockKind = Literal["heading", "paragraph", "list_item", "table", "caption", "toc_entry", "other"]
 
 
 # --------------------------------------------------------------------------- đặc trưng dòng
@@ -112,42 +109,6 @@ def classify_line(ln: Line, body_size: float, cfg: BlocksCfg) -> LineKind:
 
 
 # --------------------------------------------------------------------------- block
-
-
-class Review(BaseModel):
-    """Một quyết định đã áp vào block."""
-
-    item_id: str
-    decision: Literal["accept", "keep", "edit"]
-    before: str
-    after: str
-    reviewer: str
-    at: str
-    cell: str | None = None
-    position: int = 0  # -1 = quyết định cho cả block / cả ô
-
-
-class Block(BaseRecord):
-    """Đơn vị văn bản sau P1 - đầu vào của P2. Schema ở docs/phases/P1/plan.md mục 2."""
-
-    kind: BlockKind
-    text: str  # văn bản cuối cùng (P1.4/P1.5 sẽ cập nhật)
-    text_rules: str  # sau quy tắc, trước LLM
-    page_start: int
-    page_end: int
-    printed_start: int | None = None
-    printed_end: int | None = None
-    line_ids: list[str]
-    bbox: tuple[float, float, float, float]  # của dòng đầu
-    x0: float
-    font_size: float
-    is_upper: bool = False
-    numbering: str | None = None
-    marker: str | None = None  # ký hiệu gạch đầu dòng ("-", "1."...) - không nằm trong text
-    rows: list[list[str]] | None = None
-    flags: list[str] = Field(default_factory=list)
-    fixes: list[Fix] = Field(default_factory=list)  # P1.4: từng sửa đổi token (chấp nhận/từ chối)
-    reviews: list[Review] = Field(default_factory=list)  # P1.5: quyết định duyệt tay
 
 
 def join_text(prev: str, nxt: str) -> str:

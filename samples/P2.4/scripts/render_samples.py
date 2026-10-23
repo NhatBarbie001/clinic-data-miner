@@ -15,8 +15,9 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import load_prompt
 from dataminer.evaluation.p1_eval import format_eval
 from dataminer.evaluation.p2_eval import eval_sections
-from dataminer.ingest.blocks import Block, is_upper_text, numbering_of
-from dataminer.structure.heading_levels import HeadingDecision
+from dataminer.ingest.blocks import is_upper_text, numbering_of
+from dataminer.model.block import Block
+from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.section_mapper import (
     export_proposals,
     load_section_map,
@@ -24,7 +25,7 @@ from dataminer.structure.section_mapper import (
     map_sections,
     normalize_section_title,
 )
-from dataminer.structure.tree_builder import Node, build_tree, render_tree_md
+from dataminer.structure.tree_builder import build_tree, render_tree_md
 
 OUT = Path("samples/P2.4")
 MAP = Path("configs/section_map.yaml")

@@ -1,7 +1,8 @@
 """Data-miner: khai thác dữ liệu y khoa từ sách PDF (đã OCR).
 
 Các module con theo phase (xem plan.md):
-    core        dùng chung
+    core        dùng chung (cấu hình, AI, cache, manifest, I/O)
+    model       hợp đồng dữ liệu giữa các bước: Line, Block, TocEntry, HeadingDecision, Node
     ingest      P1 trích xuất & làm sạch
     structure   P2 dựng cây cấu trúc
     index       P3 index & retrieval
@@ -22,6 +23,7 @@ except PackageNotFoundError:  # chạy từ source chưa cài đặt
 
 SUBMODULES: tuple[str, ...] = (
     "core",
+    "model",
     "ingest",
     "structure",
     "index",

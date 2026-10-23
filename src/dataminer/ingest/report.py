@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Any
 
 from dataminer.core.io import read_json, read_jsonl
-from dataminer.ingest.blocks import Block
 from dataminer.ingest.review import build_queue
+from dataminer.model.block import Block
 
 GATE_NAMES = {
     "G1_furniture": "G1 header/footer bỏ đủ, không bỏ nhầm",

@@ -9,17 +9,18 @@ Xem docs/phases/P2/P2.3_plan.md.
 
 import re
 from collections.abc import Sequence
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import BaseModel, Field
 
-from dataminer.core.schemas import BaseRecord, stable_id
+from dataminer.core.schemas import stable_id
 from dataminer.core.text_vi import nfc
-from dataminer.ingest.blocks import Block, is_upper_text
-from dataminer.structure.heading_levels import HeadingDecision
-from dataminer.structure.toc import TocEntry, norm_title
+from dataminer.ingest.blocks import is_upper_text
+from dataminer.model.block import Block
+from dataminer.model.toc import TocEntry
+from dataminer.model.tree import HeadingDecision, Node
+from dataminer.structure.toc import norm_title
 
-NodeLevel = Literal["book", "chapter", "disease", "section", "subsection", "front"]
 RANK: dict[str, int] = {"book": 0, "front": 1, "chapter": 1, "disease": 2, "section": 3,
                         "subsection": 4}  # fmt: skip
 RE_SECTION_PREFIX = re.compile(r"^\d{1,2}(\.\d{1,2})?\.?\s+")
@@ -29,27 +30,6 @@ FRONT_TITLE = "Phần đầu"
 
 class TreeInvariantError(Exception):
     """Cây vi phạm bất biến (block mồ côi/trùng, ID trùng, phạm vi trang sai…)."""
-
-
-class Node(BaseRecord):
-    level: NodeLevel
-    parent_id: str | None
-    order: int  # thứ tự trong cha
-    title: str  # tiêu đề gốc (sau P1), vd. "3. TRIỆU CHỨNG"
-    title_norm: str
-    display_title: str  # dạng đọc được, vd. "Triệu chứng"
-    numbering: str | None = None
-    section_type: str | None = None  # P2.4 điền cho section/subsection
-    section_source: str | None = None  # P2.4: map | map_fuzzy | inherited | llm | none
-    path: list[str]
-    heading_block_id: str | None = None
-    block_ids: list[str] = Field(default_factory=list)  # nội dung RIÊNG của nút (không gồm con)
-    text: str = ""
-    page_start: int  # phạm vi trang PDF của CẢ nhánh
-    page_end: int
-    printed_start: int | None = None
-    printed_end: int | None = None
-    flags: list[str] = Field(default_factory=list)
 
 
 class TreeResult(BaseModel):

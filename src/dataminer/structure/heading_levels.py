@@ -13,35 +13,21 @@ import difflib
 import json
 import re
 from collections.abc import Sequence
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from dataminer.core.config import HeadingsCfg
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import Prompt
-from dataminer.ingest.blocks import Block
-from dataminer.structure.toc import RE_CHAPTER_NORM, TocEntry, match_key, norm_title
+from dataminer.model.block import Block
+from dataminer.model.toc import TocEntry
+from dataminer.model.tree import Confidence, HeadingDecision, Level
+from dataminer.structure.toc import RE_CHAPTER_NORM, match_key, norm_title
 
-Level = Literal["chapter", "disease", "section", "subsection", "other"]
-Confidence = Literal["high", "medium", "low"]
 RE_SUB_NUM = re.compile(r"^\d{1,2}\.\d{1,2}$")
 RE_SECTION_NUM = re.compile(r"^\d{1,2}$")
 RE_CHAPTER_PREFIX = re.compile(r"^(chuong|phan)\s+\S+?[.:]?\s+")
 SECTION_SIZE_DELTA = 0.75  # "3. Triệu chứng" (không IN HOA) vẫn là mục nếu cỡ ≥ thân bài + 0.75
-
-
-class HeadingDecision(BaseModel):
-    block_id: str
-    text: str
-    page: int  # trang PDF
-    level: Level
-    confidence: Confidence
-    reasons: list[str]
-    toc_match: str | None = None  # title_norm của mục lục khớp
-    source: Literal["rules", "toc", "llm"] = "rules"
-    numbering: str | None = None
-    flags: list[str] = Field(default_factory=list)
 
 
 class HeadingResult(BaseModel):

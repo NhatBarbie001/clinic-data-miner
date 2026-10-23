@@ -20,6 +20,7 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMJSONError
 from dataminer.core.prompts import load_prompt
 from dataminer.evaluation.p2_eval import all_pass, eval_sections
+from dataminer.model.tree import Node
 from dataminer.structure.section_mapper import (
     CSV_COLUMNS,
     SectionMapError,
@@ -30,7 +31,7 @@ from dataminer.structure.section_mapper import (
     map_sections,
     normalize_section_title,
 )
-from dataminer.structure.tree_builder import Node, build_tree
+from dataminer.structure.tree_builder import build_tree
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 from tests.unit.test_tree_builder import PILOT, make, pipeline

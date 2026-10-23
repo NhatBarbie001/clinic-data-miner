@@ -21,9 +21,9 @@ from dataminer.core.io import read_json, read_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.devtools.oracle_fix import oracle_outputs
 from dataminer.evaluation.p1_eval import all_pass, evaluate_p1
-from dataminer.ingest.blocks import Block
-from dataminer.ingest.pdf_reader import Line
 from dataminer.ingest.pipeline import p1_dir, run_p1
+from dataminer.model.block import Block
+from dataminer.model.line import Line
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 

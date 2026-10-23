@@ -18,8 +18,8 @@ from dataminer.core.io import read_json, read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.evaluation.p2_eval import GATE_NAMES
 from dataminer.ingest.pipeline import p1_dir, run_p1
+from dataminer.model.tree import Node
 from dataminer.structure.pipeline import OUTPUTS, p2_dir, run_p2
-from dataminer.structure.tree_builder import Node
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 from tests.unit.test_p1_pipeline import client as p1_client
@@ -221,8 +221,8 @@ def test_06_end_to_end_p1_oracle_to_p2_gate(tmp_path: Path, sample_book_for: Sam
 
     # P1.5: xuất hàng đợi → "người duyệt" điền từ đáp án → nhập (đúng đường CLI như người thật)
     from dataminer.devtools.auto_review import fill_from_truth
-    from dataminer.ingest.blocks import Block
-    from dataminer.ingest.pdf_reader import Line
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
 
     queue = p1_dir(settings) / "review" / "review_queue.csv"
     assert runner.invoke(app, ["p1", "review", "export", *root]).exit_code == 0

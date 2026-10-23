@@ -23,9 +23,9 @@ from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import Prompt, load_prompt
 from dataminer.core.schemas import BaseRecord, stable_id
 from dataminer.core.text_vi import nfc
-from dataminer.ingest.blocks import Block
 from dataminer.ingest.guards import GlossaryIndex, apply_guarded_fix
 from dataminer.ingest.survey import text_ocr_signals
+from dataminer.model.block import Block
 
 log = logging.getLogger("dataminer.ingest")
 

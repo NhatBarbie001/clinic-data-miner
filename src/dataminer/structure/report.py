@@ -12,10 +12,9 @@ from pathlib import Path
 
 from dataminer.core.io import read_json, read_jsonl
 from dataminer.evaluation.p2_eval import GATE_NAMES
-from dataminer.structure.heading_levels import HeadingDecision
+from dataminer.model.toc import TocResult
+from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.section_mapper import SECTION_TYPES
-from dataminer.structure.toc import TocResult
-from dataminer.structure.tree_builder import Node
 
 LONG_FACTOR = 4.0  # mục dài hơn 4 × trung vị → có thể nuốt mất tiêu đề kế tiếp
 SHORT_FACTOR = 0.25  # mục ngắn hơn 1/4 trung vị → có thể bị cắt

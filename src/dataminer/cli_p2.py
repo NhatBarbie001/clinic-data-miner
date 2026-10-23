@@ -95,10 +95,11 @@ def headings_cmd(
     from dataminer.core.prompts import PromptError, load_prompt
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
-    from dataminer.ingest.blocks import Block
     from dataminer.ingest.pipeline import p1_dir
+    from dataminer.model.block import Block
+    from dataminer.model.toc import TocResult
     from dataminer.structure.heading_levels import classify_headings
-    from dataminer.structure.toc import TocResult, extract_toc
+    from dataminer.structure.toc import extract_toc
 
     settings = _load(root)
     blocks_path = p1_dir(settings) / "blocks.jsonl"
@@ -176,11 +177,11 @@ def tree_cmd(
     from dataminer.core.io import read_jsonl, write_json, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_tree
-    from dataminer.ingest.blocks import Block
-    from dataminer.ingest.pdf_reader import Line
     from dataminer.ingest.pipeline import p1_dir
-    from dataminer.structure.heading_levels import HeadingDecision
-    from dataminer.structure.toc import TocResult
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
+    from dataminer.model.toc import TocResult
+    from dataminer.model.tree import HeadingDecision
     from dataminer.structure.tree_builder import (
         TreeInvariantError,
         build_tree,
@@ -277,10 +278,11 @@ def sections_map_cmd(
     from dataminer.core.prompts import PromptError, load_prompt
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_sections
-    from dataminer.ingest.blocks import Block
     from dataminer.ingest.pipeline import p1_dir
+    from dataminer.model.block import Block
+    from dataminer.model.tree import Node
     from dataminer.structure.section_mapper import SectionMapError, load_section_map, map_sections
-    from dataminer.structure.tree_builder import Node, render_tree_md
+    from dataminer.structure.tree_builder import render_tree_md
 
     settings = _load(root)
     out_dir = p2_dir(settings)
@@ -395,11 +397,11 @@ def golden_cmd(
     from dataminer.core.io import read_jsonl, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_golden
-    from dataminer.ingest.blocks import Block
-    from dataminer.ingest.pdf_reader import Line
     from dataminer.ingest.pipeline import p1_dir
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
+    from dataminer.model.tree import Node
     from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem, clean_texts, draft_golden
-    from dataminer.structure.tree_builder import Node
 
     settings = _load(root)
     nodes_path = p2_dir(settings) / "nodes.jsonl"

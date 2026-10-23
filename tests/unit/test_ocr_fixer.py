@@ -16,10 +16,12 @@ from dataminer.core.prompts import PromptError, load_prompt
 from dataminer.devtools.oracle_fix import oracle_outputs
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p1_eval import eval_ocr
-from dataminer.ingest.blocks import Block, build_blocks
+from dataminer.ingest.blocks import build_blocks
 from dataminer.ingest.ocr_fixer import OCRFixer, plan_batches
 from dataminer.ingest.page_furniture import strip_furniture
-from dataminer.ingest.pdf_reader import Line, body_font_size, read_lines
+from dataminer.ingest.pdf_reader import body_font_size, read_lines
+from dataminer.model.block import Block
+from dataminer.model.line import Line
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 
