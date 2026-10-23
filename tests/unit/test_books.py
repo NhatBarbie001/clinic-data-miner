@@ -90,9 +90,9 @@ def test_generic_block_builder_requires_book_rules() -> None:
 def test_registry_selects_rules_by_book_id(tmp_path: Path) -> None:
     root = tmp_path
     assert rules_for(make_settings(root)) is book01.RULES  # cấu hình mặc định: book01
-    assert set(REGISTRY) == {"book01"}
+    assert set(REGISTRY) == {"book01", "iasp"}
     other = make_settings(root / "x", DM__PROJECT__BOOK_ID="chua_co")
-    with pytest.raises(ConfigError, match=r"Sách 'chua_co' chưa có bộ luật.*book01"):
+    with pytest.raises(ConfigError, match=r"Sách 'chua_co' chưa có bộ luật.*book01, iasp"):
         rules_for(other)
 
 

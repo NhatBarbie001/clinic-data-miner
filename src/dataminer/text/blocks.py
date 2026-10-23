@@ -46,11 +46,52 @@ Numbering = Callable[[str], str | None]
 # --------------------------------------------------------------------------- block
 
 
-def join_text(prev: str, nxt: str) -> str:
-    """Nối 2 dòng: thêm khoảng trắng; giữ gạch nối giữa 2 phần Latin không dấu (anti- + CCP)."""
+# mảnh cuối dòng "dis-", "(rec-" - không nhận "side-to-" (từ ghép đã có gạch)
+RE_HYPHEN_FRAGMENT = re.compile(r"(?<![A-Za-z-])([A-Za-z]{2,})-$")
+# tiền tố thường viết CÓ gạch nối: "anti-" + "inflammatory" giữ gạch dù ngắt ở cuối dòng
+HYPHEN_PREFIXES = frozenset(
+    {"anti", "non", "self", "co", "semi", "pseudo", "multi", "half", "well", "cross", "post", "pre"}
+)
+COLUMN_JUMP = 100.0  # dòng tiếp lệch ngang > 100pt = sang cột khác (sách 1 cột không bao giờ)
+
+
+class Vocab:
+    """Từ vựng của chính cuốn sách, để quyết định bỏ hay giữ gạch nối cuối dòng."""
+
+    def __init__(self, texts: Iterable[str]) -> None:
+        self.hyphenated: set[str] = set()  # "anti-inflammatory" gặp GIỮA dòng
+        self.words: set[str] = set()  # "present" gặp như một từ
+        for text in texts:
+            tokens = [t.strip(".,;:()[]\"'“”‘’").lower() for t in text.split()]
+            for tok in tokens[:-1]:  # bỏ từ cuối dòng (có thể là mảnh bị ngắt)
+                (self.hyphenated if "-" in tok else self.words).add(tok)
+
+
+def _dehyphenate(left: str, right: str, vocab: "Vocab | None") -> bool:
+    """Bỏ gạch giữa `left`- và `right`? Ưu tiên bằng chứng trong sách, rồi danh sách tiền tố."""
+    if vocab is not None:
+        if f"{left}-{right}".lower() in vocab.hyphenated:
+            return False  # sách viết có gạch ở chỗ khác ("anti-inflammatory")
+        if f"{left}{right}".lower() in vocab.words:
+            return True  # sách có từ liền ("present")
+    return left.lower() not in HYPHEN_PREFIXES
+
+
+def join_text(prev: str, nxt: str, dehyphenate: bool = False, vocab: "Vocab | None" = None) -> str:
+    """Nối 2 dòng: thêm khoảng trắng; giữ gạch nối giữa 2 phần Latin không dấu (anti- + CCP).
+
+    `dehyphenate` (sách tiếng Anh ngắt từ cuối dòng): "dis-" + "ease" → "disease" khi phần sau
+    bắt đầu bằng chữ thường và phần trước là MỘT từ (từ ghép "side-to-" + "side" giữ gạch).
+    `vocab`: từ vựng của sách - phân biệt "pre-" + "sent" (present) với "anti-" + "inflammatory"."""
+    if dehyphenate and nxt[:1].islower() and prev.split():
+        frag = RE_HYPHEN_FRAGMENT.search(prev.split()[-1])
+        right = re.match(r"[a-z]+", nxt)
+        if frag and right and _dehyphenate(frag.group(1), right.group(0), vocab):
+            return prev[:-1] + nxt
     if prev.endswith("-") and nxt[:1].isascii() and nxt[:1].isalpha():
         last = prev.split()[-1] if prev.split() else ""
-        if not has_vietnamese_marks(last):
+        # chỉ khi trước gạch là chữ ("anti-"); gạch đứng riêng ("… -") là dấu câu
+        if last[:-1][-1:].isalpha() and not has_vietnamese_marks(last):
             return prev + nxt
     return f"{prev} {nxt}"
 
@@ -214,8 +255,9 @@ def build_blocks(
     cfg = cfg or BlocksCfg()
     printed = printed or {}
     step = _line_step(lines)
+    vocab = Vocab(ln.text for ln in lines) if cfg.dehyphenate else None
     table_of: dict[str, int] = {}
-    tables = find_tables(lines, cfg)
+    tables = find_tables(lines, cfg) if cfg.detect_tables else []
     for t_idx, rows in enumerate(tables):
         for row in rows:
             for cell in row:
@@ -248,7 +290,7 @@ def build_blocks(
         if kind == "body" and current is not None and _continues(current, ln, step, cfg):
             if ln.page != current.last.page:
                 current.flags.append("joined_across_pages")
-            current.text = join_text(current.text, text)
+            current.text = join_text(current.text, text, cfg.dehyphenate, vocab)
             current.lines.append(ln)
             continue
         if (
@@ -256,7 +298,7 @@ def build_blocks(
             and current is not None
             and _heading_continues(current, ln, step, numbering)
         ):
-            current.text = join_text(current.text, text)
+            current.text = join_text(current.text, text, cfg.dehyphenate, vocab)
             current.lines.append(ln)
             continue
 
@@ -283,9 +325,16 @@ def _continues(cur: _Open, ln: Line, step: float, cfg: BlocksCfg) -> bool:
     if cur.kind not in ("paragraph", "list_item"):
         return False
     prev = cur.last
-    if ln.page != prev.page:  # sang trang mới: chỉ nối khi câu trước chưa kết thúc
+    # sang cột khác (sách nhiều cột): lệch ngang lớn, và đi lên trên hoặc sang trang
+    column_jump = abs(ln.bbox[0] - prev.bbox[0]) > COLUMN_JUMP and (
+        ln.page != prev.page or ln.bbox[1] < prev.bbox[1]
+    )
+    if ln.page != prev.page or column_jump:  # chỉ nối khi câu trước chưa kết thúc
         if not cfg.join_across_pages or cur.text.rstrip().endswith(SENTENCE_END):
             return False
+        if column_jump:  # lề trái của cột mới khác cột cũ → không so lề
+            cur.flags.append("joined_across_columns")
+            return True
     elif ln.bbox[3] - prev.bbox[3] - step >= cfg.para_gap_ratio * ln.size:
         return False  # khoảng cách dôi ra → đoạn mới
     if cur.kind == "list_item":

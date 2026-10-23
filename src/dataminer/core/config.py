@@ -80,6 +80,8 @@ class _Strict(BaseModel):
 class ProjectCfg(_Strict):
     book_id: str = Field(pattern=r"^[a-z0-9_-]+$")
     book_file: str
+    # phạm vi nội dung chính (trang PDF, gồm 2 đầu) dùng cho `--scope all`; None = cả file
+    content_pages: tuple[int, int] | None = None
 
 
 class PathsCfg(_Strict):
@@ -163,6 +165,10 @@ class BlocksCfg(_Strict):
     table_min_rows: int = Field(default=2, ge=2)
     table_min_cells: int = Field(default=2, ge=2)
     heading_size_delta: float = Field(default=1.5, gt=0)  # chỉ dựa cỡ chữ: phải ≥ thân bài + delta
+    # nhận bảng = các dòng cùng hàng ngang. Sách in 2 cột phải TẮT: 2 cột cạnh nhau trông như bảng
+    detect_tables: bool = True
+    # bỏ gạch nối cuối dòng khi nối 2 dòng ("dis-" + "ease" → "disease") - sách tiếng Anh
+    dehyphenate: bool = False
 
 
 class FixCfg(_Strict):

@@ -1,0 +1,23 @@
+# Hồ sơ sách: iasp - IASP "Classification of Chronic Pain", 2nd ed. (1994). SÁCH CHÍNH của dự án.
+# 238 trang PDF, tiếng Anh, xuất từ Word (chữ chuẩn, KHÔNG cần sửa OCR), thân sách in 2 cột.
+# Luật nhận dạng: src/dataminer/books/iasp/ · Plan: docs/phases/P2R/plan.md (luật L1-L13).
+
+project:
+  book_file: classification_of_chronic_pain.pdf   # data/books/iasp/raw/
+  content_pages: [53, 222]   # L1: Part II (mô tả hội chứng) - phạm vi của `--scope all`
+
+pilot:                       # GROUP XI "Pain in the Shoulder, Arm, and Hand": tr.in 121-127
+  page_start: 137
+  page_end: 143
+
+p1:
+  blocks:
+    bullet_markers: ["-", "•", "–", "—", "+"]   # sách dùng gạch dài "—" cho danh sách
+    detect_tables: false     # 2 cột cạnh nhau trông như bảng (lần chạy thử: 370 "bảng" giả)
+    dehyphenate: true        # sách ngắt từ cuối dòng: "dis-" + "ease" → "disease"
+  fix:
+    enabled: false           # sách xuất từ Word, chữ đã chuẩn
+
+p2:
+  toc:
+    pages: [5, 6]            # L12: mục lục "tên ↵ số trang" (không có chấm dẫn)

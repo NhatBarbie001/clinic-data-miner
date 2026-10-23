@@ -107,7 +107,8 @@ def read_lines(
                         flags=[] if is_nfc(raw) else ["nfd_fixed"],
                     )
                 )
-            if detect_columns(page_lines):
+            # chỉ cảnh báo khi đọc THEO HÀNG; sách có luật đọc theo cột đã tự xử lý
+            if order is reading_order and detect_columns(page_lines):
                 log.warning("trang %d có thể dàn 2 cột - thứ tự đọc có thể sai", page_no)
                 for ln in page_lines:
                     ln.flags.append("possible_two_columns")

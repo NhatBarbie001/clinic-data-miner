@@ -12,8 +12,15 @@ def _book01() -> BookRules:
     return RULES
 
 
+def _iasp() -> BookRules:
+    from dataminer.books.iasp.rules import RULES
+
+    return RULES
+
+
 REGISTRY: dict[str, Callable[[], BookRules]] = {
-    "book01": _book01,
+    "book01": _book01,  # sách mẫu tiếng Việt tổng hợp (có đáp án)
+    "iasp": _iasp,  # IASP "Classification of Chronic Pain" - sách chính
 }
 
 

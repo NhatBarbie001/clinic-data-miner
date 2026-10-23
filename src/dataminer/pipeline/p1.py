@@ -55,6 +55,9 @@ def resolve_pages(
     pilot = settings.pilot
     if scope == "pilot" and pilot.page_start is not None and pilot.page_end is not None:
         return pilot.page_start, pilot.page_end
+    content = settings.project.content_pages
+    if content is not None:
+        return content[0], min(content[1], page_count)
     return 1, page_count
 
 
