@@ -210,6 +210,9 @@ class HeadingsCfg(_Strict):
     disease_size_delta: float = Field(default=1.5, gt=0)  # IN HOA, không số, cỡ ≥ thân bài + delta
     use_toc: bool = True  # dùng mục lục để xác nhận/sửa cấp
     toc_match_min: float = Field(default=0.85, gt=0, le=1)  # độ giống tối thiểu khi khớp gần
+    # mục lục có liệt kê từng bệnh không? true: bệnh vắng mặt trong mục lục → đáng ngờ (sách mẫu);
+    # false: mục lục chỉ tới chương (sách IASP) → không hạ tin cậy bệnh
+    toc_lists_diseases: bool = True
     llm_fallback: bool = True  # tiêu đề còn tin cậy thấp → hỏi LLM (tác vụ `classify`)
     prompt: str = "p2_classify_heading"
 

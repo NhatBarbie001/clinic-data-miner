@@ -1,0 +1,24 @@
+Cây Part II: 2842 nút · part 8 · chapter 35 · disease 334 · section 2461 · subsection 2 · front 1
+Hội chứng: 335 nút, 331 mã (nút không mã 5) · có mã IASP 5 trục: 293
+
+A2 mã hội chứng liên tiếp trong mỗi nhóm: 0 chỗ nhảy/trùng trên 331 mã (ngưỡng 0 (trừ chỗ sách tự nhảy đã liệt kê)) → ĐẠT
+A3 số hội chứng có mã (cây ↔ đếm độc lập trên PDF): cây 331 · PDF 331 · lệch 0.0% (ngưỡng ≤ 1%) → ĐẠT
+A4 hội chứng có mục chính (^(Definition|Codes?\b|Code\(s\))): 96.7% (324/335) (ngưỡng ≥ 90%) → ĐẠT
+    - 'Complex Regional Pain Syndromes (CRPS)' (PDF 56)
+    - 'Note: Specific Myofascial Pain Syndromes' (PDF 63)
+    - 'A Note on Factitious Illness and Malingering' (PDF 72)
+    - 'Headache Not Otherwise Specified' (PDF 105)
+    - 'Cervical Rib or Malformed First Thoracic Rib' (PDF 113)
+    - 'Thoracic Visceral Disease with Pain Referred to Abdomen' (PDF 165)
+    - 'Porphyria—Hepatic Porphyrias' (PDF 177)
+    - 'Abdominal Pain—Visceral Pain Referred to the Abdomen' (PDF 179)
+    - 'Neuralgia of Iliohypogastric, Ilio-inguinal, or Genito-Femoral Nerves' (PDF 188)
+    - 'Pain of Hemorrhoids' (PDF 189)
+    - 'Back Pain of Other Visceral or Neurological Origin Involving the Spine' (PDF 209)
+A5 mục có loại 'other': 1.9% (46/2463) · không tra được: 0 (ngưỡng < 5%, 0 tên không tra được) → ĐẠT
+    - other: Remarks ×44
+    - other: Associated Disorders ×1
+    - other: Chronic aneurysm ×1
+A6 mục lục ↔ cây (đúng 1 nút, đúng trang): 41/41 (ngưỡng 100%) → ĐẠT
+A6b số mục lục Part II đọc được ↔ đếm độc lập trên PDF 5-6: đọc 43 · đếm 43 (ngưỡng bằng nhau) → ĐẠT
+A8 bất biến cây: 0 vi phạm → ĐẠT

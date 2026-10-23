@@ -3,7 +3,7 @@
 from typing import Any
 
 from dataminer.books.base import BookRules
-from dataminer.books.iasp import headings, layout, lines
+from dataminer.books.iasp import headings, layout, lines, toc
 from dataminer.core.config import BlocksCfg, HeadingsCfg, Settings
 from dataminer.model.block import Block
 from dataminer.model.line import Line
@@ -14,6 +14,7 @@ from dataminer.text.blocks import LineKind
 
 class IaspRules(BookRules):
     book_id = "iasp"
+    chapter_prefix = toc.RE_CHAPTER_PREFIX  # "GROUP XI: …" ↔ mục lục "XI. …"
 
     # ---------------------------------------------------------------- P1
     def order_lines(self, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -33,13 +34,13 @@ class IaspRules(BookRules):
 
     # ---------------------------------------------------------------- P2
     def read_toc(self, settings: Settings) -> TocResult:
-        # TODO(I4): đọc mục lục PDF 5-6 (L12) - tạm thời không đối chiếu
-        return TocResult(
-            toc_pages=[],
-            source="none",
-            page_offset=None,
-            entries=[],
-            warnings=["IASP: chưa đọc mục lục (việc I4) - cấp tiêu đề chỉ dựa trên quy tắc."],
+        content = settings.project.content_pages or (1, 10_000)
+        return toc.extract_toc(
+            settings.paths.raw_dir / settings.project.book_file,
+            book_id=settings.project.book_id,
+            cfg=settings.p2.toc,
+            content_pages=content,
+            furniture=settings.p1.furniture,
         )
 
     def rule_level(
@@ -49,6 +50,9 @@ class IaspRules(BookRules):
 
     def display_title(self, text: str, level: str) -> str:
         return headings.display_title(text, level)
+
+    def section_key(self, title: str) -> str:
+        return headings.section_key(title)
 
     def annotate_tree(self, nodes: list[Node]) -> list[str]:
         return headings.annotate_tree(nodes)

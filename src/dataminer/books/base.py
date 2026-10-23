@@ -8,7 +8,7 @@ Mỗi sách trả lời 6 câu hỏi (docs/phases/P2R/architecture.md mục 4):
     5. mục lục đọc thế nào           → read_toc             (riêng từng sách)
     6. tiêu đề thuộc cấp nào         → rule_level, chapter_prefix, display_title
     (thêm) tiêu đề nhiều dòng nối thế nào → heading_joins; thuộc tính riêng sau khi dựng cây
-    → annotate_tree (cả hai có mặc định).
+    → annotate_tree; tên mục → khóa tra từ điển loại mục → section_key (đều có mặc định).
 Phương thức trừu tượng = BẮT BUỘC mỗi sách tự viết; còn lại có mặc định dùng chung.
 """
 
@@ -23,6 +23,7 @@ from dataminer.model.toc import TocResult
 from dataminer.model.tree import Confidence, Level, Node
 from dataminer.pdf.furniture import page_number_of
 from dataminer.pdf.layout import reading_order
+from dataminer.structure.section_mapper import normalize_section_title
 from dataminer.structure.tree_builder import display_title
 from dataminer.text.blocks import LineKind, default_heading_joins
 
@@ -70,6 +71,10 @@ class BookRules(ABC):
     def display_title(self, text: str, level: str) -> str:
         """Tên hiển thị của nút (dùng làm `path` → ID ổn định)."""
         return display_title(text, level)
+
+    def section_key(self, title: str) -> str:
+        """Tên mục → khóa tra từ điển loại mục. Mặc định: bỏ số thứ tự, bỏ dấu, chữ thường."""
+        return normalize_section_title(title)
 
     def annotate_tree(self, nodes: list[Node]) -> list[str]:
         """Gắn thuộc tính riêng của sách vào nút đã dựng (`attrs`, `flags`; KHÔNG đổi id/path).

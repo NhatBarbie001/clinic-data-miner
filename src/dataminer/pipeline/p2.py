@@ -112,6 +112,7 @@ def run_p2(
             cfg.sections,
             client=client,
             prompt=section_prompt,
+            section_key=rules.section_key,
         )
         warnings += [f"loại mục: {w}" for w in sections.warnings]
         if sections.prompt and section_prompt:

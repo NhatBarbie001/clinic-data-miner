@@ -107,7 +107,7 @@ def match_toc(
     """
     warnings: list[str] = []
     used: set[int] = set()
-    candidates = [d for d in decisions if d.level in ("chapter", "disease", "other")]
+    candidates = [d for d in decisions if d.level in ("part", "chapter", "disease", "other")]
     for d in candidates:
         scored = [
             (toc_similarity(d.text, e.title, chapter_prefix), i)
@@ -116,7 +116,7 @@ def match_toc(
         ]
         score, idx = max(scored, default=(0.0, -1))
         if score < cfg.toc_match_min:
-            if d.level == "disease" and toc:
+            if d.level == "disease" and toc and cfg.toc_lists_diseases:
                 d.confidence = "low"
                 d.flags.append("missing_from_toc")
                 d.reasons.append("không khớp mục nào trong mục lục")

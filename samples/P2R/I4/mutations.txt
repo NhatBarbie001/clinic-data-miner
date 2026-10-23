@@ -1,0 +1,12 @@
+M1 bỏ luật 'Code <mã>' → BẮT ĐƯỢC
+M2 không bỏ chân trang 'v' → BẮT ĐƯỢC
+M3 không tìm 'Part II' → BẮT ĐƯỢC
+M4 không nối dòng sau của tên → BẮT ĐƯỢC
+M5 chữ cái không thành part → BẮT ĐƯỢC
+M6 bỏ toc_lists_diseases → BẮT ĐƯỢC
+M7 mục lục bỏ qua cấp part → BẮT ĐƯỢC
+M8 A5 bỏ kiểm tên không tra được → BẮT ĐƯỢC
+M9 A6 bỏ kiểm trang → BẮT ĐƯỢC
+M10 báo cáo liệt kê loại mới → BẮT ĐƯỢC
+M11 từ điển đổi quyết định → BẮT ĐƯỢC
+M12 không dừng ở 'Part III' → BẮT ĐƯỢC

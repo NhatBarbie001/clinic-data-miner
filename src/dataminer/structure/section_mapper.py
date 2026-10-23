@@ -15,7 +15,7 @@ import csv
 import difflib
 import json
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import date
 from pathlib import Path
 from typing import Literal
@@ -43,9 +43,19 @@ SectionType = Literal[
     "complication",
     "prognosis",
     "prevention",
+    # thêm cho sách IASP (docs/phases/P2R/plan.md mục 3) - sách mẫu không dùng
+    "site",
+    "body_system",
+    "code",
+    "disability",
+    "references",
     "other",
 ]
 SECTION_TYPES: tuple[str, ...] = SectionType.__args__  # type: ignore[attr-defined]
+# loại chỉ một số sách dùng: báo cáo không liệt kê là "không bệnh nào có" nếu sách không dùng
+EXTRA_SECTION_TYPES = ("site", "body_system", "code", "disability", "references")
+# Luật riêng từng sách (books/<sách>/): tên mục → khóa tra từ điển.
+SectionKey = Callable[[str], str]
 SECTION_FLAGS = ("section_type_fuzzy", "section_type_from_llm", "section_type_unknown")
 CSV_COLUMNS = (
     "item_id",
@@ -169,9 +179,11 @@ def map_sections(
     *,
     client: LLMClient | None = None,
     prompt: Prompt | None = None,
+    section_key: SectionKey = normalize_section_title,
 ) -> SectionResult:
     """Điền `section_type`/`section_source`/cờ cho các nút mục (TẠI CHỖ, chạy lại được: kết quả
-    cũ bị xóa trước). Nút phải theo thứ tự duyệt trước để mục cha có loại trước mục con."""
+    cũ bị xóa trước). Nút phải theo thứ tự duyệt trước để mục cha có loại trước mục con.
+    `section_key`: tên mục → khóa tra từ điển (mặc định `normalize_section_title`)."""
     cfg = cfg or SectionsCfg()
     by_id = {n.id: n for n in nodes}
 
@@ -188,7 +200,7 @@ def map_sections(
             continue
         n.section_type, n.section_source = None, None
         n.flags = [f for f in n.flags if f not in SECTION_FLAGS]
-        key = normalize_section_title(n.title)
+        key = section_key(n.title)
         hit = lookup(key, mapping, cfg.fuzzy_min)
         if hit is not None:
             n.section_type = hit[0]

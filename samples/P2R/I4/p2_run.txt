@@ -1,0 +1,28 @@
+✓ P2 xong: 35 chương · 334 bệnh · 2461 mục · 2 mục con · 6642 block
+  mục lục 43 mục · cấp tiêu đề: quy tắc 2801, mục lục 42, LLM 0 · loại mục: từ điển 2461, khớp gần 0, kế thừa 2, LLM 0, chưa rõ 0
+  chi phí LLM: $0.000000 · đề xuất chờ duyệt 0 · manifest: p2_tree_20261023-170706-193_ebb2
+  ⚠ cấp tiêu đề: Mục lục có 'List of Items Usually Provided in Detailed Descriptions of Pain Syndromes' nhưng không tìm thấy tiêu đề nào khớp trong thân sách.
+  ⚠ cây: Mục lục 'List of Items Usually Provided in Detailed Descriptions of Pain Syndromes': 0 nút khớp trong cây (cần đúng 1).
+  ⚠ cây: 'Definition' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Site' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'System(s)' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Main Features' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Associated Symptoms — aggravating and relieving agents' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Signs' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Laboratory Findings' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Usual Course' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Complications' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Social and Physical Disability' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Pathology' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Summary of Essential Features and Diagnostic Criteria' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Criteria' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Differential Diagnosis' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Code(s)' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'References' (trang PDF 54) không có nút cha đúng cấp - gắn tạm vào 'Items usually provided in descriptions'.
+  ⚠ cây: 'Code' (trang PDF 152) không có nút cha đúng cấp - gắn tạm vào 'GROUP XVI: Pain of psychological origin in the lower limbs'.
+  ⚠ cây: 'References' (trang PDF 152) không có nút cha đúng cấp - gắn tạm vào 'GROUP XVI: Pain of psychological origin in the lower limbs'.
+  ⚠ thuộc tính: 'Tuberculous Salpingitis': mục Definition ở PDF 185 nằm sau mục Code/References - nghi sách thiếu tên một hội chứng (nội dung bị gộp vào đây).
+  ⚠ thuộc tính: 5 hội chứng không có mã (L9): 'Complex Regional Pain Syndromes (CRPS)' (PDF 56); 'Note: Specific Myofascial Pain Syndromes' (PDF 63); 'Porphyria—Hepatic Porphyrias' (PDF 177); 'Abdominal Pain—Visceral Pain Referred to the Abdomen' (PDF 179); 'Testicular Pain' (PDF 188)
+  ⚠ thuộc tính: 42 hội chứng không tìm thấy mã IASP 5 trục (mục Code).
+  nodes.jsonl sha256 7329347590c4988056768b0855f95a0ba5090eae78cd72823707d65e8164dbe1
+  đầu ra: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\data\books\iasp\p2_tree

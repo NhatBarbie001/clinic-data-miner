@@ -1,1 +1,124 @@
-# Từ điển tên mục → loại mục của sách IASP (L13). Điền ở việc I4 (docs/phases/P2R/plan.md).
+# Từ điển tên mục → loại mục của sách IASP (L13). Plan: docs/phases/P2R/I4_plan.md mục 3.
+#
+# Định dạng như sách mẫu: `khóa: loại  # ghi chú`; khóa = tên mục chữ thường, gộp khoảng trắng.
+# Đủ 110 tên mục của Part II (đếm 2026-10-23) → không cần hỏi AI. Mục "Code X32.X3a" (mã dính
+# sau tên) tra như "code" (luật riêng `section_key` của IASP). Mục con "1. History of …" kế thừa
+# loại của mục cha.
+# Tên ghép 2 ý chỉ nhận 1 loại → chọn ý CHÍNH (ghi chú ở cuối dòng).
+# Quyết định của người duyệt (2026-10-23): Aggravating/Precipitating → symptom; Remarks → other;
+# Schedule of … → cause.
+
+# ---------------------------------------------------------------- definition
+definition: definition
+
+# ---------------------------------------------------------------- site, body_system (loại mới)
+site: site
+system: body_system
+systems: body_system
+system(s): body_system
+system involved: body_system
+
+# ---------------------------------------------------------------- symptom
+main features: symptom
+main feature: symptom
+clinical features: symptom
+associated symptoms: symptom
+associated symptom: symptom
+associated symptoms and signs: symptom
+associated signs and symptoms: symptom
+associated features: symptom
+associated symptoms and modifying factors: symptom
+associated symptoms — aggravating and relieving agents: symptom
+signs: symptom
+other features: symptom
+aggravating factors: symptom  # yếu tố làm cơn đau nặng hơn = đặc điểm của cơn đau
+aggravating features: symptom
+aggravating and relieving features: symptom
+precipitating factors: symptom  # yếu tố khởi phát cơn
+precipitation: symptom
+precipitants and exacerbating factors: symptom
+prevalence: symptom  # sách để tỉ lệ mắc trong Main Features
+
+# ---------------------------------------------------------------- paraclinical
+laboratory findings: paraclinical
+laboratory finding: paraclinical
+signs and laboratory findings: paraclinical  # ghép: dấu hiệu + xét nghiệm → xét nghiệm
+laboratory and radiological findings: paraclinical
+laboratory and radiologic findings: paraclinical
+radiologic findings: paraclinical
+radiologic finding: paraclinical
+radiographic findings: paraclinical
+imaging: paraclinical
+laboratory tests: paraclinical
+tests and laboratory findings: paraclinical
+associated symptoms and signs and laboratory findings: paraclinical  # ghép, ý cuối là chính
+
+# ---------------------------------------------------------------- pathophysiology
+pathology: pathophysiology
+pathogenesis: pathophysiology
+pathophysiology: pathophysiology
+pathology and etiology: pathophysiology
+pathology or other contributory factors: pathophysiology
+pathology or other contributing factors: pathophysiology
+
+# ---------------------------------------------------------------- cause
+etiology: cause
+main causes: cause
+tumors: cause  # "Tumors" của Tumors of the Brachial Plexus: liệt kê loại u gây bệnh
+schedule of neoplastic diseases: cause  # danh sách bệnh gây đau (hội chứng cột sống)
+schedule of fractures: cause
+schedule of arthritides: cause
+schedule of metabolic bone diseases: cause
+schedule of sites of infection: cause
+schedule of diseases: cause
+schedule of trigger point sites: cause
+
+# ---------------------------------------------------------------- diagnosis
+diagnostic criteria: diagnosis
+essential features: diagnosis
+summary of essential features and diagnostic criteria: diagnosis
+summary of essential features and diagnostic: diagnosis  # tên bị ngắt dòng ở 1 chỗ
+summary of essential features: diagnosis
+summary of essential findings and diagnostic criteria: diagnosis
+diagnostic features: diagnosis
+criteria: diagnosis
+essential factors: diagnosis
+classification criteria for primary and concomitant fibromyalgia (from wolfe et al. 1990): diagnosis
+diagnostic criteria and differential diagnosis: diagnosis  # ghép, ý đầu là chính
+
+# ---------------------------------------------------------------- differential_diagnosis
+differential diagnosis: differential_diagnosis
+
+# ---------------------------------------------------------------- treatment
+relief: treatment
+treatment: treatment
+relieving agents: treatment
+diagnostic criteria and treatment: treatment  # ghép; phần chẩn đoán đã có mục riêng ở bệnh này
+
+# ---------------------------------------------------------------- complication
+complications: complication
+complication: complication
+
+# ---------------------------------------------------------------- prognosis
+usual course: prognosis
+course: prognosis
+duration and usual course: prognosis
+signs and usual course: prognosis  # ghép, ý cuối là chính
+
+# ---------------------------------------------------------------- disability (loại mới)
+social and physical disability: disability
+social and physical disabilities: disability
+social and physical impairment: disability
+physical disability: disability
+
+# ---------------------------------------------------------------- code (loại mới)
+code: code
+
+# ---------------------------------------------------------------- references (loại mới)
+references: references
+reference: references
+
+# ---------------------------------------------------------------- other
+remarks: other  # ghi chú tự do
+associated disorders: other
+chronic aneurysm: other  # tên mục lạ (1 lần)

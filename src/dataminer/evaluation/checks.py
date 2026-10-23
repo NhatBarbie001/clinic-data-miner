@@ -97,3 +97,49 @@ def section_coverage(
         passed=share >= minimum,
         details=missing,
     )
+
+
+def section_types(nodes: Sequence[Node], *, max_other: float = 0.05) -> CheckResult:
+    """A5 - tỉ lệ mục (section/subsection) có loại `other` < `max_other`; liệt kê tên mục còn
+    `other` và tên mục KHÔNG tra được (cờ `section_type_unknown` - từ điển thiếu)."""
+    sections = [n for n in nodes if n.level in ("section", "subsection")]
+    other = [n for n in sections if n.section_type in (None, "other")]
+    unknown = sorted({n.title for n in sections if "section_type_unknown" in n.flags})
+    share = len(other) / len(sections) if sections else 0.0
+    names: dict[str, int] = {}
+    for n in other:
+        names[n.title] = names.get(n.title, 0) + 1
+    return CheckResult(
+        id="A5",
+        name="mục có loại 'other'",
+        value=f"{share:.1%} ({len(other)}/{len(sections)}) · không tra được: {len(unknown)}",
+        threshold=f"< {max_other:.0%}, 0 tên không tra được",
+        passed=share < max_other and not unknown,
+        details=[f"không tra được: {t}" for t in unknown]
+        + [f"other: {t} ×{c}" for t, c in sorted(names.items(), key=lambda x: -x[1])],
+    )
+
+
+def toc_coverage(
+    entries: Sequence[tuple[str, str, int | None]],
+    nodes: Sequence[Node],
+    key_of: Callable[[Node], str | None],
+) -> CheckResult:
+    """A6 - mỗi mục lục (khóa, cấp, trang PDF) có ĐÚNG 1 nút cùng cấp, cùng khóa (vd. số La Mã
+    "XI", chữ cái "E"), bắt đầu đúng trang. Khóa so độc lập với tên (tên có thể viết khác)."""
+    problems: list[str] = []
+    for key, level, page in entries:
+        hits = [n for n in nodes if n.level == level and key_of(n) == key]
+        if len(hits) != 1:
+            problems.append(f"{level} {key}: {len(hits)} nút (cần 1)")
+        elif hits[0].page_start != page:
+            problems.append(f"{level} {key}: cây PDF {hits[0].page_start} ≠ mục lục PDF {page}")
+    ok = len(entries) - len(problems)
+    return CheckResult(
+        id="A6",
+        name="mục lục ↔ cây (đúng 1 nút, đúng trang)",
+        value=f"{ok}/{len(entries)}",
+        threshold="100%",
+        passed=not problems and bool(entries),
+        details=problems,
+    )

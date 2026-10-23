@@ -286,6 +286,7 @@ def sections_map_cmd(
     no_llm: bool = NoLLMOption,
 ) -> None:
     """Gán loại mục cho nodes.jsonl (cập nhật tại chỗ) + đề xuất chờ duyệt (cần `dm p2 tree`)."""
+    from dataminer.books.registry import rules_for
     from dataminer.core.io import read_jsonl, write_jsonl
     from dataminer.core.llm_client import LLMClient
     from dataminer.core.llm_types import LLMError
@@ -311,7 +312,14 @@ def sections_map_cmd(
         mapping = load_section_map(_map_path(settings))
         prompt = load_prompt(settings.paths.prompts_dir, cfg.prompt) if use_llm else None
         client = LLMClient(settings) if use_llm else None
-        result = map_sections(nodes, mapping, cfg, client=client, prompt=prompt)
+        result = map_sections(
+            nodes,
+            mapping,
+            cfg,
+            client=client,
+            prompt=prompt,
+            section_key=rules_for(settings).section_key,
+        )
     except (SectionMapError, LLMError, PromptError, ConfigError) as exc:
         typer.echo(f"✗ {exc}", err=True)
         raise typer.Exit(1) from None

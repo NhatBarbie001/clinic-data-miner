@@ -14,7 +14,7 @@ from dataminer.core.io import read_json, read_jsonl
 from dataminer.evaluation.truth.p2_eval import GATE_NAMES
 from dataminer.model.toc import TocResult
 from dataminer.model.tree import HeadingDecision, Node
-from dataminer.structure.section_mapper import SECTION_TYPES
+from dataminer.structure.section_mapper import EXTRA_SECTION_TYPES, SECTION_TYPES
 
 LONG_FACTOR = 4.0  # mục dài hơn 4 × trung vị → có thể nuốt mất tiêu đề kế tiếp
 SHORT_FACTOR = 0.25  # mục ngắn hơn 1/4 trung vị → có thể bị cắt
@@ -138,7 +138,11 @@ def render_tree_report(out_dir: Path) -> str:
     # ------------------------------------------------ 3. ma trận
     have = {d.id: {n.section_type for n in subtree(d) if n.section_type} for d in diseases}
     present = [t for t in SECTION_TYPES if t != "other" and any(t in h for h in have.values())]
-    absent = [t for t in SECTION_TYPES if t != "other" and t not in present]
+    absent = [
+        t
+        for t in SECTION_TYPES
+        if t != "other" and t not in present and t not in EXTRA_SECTION_TYPES
+    ]
     lines += [
         "",
         "## 3. Ma trận bệnh × loại mục",

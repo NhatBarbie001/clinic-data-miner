@@ -164,6 +164,11 @@ def test_04_report_sections_and_matrix(p1_rules: Settings) -> None:
         "✓",
     ]  # complication chỉ ở bệnh 3
     assert "chỉ có ở một số bệnh** (P4 phải chấp nhận trường trống): `risk_factor`" in text
+    # loại mục chỉ sách IASP dùng (site, code, …) không bị liệt kê là "không bệnh nào có"
+    assert (
+        "Loại mục **không bệnh nào có**: `pathophysiology`, `differential_diagnosis`, `prognosis`\n"
+        in text
+    )
     assert "| Chương 2. Bệnh tiêu hỏa | chapter | 5 | ✓ Chương 2. Bệnh tiêu hóa | ✓ PDF 8 |" in text
     assert "✅ Không có cảnh báo" in text
 

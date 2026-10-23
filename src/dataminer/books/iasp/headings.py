@@ -16,6 +16,7 @@ from dataminer.core.config import HeadingsCfg
 from dataminer.core.text_vi import nfc
 from dataminer.model.block import Block
 from dataminer.model.tree import Confidence, Level, Node
+from dataminer.structure.section_mapper import normalize_section_title
 from dataminer.structure.tree_builder import sentence_case
 
 TITLE_SIZE = 15.0  # "PART II", "DETAILED DESCRIPTIONS OF PAIN SYNDROMES" (cỡ 15.5): tên phần sách
@@ -82,6 +83,14 @@ def is_syndrome(node: Node) -> bool:
 def code_of(node: Node) -> str | None:
     """Mã hội chứng đã chuẩn hóa của nút (disease: `numbering`; GROUP-hội chứng: từ tiêu đề)."""
     return node.numbering if node.level == "disease" else syndrome_code(node.title)
+
+
+def section_key(title: str) -> str:
+    """Khóa tra từ điển loại mục: như mặc định, nhưng mục Code có mã dính sau tên
+    ("Code X32.X3a", "Code(s)", "Codes") → "code"."""
+    if RE_CODE_TITLE.match(_norm(title)):
+        return "code"
+    return normalize_section_title(title)
 
 
 def annotate_tree(nodes: list[Node]) -> list[str]:

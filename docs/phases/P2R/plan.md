@@ -92,7 +92,7 @@ Part II › E. Local syndromes of the upper limbs and relatively generalized syn
 | **I1** Khung luật riêng ✅ [báo cáo](I1_I2_report.md) | Tùy chọn `dm --book iasp`; `configs/books/iasp.yaml`; thư mục `data/books/iasp/`; sửa lỗi đường dẫn từ điển tên mục (phát hiện khi chạy thử) | Chạy IASP xong, dữ liệu sách mẫu **không đổi một byte**; 509 test cũ pass |
 | **I2** Đọc trang (L1–L4) ✅ [báo cáo](I1_I2_report.md) | Đọc Part II, bỏ số trang và dòng rác, **sắp thứ tự 2 cột**, ghép dòng thành đoạn → `blocks.jsonl` (giữ thông tin chữ đậm và cỡ chữ cho I3) | Trang 57 và 137 đọc đúng thứ tự (so tay); 0 "bảng giả" (trước: 370); không đoạn nào chứa dòng của cả 2 cột |
 | **I3** Cấp tiêu đề + cây (L5–L11) ✅ [plan](I3_plan.md) · [báo cáo](I3_report.md) | Nhận nhóm chữ cái / nhóm La Mã / hội chứng / mục; nối tên nhiều dòng; chuẩn hóa mã; tách mã IASP → dựng cây bằng bộ dựng cây chung | Kiểm tự động mục 5 (A2–A5) đạt |
-| **I4** Loại mục + mục lục (L12–L13) | Từ điển tiếng Anh + 5 loại mới; đọc mục lục 2 trang, đối chiếu nhóm La Mã | A5, A6 đạt |
+| **I4** Loại mục + mục lục (L12–L13) ✅ [plan](I4_plan.md) · [báo cáo](I4_report.md) | Từ điển tiếng Anh + 5 loại mới; đọc mục lục 2 trang, đối chiếu nhóm La Mã | A5, A6 đạt |
 | **I5** Công cụ soi cho bạn | `dm --book iasp p2 spotcheck --n 10` → trang HTML: **ảnh trang PDF gốc ↔ nội dung tách ra** cho 10 hội chứng ngẫu nhiên; `syndromes.csv`: mỗi hội chứng một dòng (mã, tên, trang, có / thiếu mục nào), mở bằng Excel | Bạn mở được, chấm được |
 | **I6** Pilot → cả Part II → báo cáo | Pilot `GROUP XI` (PDF 137–143) → bạn soi → chạy cả Part II → `docs/phases/P2R/report.md` viết bằng ngôn ngữ thường, có ví dụ trước/sau | Mục 5 đạt trên cả Part II |
 

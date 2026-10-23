@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-TocLevel = Literal["chapter", "disease"]
+TocLevel = Literal["part", "chapter", "disease"]  # part: nhóm lớn trên chương (sách IASP)
 
 
 class TocEntry(BaseModel):
