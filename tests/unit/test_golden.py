@@ -17,10 +17,10 @@ from dataminer.books.book01.golden import clean_texts, draft_golden
 from dataminer.books.book01.rules import build_tree, classify_headings
 from dataminer.cli import app
 from dataminer.core.io import read_jsonl, write_jsonl
+from dataminer.evaluation.golden import GoldenItem, Source, items_of, quote_status, validate_golden
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.model.tree import Node
-from dataminer.structure.golden import GoldenItem, Source, items_of, quote_status, validate_golden
 from dataminer.structure.section_mapper import load_section_map, map_sections
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, make_settings
@@ -34,7 +34,7 @@ runner = CliRunner()
 
 def oracle_blocks(blocks: list[Block], lines: list[Line], truth: dict) -> list[Block]:
     """ "P1 hoàn hảo": văn bản block = văn bản sạch của đáp án (đối chứng dương)."""
-    from dataminer.evaluation.p1_eval import _line_key_map, _norm
+    from dataminer.evaluation.truth.p1_eval import _line_key_map, _norm
 
     key_of = _line_key_map(lines)
     clean: dict[tuple[int, str, int], str] = {}

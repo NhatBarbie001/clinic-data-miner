@@ -12,7 +12,7 @@ from dataminer.books.book01.lines import classify_line
 from dataminer.books.book01.rules import build_blocks
 from dataminer.core.config import BlocksCfg
 from dataminer.devtools.sample_book import SampleBook
-from dataminer.evaluation.p1_eval import eval_blocks
+from dataminer.evaluation.truth.p1_eval import eval_blocks
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.pdf.furniture import strip_furniture

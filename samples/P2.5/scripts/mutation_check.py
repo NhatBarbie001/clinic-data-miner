@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-G = "src/dataminer/structure/golden.py"
+G = "src/dataminer/evaluation/golden.py"
 C = "src/dataminer/cli/p2.py"
 TESTS = "tests/unit/test_golden.py"
 M = [

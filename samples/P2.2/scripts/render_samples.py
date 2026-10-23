@@ -7,8 +7,8 @@ from pathlib import Path
 from dataminer.books.book01.lines import numbering_of
 from dataminer.books.book01.rules import classify_headings
 from dataminer.core.io import read_jsonl
-from dataminer.evaluation.p1_eval import format_eval
-from dataminer.evaluation.p2_eval import eval_heading_levels
+from dataminer.evaluation.truth.p1_eval import format_eval
+from dataminer.evaluation.truth.p2_eval import eval_heading_levels
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision

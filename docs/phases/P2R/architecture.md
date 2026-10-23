@@ -171,7 +171,8 @@ Sau S1–S5, plan P2R gọn lại: **I1** chỉ còn "tạo `books/iasp/` + `con
 | S1 `model/` | `a328b61` | Gom 6 nhóm kiểu dữ liệu; sửa import ở 36 file (bằng script dựa trên AST). 510 test pass; 12/12 file dữ liệu sách mẫu **giống hệt từng byte** |
 | S2 tách `ingest/` | `1881762` | `pdf/` (reader, layout, furniture), `text/blocks`, `ocrfix/` (fixer, guards, review), `survey/`, `pipeline/` (p1, p1_report, p2). Logger đổi tên theo module mới. 514 test; 12/12 byte |
 | S3 `books/` | `43d2a1c` | Xem bên dưới |
-| S4 hồ sơ sách, `--book`, `cli/` | *(commit kèm theo)* | Xem cuối mục |
+| S4 hồ sơ sách, `--book`, `cli/` | `6dc18a7` | Xem cuối mục |
+| S5 `evaluation/` | *(commit kèm theo)* | `evaluation/truth/` (p1_eval, p2_eval: so với đáp án sách mẫu) + `evaluation/golden.py` (kiểm bộ câu hỏi chuẩn, dùng chung; chuyển từ `structure/golden.py`). `checks.py` (kiểm tra không cần đáp án, A1–A8) sẽ viết ở I3/I4 của P2R, khi có nội dung thật để kiểm. 525 test; 12/12 byte; 96/96 đích đột biến |
 
 **S3: phần dùng chung nhận luật qua tham số** (các tham số này bắt buộc truyền, không có mặc định mang luật sách mẫu):
 

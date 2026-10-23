@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 S = "src/dataminer/structure/section_mapper.py"
-E = "src/dataminer/evaluation/p2_eval.py"
+E = "src/dataminer/evaluation/truth/p2_eval.py"
 TESTS = "tests/unit/test_section_mapper.py"
 M = [
     ("S1 bỏ khớp gần", S, "if best[0] >= fuzzy_min:", "if False:"),

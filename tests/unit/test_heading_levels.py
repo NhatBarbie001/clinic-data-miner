@@ -21,7 +21,7 @@ from dataminer.core.io import write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMJSONError
 from dataminer.core.prompts import load_prompt
-from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
+from dataminer.evaluation.truth.p2_eval import all_pass, eval_heading_levels
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision

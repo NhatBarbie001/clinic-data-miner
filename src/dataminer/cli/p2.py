@@ -37,8 +37,8 @@ def toc_cmd(
     """Tìm và đọc mục lục → data/p2_tree/toc.json (chương, bệnh, số trang in → trang PDF)."""
     from dataminer.books.registry import rules_for
     from dataminer.core.io import write_json
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, eval_toc
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, eval_toc
 
     settings = _load(root)
     pdf = settings.paths.raw_dir / settings.project.book_file
@@ -93,8 +93,8 @@ def headings_cmd(
     from dataminer.core.llm_client import LLMClient
     from dataminer.core.llm_types import LLMError
     from dataminer.core.prompts import PromptError, load_prompt
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, eval_heading_levels
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, eval_heading_levels
     from dataminer.model.block import Block
     from dataminer.model.toc import TocResult
     from dataminer.pipeline.p1 import p1_dir
@@ -178,8 +178,8 @@ def tree_cmd(
     """Dựng cây chương → bệnh → mục → nodes.jsonl, tree.json, tree.md (cần `dm p2 headings`)."""
     from dataminer.books.registry import rules_for
     from dataminer.core.io import read_jsonl, write_json, write_jsonl
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, eval_tree
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, eval_tree
     from dataminer.model.block import Block
     from dataminer.model.line import Line
     from dataminer.model.toc import TocResult
@@ -285,8 +285,8 @@ def sections_map_cmd(
     from dataminer.core.llm_client import LLMClient
     from dataminer.core.llm_types import LLMError
     from dataminer.core.prompts import PromptError, load_prompt
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, eval_sections
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, eval_sections
     from dataminer.model.block import Block
     from dataminer.model.tree import Node
     from dataminer.pipeline.p1 import p1_dir
@@ -405,13 +405,13 @@ def golden_cmd(
     """Sinh (hoặc --check) bộ câu hỏi chuẩn eval/golden_qa_v1.jsonl từ cây + đáp án sách mẫu."""
     from dataminer.books.book01.golden import clean_texts, draft_golden
     from dataminer.core.io import read_jsonl, write_jsonl
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, eval_golden
+    from dataminer.evaluation.golden import GOLDEN_VERSION, GoldenItem
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, eval_golden
     from dataminer.model.block import Block
     from dataminer.model.line import Line
     from dataminer.model.tree import Node
     from dataminer.pipeline.p1 import p1_dir
-    from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem
 
     settings = _load(root)
     nodes_path = p2_dir(settings) / "nodes.jsonl"
@@ -525,10 +525,10 @@ def run_cmd(root: Path | None = RootOption, no_llm: bool = NoLLMOption) -> None:
 def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -> None:
     """So với đáp án → eval.json + bảng chỉ tiêu G1-G7 (exit 1 nếu chưa đạt)."""
     from dataminer.core.io import write_json
-    from dataminer.evaluation.p1_eval import format_eval
-    from dataminer.evaluation.p2_eval import all_pass, evaluate_p2
+    from dataminer.evaluation.golden import GOLDEN_VERSION
+    from dataminer.evaluation.truth.p1_eval import format_eval
+    from dataminer.evaluation.truth.p2_eval import all_pass, evaluate_p2
     from dataminer.pipeline.p1 import p1_dir
-    from dataminer.structure.golden import GOLDEN_VERSION
 
     settings = _load(root)
     truth_path = truth or (settings.paths.raw_dir / settings.project.book_file).with_suffix(

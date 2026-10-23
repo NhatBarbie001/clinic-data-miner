@@ -20,7 +20,7 @@ from dataminer.core.config import Settings
 from dataminer.core.io import read_json, read_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.devtools.oracle_fix import oracle_outputs
-from dataminer.evaluation.p1_eval import all_pass, evaluate_p1
+from dataminer.evaluation.truth.p1_eval import all_pass, evaluate_p1
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.pipeline.p1 import p1_dir, run_p1

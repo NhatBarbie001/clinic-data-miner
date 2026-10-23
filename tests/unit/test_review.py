@@ -15,7 +15,7 @@ from dataminer.core.prompts import Prompt
 from dataminer.devtools.auto_review import REVIEWER, fill_from_truth
 from dataminer.devtools.oracle_fix import oracle_outputs
 from dataminer.devtools.sample_book import SampleBook
-from dataminer.evaluation.p1_eval import eval_ocr
+from dataminer.evaluation.truth.p1_eval import eval_ocr
 from dataminer.model.block import Block, Fix
 from dataminer.model.line import Line
 from dataminer.ocrfix.fixer import OCRFixer

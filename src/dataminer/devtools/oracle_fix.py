@@ -7,7 +7,7 @@ không phải ở LLM. (Đối chứng này đã tìm ra 3 lỗi - xem P1.4_repo
 
 from typing import Any
 
-from dataminer.evaluation.p1_eval import _line_key_map, _norm, _truth_keys
+from dataminer.evaluation.truth.p1_eval import _line_key_map, _norm, _truth_keys
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.ocrfix.fixer import block_items

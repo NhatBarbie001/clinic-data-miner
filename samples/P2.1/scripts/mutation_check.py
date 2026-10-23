@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 T = "src/dataminer/books/book01/toc.py"
-E = "src/dataminer/evaluation/p2_eval.py"
+E = "src/dataminer/evaluation/truth/p2_eval.py"
 M = [
     (
         "M1 bỏ thụt lề khi mẫu chữ trượt",

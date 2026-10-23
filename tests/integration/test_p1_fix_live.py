@@ -13,7 +13,7 @@ import pytest
 from dataminer.books.book01.rules import build_blocks
 from dataminer.core.config import load_settings
 from dataminer.devtools.sample_book import make_sample_book
-from dataminer.evaluation.p1_eval import eval_ocr
+from dataminer.evaluation.truth.p1_eval import eval_ocr
 from dataminer.ocrfix.fixer import OCRFixer
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines

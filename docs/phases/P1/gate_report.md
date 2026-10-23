@@ -1,5 +1,8 @@
 # Gate report P1: Trích xuất và làm sạch text
 
+> ℹ️ **Đường dẫn trong báo cáo này là bố cục cũ** (trước 2026-10-23). Code đã được sắp xếp lại theo "phần dùng chung + luật riêng từng sách": `ingest/` → `pdf/`, `text/`, `ocrfix/`, `pipeline/`; luật sách mẫu → `books/book01/`; dữ liệu → `data/books/book01/`. Bảng chuyển đầy đủ: [docs/phases/P2R/architecture.md](../P2R/architecture.md) mục 5. Kết quả không đổi (dữ liệu sách mẫu giống hệt từng byte).
+
+
 > Ngày: 2026-10-21 · Plan: [plan.md](plan.md) · Bằng chứng: [samples/P1.6/](../../../samples/P1.6/)
 >
 > **Kết luận: ✅ P1 QUA GATE trên pilot sách mẫu** (trang PDF 4–9, 85 block, khoảng 1.000 từ).

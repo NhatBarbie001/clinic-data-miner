@@ -1,5 +1,8 @@
 # Gate report P2: Dựng cấu trúc tài liệu
 
+> ℹ️ **Đường dẫn trong báo cáo này là bố cục cũ** (trước 2026-10-23). Code đã được sắp xếp lại theo "phần dùng chung + luật riêng từng sách": `ingest/` → `pdf/`, `text/`, `ocrfix/`, `pipeline/`; luật sách mẫu → `books/book01/`; dữ liệu → `data/books/book01/`. Bảng chuyển đầy đủ: [docs/phases/P2R/architecture.md](../P2R/architecture.md) mục 5. Kết quả không đổi (dữ liệu sách mẫu giống hệt từng byte).
+
+
 > Ngày: 2026-10-22 · Plan: [plan.md](plan.md) · Bằng chứng: [samples/P2.6/](../../../samples/P2.6/)
 >
 > **Kết luận: ✅ P2 QUA GATE trên pilot sách mẫu** (trang PDF 4–9: 2 chương, 3 bệnh, 22 mục và mục con, 85 block). **0 lời gọi LLM, $0.**

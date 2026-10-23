@@ -4,10 +4,10 @@ Chạy: uv run python samples/P2.5/scripts/render_samples.py"""
 from pathlib import Path
 
 from dataminer.core.io import read_jsonl
-from dataminer.evaluation.p1_eval import format_eval
-from dataminer.evaluation.p2_eval import eval_golden
+from dataminer.evaluation.golden import GoldenItem
+from dataminer.evaluation.truth.p1_eval import format_eval
+from dataminer.evaluation.truth.p2_eval import eval_golden
 from dataminer.model.tree import Node
-from dataminer.structure.golden import GoldenItem
 
 OUT = Path("samples/P2.5")
 items = list(read_jsonl(Path("eval/book01/golden_qa_v1.jsonl"), GoldenItem))

@@ -7,9 +7,7 @@ from collections.abc import Sequence
 from typing import Any
 
 from dataminer.core.schemas import stable_id
-from dataminer.model.block import Block
-from dataminer.model.tree import Node
-from dataminer.structure.golden import (
+from dataminer.evaluation.golden import (
     GOLDEN_VERSION,
     REVIEWED_BY,
     GoldenItem,
@@ -20,6 +18,8 @@ from dataminer.structure.golden import (
     items_of,
     loose,
 )
+from dataminer.model.block import Block
+from dataminer.model.tree import Node
 
 
 def clean_texts(
@@ -32,7 +32,7 @@ def clean_texts(
     khóa ghép dòng như P1). Không có đáp án (sách thật) → dùng `node.text` (cần người duyệt)."""
     if truth is None:
         return {n.id: n.text for n in nodes}
-    from dataminer.evaluation.p1_eval import _line_key_map, _norm
+    from dataminer.evaluation.truth.p1_eval import _line_key_map, _norm
 
     key_of = _line_key_map(list(lines))
     clean: dict[tuple[int, str, int], str] = {}

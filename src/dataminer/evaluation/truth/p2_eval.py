@@ -8,7 +8,7 @@ import re
 from typing import Any
 
 from dataminer.core.text_vi import nfc
-from dataminer.evaluation.p1_eval import _line_key_map, _norm
+from dataminer.evaluation.truth.p1_eval import _line_key_map, _norm
 from dataminer.model.toc import TocResult
 from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.toc_match import match_key
@@ -278,7 +278,7 @@ def eval_sections(
 
 def eval_golden(items: list[Any], nodes: list[Node]) -> dict[str, Any]:
     """G7: bộ câu hỏi chuẩn hợp lệ với cây hiện tại (xem `golden.validate_golden`)."""
-    from dataminer.structure.golden import validate_golden
+    from dataminer.evaluation.golden import validate_golden
 
     report = validate_golden(items, nodes)
     return {
@@ -308,9 +308,9 @@ def evaluate_p2(out_dir: Any, p1_dir: Any, truth: dict[str, Any], golden: Any) -
     from pathlib import Path
 
     from dataminer.core.io import read_jsonl
+    from dataminer.evaluation.golden import GoldenItem
     from dataminer.model.block import Block
     from dataminer.model.line import Line
-    from dataminer.structure.golden import GoldenItem
 
     out, p1 = Path(out_dir), Path(p1_dir)
     toc = TocResult.model_validate_json((out / "toc.json").read_text(encoding="utf-8"))

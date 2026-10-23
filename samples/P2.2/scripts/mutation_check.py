@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 H = "src/dataminer/structure/heading_levels.py"
-E = "src/dataminer/evaluation/p2_eval.py"
+E = "src/dataminer/evaluation/truth/p2_eval.py"
 TESTS = "tests/unit/test_heading_levels.py"
 M = [
     ("H1 bỏ khớp gần mục lục", H, "if score < cfg.toc_match_min:", "if score < 1.0:"),

@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-E = "src/dataminer/evaluation/p2_eval.py"
+E = "src/dataminer/evaluation/truth/p2_eval.py"
 R = "src/dataminer/structure/report.py"
 P = "src/dataminer/pipeline/p2.py"
 C = "src/dataminer/cli/p2.py"

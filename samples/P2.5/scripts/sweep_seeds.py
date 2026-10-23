@@ -16,7 +16,7 @@ from tests.unit.test_tree_builder import pipeline
 from dataminer.books.book01.golden import clean_texts, draft_golden
 from dataminer.books.book01.rules import build_tree, classify_headings
 from dataminer.devtools.sample_book import make_sample_book
-from dataminer.structure.golden import validate_golden
+from dataminer.evaluation.golden import validate_golden
 from dataminer.structure.section_mapper import load_section_map, map_sections
 
 MAPPING = load_section_map(Path("configs/books/book01/section_map.yaml"))

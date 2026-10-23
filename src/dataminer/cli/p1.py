@@ -96,7 +96,7 @@ def run_cmd(
 def eval_cmd(root: Path | None = RootOption, truth: Path | None = TruthOption) -> None:
     """So với đáp án → eval.json + bảng chỉ tiêu G1-G9 (exit 1 nếu chưa đạt)."""
     from dataminer.core.io import write_json
-    from dataminer.evaluation.p1_eval import all_pass, evaluate_p1, format_eval
+    from dataminer.evaluation.truth.p1_eval import all_pass, evaluate_p1, format_eval
     from dataminer.pipeline.p1 import p1_dir
 
     settings = _load(root)

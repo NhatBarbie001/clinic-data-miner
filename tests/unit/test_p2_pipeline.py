@@ -16,7 +16,7 @@ from dataminer.cli import app
 from dataminer.core.config import Settings
 from dataminer.core.io import read_json, read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
-from dataminer.evaluation.p2_eval import GATE_NAMES
+from dataminer.evaluation.truth.p2_eval import GATE_NAMES
 from dataminer.model.tree import Node
 from dataminer.pipeline.p1 import p1_dir, run_p1
 from dataminer.pipeline.p2 import OUTPUTS, p2_dir, run_p2

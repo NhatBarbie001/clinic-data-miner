@@ -15,8 +15,8 @@ from dataminer.core.config import load_settings
 from dataminer.core.io import read_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.prompts import load_prompt
-from dataminer.evaluation.p1_eval import format_eval
-from dataminer.evaluation.p2_eval import eval_sections
+from dataminer.evaluation.truth.p1_eval import format_eval
+from dataminer.evaluation.truth.p2_eval import eval_sections
 from dataminer.model.block import Block
 from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.section_mapper import (

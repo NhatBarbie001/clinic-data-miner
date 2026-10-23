@@ -8,7 +8,7 @@ from dataminer.books.book01.rules import build_blocks, classify_headings
 from dataminer.books.book01.toc import extract_toc
 from dataminer.core.config import BlocksCfg
 from dataminer.devtools.sample_book import make_sample_book
-from dataminer.evaluation.p2_eval import eval_heading_levels
+from dataminer.evaluation.truth.p2_eval import eval_heading_levels
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
 

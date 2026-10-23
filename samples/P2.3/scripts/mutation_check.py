@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 T = "src/dataminer/structure/tree_builder.py"
-E = "src/dataminer/evaluation/p2_eval.py"
+E = "src/dataminer/evaluation/truth/p2_eval.py"
 TESTS = "tests/unit/test_tree_builder.py"
 M = [
     (

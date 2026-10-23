@@ -19,7 +19,7 @@ from dataminer.cli import app
 from dataminer.core.config import BlocksCfg
 from dataminer.core.io import write_jsonl
 from dataminer.devtools.sample_book import SampleBook
-from dataminer.evaluation.p2_eval import all_pass, eval_tree
+from dataminer.evaluation.truth.p2_eval import all_pass, eval_tree
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.model.toc import TocEntry

@@ -20,7 +20,7 @@ from dataminer.core.io import read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMJSONError
 from dataminer.core.prompts import load_prompt
-from dataminer.evaluation.p2_eval import all_pass, eval_sections
+from dataminer.evaluation.truth.p2_eval import all_pass, eval_sections
 from dataminer.model.tree import Node
 from dataminer.structure.section_mapper import (
     CSV_COLUMNS,

@@ -11,7 +11,7 @@ import statistics
 from pathlib import Path
 
 from dataminer.core.io import read_json, read_jsonl
-from dataminer.evaluation.p2_eval import GATE_NAMES
+from dataminer.evaluation.truth.p2_eval import GATE_NAMES
 from dataminer.model.toc import TocResult
 from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.section_mapper import SECTION_TYPES

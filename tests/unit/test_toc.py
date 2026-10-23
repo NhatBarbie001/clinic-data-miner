@@ -22,7 +22,7 @@ from dataminer.books.book01.toc import (
 from dataminer.cli import app
 from dataminer.core.config import TocCfg
 from dataminer.devtools.sample_book import SampleBook
-from dataminer.evaluation.p2_eval import all_pass, eval_toc
+from dataminer.evaluation.truth.p2_eval import all_pass, eval_toc
 from dataminer.model.line import Line, Zone
 from dataminer.structure.toc_match import match_key, norm_title
 from tests.conftest import SampleBookFor
