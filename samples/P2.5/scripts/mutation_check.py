@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 G = "src/dataminer/structure/golden.py"
-C = "src/dataminer/cli_p2.py"
+C = "src/dataminer/cli/p2.py"
 TESTS = "tests/unit/test_golden.py"
 M = [
     (

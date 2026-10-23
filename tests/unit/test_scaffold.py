@@ -63,7 +63,7 @@ def test_cli_info(monkeypatch: pytest.MonkeyPatch) -> None:
         assert f"- {name}" in result.output
     assert "THIẾU" not in result.output
     assert "LỖI" not in result.output
-    assert "PDF sách" in result.output
+    assert "Sách      : book01 · book01.pdf" in result.output
 
 
 @pytest.mark.parametrize("command", ["version", "info"])
@@ -108,13 +108,14 @@ def _git_ignored(path: str) -> bool:
     [
         (".env", True),
         ("configs/local.yaml", True),
-        ("data/raw/book.pdf", True),
-        ("data/p1_clean/blocks.jsonl", True),
+        ("data/books/book01/raw/book.pdf", True),
+        ("data/books/iasp/p1_clean/blocks.jsonl", True),
         ("data/.gitkeep", False),
-        ("data/raw/.gitkeep", False),
+        ("data/cache/llm_cache.sqlite", True),
         ("samples/P0.1/cli_info.txt", False),
         (".env.example", False),
-        ("src/dataminer/cli.py", False),
+        ("src/dataminer/cli/__init__.py", False),
+        ("configs/books/iasp/book.yaml", False),
     ],
 )
 def test_gitignore_rules(path: str, ignored: bool) -> None:

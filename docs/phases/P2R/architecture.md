@@ -170,7 +170,8 @@ Sau S1–S5, plan P2R gọn lại: **I1** chỉ còn "tạo `books/iasp/` + `con
 |---|---|---|
 | S1 `model/` | `a328b61` | Gom 6 nhóm kiểu dữ liệu; sửa import ở 36 file (bằng script dựa trên AST). 510 test pass; 12/12 file dữ liệu sách mẫu **giống hệt từng byte** |
 | S2 tách `ingest/` | `1881762` | `pdf/` (reader, layout, furniture), `text/blocks`, `ocrfix/` (fixer, guards, review), `survey/`, `pipeline/` (p1, p1_report, p2). Logger đổi tên theo module mới. 514 test; 12/12 byte |
-| S3 `books/` | *(commit kèm theo)* | Xem bên dưới |
+| S3 `books/` | `43d2a1c` | Xem bên dưới |
+| S4 hồ sơ sách, `--book`, `cli/` | *(commit kèm theo)* | Xem cuối mục |
 
 **S3: phần dùng chung nhận luật qua tham số** (các tham số này bắt buộc truyền, không có mặc định mang luật sách mẫu):
 
@@ -190,3 +191,12 @@ Sau S1–S5, plan P2R gọn lại: **I1** chỉ còn "tạo `books/iasp/` + `con
 - `survey/survey.py`: công cụ khảo sát viết cho sách scan tiếng Việt (tín hiệu tiêu đề và lỗi OCR kiểu tiếng Việt).
 
 **Script mutation check P2.1–P2.6:** đã cập nhật đường dẫn. Khi kiểm lại, phát hiện 2 đột biến (P2.1 M10, P2.2 H11) đã **không chạy được từ P2.4**, vì chuỗi đích bị trùng sau khi thêm `eval_sections`. Script đã từ chối chạy ("KHÔNG ÁP DỤNG ĐƯỢC") đúng như thiết kế, nhưng tôi không chạy lại script P2.1/P2.2 sau P2.4 nên không thấy. Đã sửa chuỗi đích. Toàn bộ 96 đích hiện tìm thấy đúng 1 lần.
+
+**S4: mỗi sách một hồ sơ cấu hình và thư mục dữ liệu riêng**
+- Lớp cấu hình mới `configs/books/<sách>/book.yaml`, nằm giữa `models.yaml` và `local.yaml`. Sách mẫu: `book_file`, `pilot`, cùng `glossary.yaml` và `section_map.yaml` chuyển vào `configs/books/book01/`.
+- `{book_id}` trong cấu hình: `paths.raw_dir: data/books/{book_id}/raw`, `data_dir: data/books/{book_id}`, `eval_dir: eval/{book_id}`; `cache_dir: data/cache` dùng chung.
+- **Chọn sách:** `dm --book <id>` > `DM__PROJECT__BOOK_ID` > `local.yaml` > `default.yaml` (`book01`).
+- **Sửa 3 lỗi cùng loại** "lấy gốc dự án = thư mục cha của `data`": `core/run.py` (đường dẫn trong manifest), `ocrfix/fixer.py` (từ điển thuật ngữ), `pipeline/p2.py` + `cli/p2.py` (từ điển tên mục). Giờ cấu hình nhớ gốc dự án khi nạp (`settings.root`, `settings.from_root(...)`).
+- `cli.py`, `cli_*.py` → gói `cli/`. Lệnh `dm` vẫn như cũ (`dataminer.cli:main`).
+- Dữ liệu cục bộ của sách mẫu đã chuyển: `data/raw/` + `data/p0_*`, `p1_clean`, `p2_tree` → `data/books/book01/`. `eval/golden_qa_v1.jsonl` → `eval/book01/`.
+- **Lỗi thiết kế tìm được khi test:** bản đầu lưu `--book` vào một biến toàn cục của `core/config`, nên một lần gọi `--book demo` **rò sang các lần nạp cấu hình sau** (2 test cấu hình hỏng). Đã sửa: chỉ CLI giữ lựa chọn và đặt lại ở mỗi lần gọi; `load_settings` nhận `book=` tường minh, không có trạng thái ẩn. Có test chống tái phát.

@@ -3,11 +3,9 @@
 configs/local.yaml
 
 # --- Dữ liệu (lớn, không commit). Chỉ giữ cấu trúc thư mục.
+# Mỗi sách một thư mục: data/books/<sách>/{raw, p1_clean, p2_tree, …}; data/cache dùng chung.
 data/*
 !data/.gitkeep
-!data/raw/
-data/raw/*
-!data/raw/.gitkeep
 
 # --- Python
 __pycache__/

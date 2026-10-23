@@ -45,7 +45,7 @@ def edit_yaml(path: Path, change: dict[str, Any]) -> None:
         node = data
         *parents, last = dotted.split(".")
         for p in parents:
-            node = node[p]
+            node = node.setdefault(p, {})
         if value is _DELETE:
             del node[last]
         else:
@@ -74,7 +74,7 @@ def test_01_real_config_is_valid() -> None:
 
 def test_02_paths_resolved_absolute_relative_to_root(proj: Path) -> None:
     s = load_settings(proj, env={})
-    assert s.paths.raw_dir == (proj / "data" / "raw").resolve()
+    assert s.paths.raw_dir == (proj / "data" / "books" / "book01" / "raw").resolve()
     for value in s.paths.model_dump().values():
         assert Path(value).is_absolute()
 

@@ -132,9 +132,12 @@ def test_on_real_sample_book_and_cli(tmp_path: Path, sample_book_for: SampleBook
     """Đầu-cuối: sách mẫu thật → khảo sát → `dm pilot check` với cấu hình thật trong configs/."""
     make_settings(tmp_path)
     book = sample_book_for(7)
-    (tmp_path / "data" / "raw").mkdir(parents=True)
-    shutil.copy(book.pdf_path, tmp_path / "data" / "raw" / "book01.pdf")
-    survey_pdf(tmp_path / "data/raw/book01.pdf", tmp_path / "data" / "p0_survey")
+    (tmp_path / "data" / "books" / "book01" / "raw").mkdir(parents=True)
+    shutil.copy(book.pdf_path, tmp_path / "data" / "books" / "book01" / "raw" / "book01.pdf")
+    survey_pdf(
+        tmp_path / "data/books/book01/raw/book01.pdf",
+        tmp_path / "data" / "books" / "book01" / "p0_survey",
+    )
     ok = runner.invoke(app, ["pilot", "check", "--root", str(tmp_path)])
     assert ok.exit_code == 0, ok.output
     assert "Viêm loét dạ dày tá tràng: tiêu đề ở trang 8" in ok.output

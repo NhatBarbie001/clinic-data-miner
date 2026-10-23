@@ -26,9 +26,9 @@ from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, make_settings
 from tests.unit.test_tree_builder import pipeline
 
-GOLDEN = ROOT / "eval" / "golden_qa_v1.jsonl"
+GOLDEN = ROOT / "eval" / "book01" / "golden_qa_v1.jsonl"
 REF_NODES = ROOT / "samples" / "P2.4" / "nodes.jsonl"
-MAPPING = load_section_map(ROOT / "configs" / "section_map.yaml")
+MAPPING = load_section_map(ROOT / "configs" / "books" / "book01" / "section_map.yaml")
 runner = CliRunner()
 
 
@@ -271,16 +271,16 @@ def test_cli_golden(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     make_settings(tmp_path)
     (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "prompts", tmp_path / "prompts")
-    shutil.copy(ROOT / "configs" / "section_map.yaml", tmp_path / "configs")
-    raw = tmp_path / "data" / "raw"
+    raw = tmp_path / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True)
     shutil.copy(book.pdf_path, raw / "book01.pdf")
     shutil.copy(book.truth_path, raw / "book01.truth.json")
     blocks, lines, _, _ = pipeline(book.pdf_path)
     write_jsonl(
-        tmp_path / "data" / "p1_clean" / "blocks.jsonl", oracle_blocks(blocks, lines, book.truth)
+        tmp_path / "data" / "books" / "book01" / "p1_clean" / "blocks.jsonl",
+        oracle_blocks(blocks, lines, book.truth),
     )
-    write_jsonl(tmp_path / "data" / "p1_clean" / "content_lines.jsonl", lines)
+    write_jsonl(tmp_path / "data" / "books" / "book01" / "p1_clean" / "content_lines.jsonl", lines)
     root = ["--root", str(tmp_path)]
 
     assert "dm p2 tree" in runner.invoke(app, ["p2", "golden", *root]).output
@@ -294,7 +294,7 @@ def test_cli_golden(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     first = runner.invoke(app, ["p2", "golden", *root])
     assert first.exit_code == 0, first.output
     assert "30 câu · cụ thể 20 · liệt kê 5 · từ chối 5" in first.output
-    golden = tmp_path / "eval" / "golden_qa_v1.jsonl"
+    golden = tmp_path / "eval" / "book01" / "golden_qa_v1.jsonl"
 
     # cùng nội dung với bản đã commit; chỉ nguồn của "Triệu chứng" (THKG) khác: cây commit có
     # tiêu đề còn lỗi OCR "TRIỆU CHUNG" (path/ID khác) - xem giới hạn "ID phụ thuộc tiêu đề" (P2.3)

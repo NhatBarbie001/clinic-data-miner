@@ -379,17 +379,20 @@ def test_cli_headings(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     missing = runner.invoke(app, ["p2", "headings", *root])
     assert missing.exit_code == 1 and "dm p1 run" in missing.output
 
-    raw = tmp_path / "data" / "raw"
+    raw = tmp_path / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True)
     shutil.copy(sample.pdf_path, raw / "book01.pdf")
     shutil.copy(sample.truth_path, raw / "book01.truth.json")
-    write_jsonl(tmp_path / "data" / "p1_clean" / "blocks.jsonl", p1_blocks(sample.pdf_path))
+    write_jsonl(
+        tmp_path / "data" / "books" / "book01" / "p1_clean" / "blocks.jsonl",
+        p1_blocks(sample.pdf_path),
+    )
 
     good = runner.invoke(app, ["p2", "headings", *root, "--eval", "--no-llm"])
     assert good.exit_code == 0, good.output
     assert "chapter 2 · disease 3 · section 19 · subsection 3 · other 0" in good.output
     assert "✓ G2_heading_levels" in good.output
-    out = tmp_path / "data" / "p2_tree"
+    out = tmp_path / "data" / "books" / "book01" / "p2_tree"
     assert (out / "toc.json").is_file()  # tự chạy P2.1 khi chưa có
     assert len((out / "heading_levels.jsonl").read_text(encoding="utf-8").splitlines()) == 27
 

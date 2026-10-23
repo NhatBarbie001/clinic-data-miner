@@ -13,11 +13,12 @@ import typer
 import yaml
 
 from dataminer import SUBMODULES, __version__
-from dataminer.cli_llm import llm_app
-from dataminer.cli_p1 import p1_app
-from dataminer.cli_p2 import p2_app
-from dataminer.cli_runs import runs_app
-from dataminer.cli_survey import dev_app, pilot_app, survey_cmd
+from dataminer.cli._common import current_book, set_current_book
+from dataminer.cli.llm import llm_app
+from dataminer.cli.p1 import p1_app
+from dataminer.cli.p2 import p2_app
+from dataminer.cli.runs import runs_app
+from dataminer.cli.survey import dev_app, pilot_app, survey_cmd
 from dataminer.core.config import ConfigError, find_project_root, load_settings
 from dataminer.core.logging import setup_logging
 
@@ -40,12 +41,20 @@ app.command("survey")(survey_cmd)
 LogLevelOption = typer.Option(
     "WARNING", "--log-level", help="Mức log ra console: DEBUG, INFO, WARNING, ERROR."
 )
+BookOption = typer.Option(
+    None,
+    "--book",
+    help="Sách cần chạy (hồ sơ configs/books/<id>/, dữ liệu data/books/<id>/). "
+    "Mặc định: project.book_id trong cấu hình.",
+    show_default=False,
+)
 
 
 @app.callback()
-def _main(log_level: str = LogLevelOption) -> None:
+def _main(log_level: str = LogLevelOption, book: str | None = BookOption) -> None:
     """Data-miner: khai thác dữ liệu y khoa từ sách PDF."""
     setup_logging(log_level.upper())
+    set_current_book(book)  # mỗi lần gọi đều đặt lại (None = theo cấu hình)
 
 
 RootOption = typer.Option(
@@ -59,7 +68,7 @@ REQUIRED_DIRS: tuple[str, ...] = (
     "scripts",
     "app",
     "eval",
-    "data/raw",
+    "data",
     "samples",
     "docs/phases",
     "tests/unit",
@@ -99,15 +108,24 @@ def info_cmd() -> None:
     typer.echo("\nTrạng thái:")
     env_status = "có" if (root / ".env").is_file() else "chưa có (copy từ .env.example)"
     typer.echo(f"  - .env      : {env_status}")
-    pdfs = sorted(p.name for p in (root / "data" / "raw").glob("*.pdf"))
-    typer.echo(f"  - PDF sách  : {', '.join(pdfs) if pdfs else 'chưa có (chép vào data/raw/)'}")
+    try:
+        settings = load_settings(root, book=current_book())
+    except ConfigError:
+        typer.echo("  - Sách      : (cấu hình lỗi - chạy `dm config validate`)")
+        return
+    raw = settings.paths.raw_dir
+    pdf = raw / settings.project.book_file
+    status = "có" if pdf.is_file() else f"CHƯA CÓ (chép vào {raw})"
+    typer.echo(
+        f"  - Sách      : {settings.project.book_id} · {settings.project.book_file} · {status}"
+    )
 
 
 @config_app.command("show")
 def config_show(root: Path | None = RootOption) -> None:
     """In cấu hình cuối cùng sau khi gộp các lớp (API key đã bị che)."""
     try:
-        settings = load_settings(root)
+        settings = load_settings(root, book=current_book())
     except ConfigError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from None
@@ -124,7 +142,7 @@ def config_show(root: Path | None = RootOption) -> None:
 def config_validate(root: Path | None = RootOption) -> None:
     """Kiểm tra cấu hình: exit 0 nếu hợp lệ, exit 1 kèm danh sách lỗi."""
     try:
-        settings = load_settings(root)
+        settings = load_settings(root, book=current_book())
     except ConfigError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from None

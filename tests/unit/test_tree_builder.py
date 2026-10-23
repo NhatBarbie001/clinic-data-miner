@@ -454,12 +454,12 @@ def test_cli_tree(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     make_settings(tmp_path)
     (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "prompts", tmp_path / "prompts")
-    raw = tmp_path / "data" / "raw"
+    raw = tmp_path / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True)
     shutil.copy(book.pdf_path, raw / "book01.pdf")
     shutil.copy(book.truth_path, raw / "book01.truth.json")
     blocks, lines, _, _ = pipeline(book.pdf_path)
-    p1 = tmp_path / "data" / "p1_clean"
+    p1 = tmp_path / "data" / "books" / "book01" / "p1_clean"
     write_jsonl(p1 / "blocks.jsonl", blocks)
     write_jsonl(p1 / "content_lines.jsonl", lines)
     root = ["--root", str(tmp_path)]
@@ -472,7 +472,7 @@ def test_cli_tree(tmp_path: Path, sample_book_for: SampleBookFor) -> None:
     assert good.exit_code == 0, good.output
     assert "2 chương · 3 bệnh · 19 mục · 3 mục con" in good.output
     assert "✓ G4_content_in_node" in good.output
-    out = tmp_path / "data" / "p2_tree"
+    out = tmp_path / "data" / "books" / "book01" / "p2_tree"
     assert len((out / "nodes.jsonl").read_text(encoding="utf-8").splitlines()) == 28
     assert json.loads((out / "tree.json").read_text(encoding="utf-8"))["level"] == "book"
     assert "3.1. Lâm sàng" in (out / "tree.md").read_text(encoding="utf-8")

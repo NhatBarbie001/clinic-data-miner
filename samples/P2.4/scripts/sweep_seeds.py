@@ -14,7 +14,7 @@ from dataminer.pdf.reader import body_font_size, read_lines
 from dataminer.structure.section_mapper import load_section_map, map_sections
 
 PILOT = (4, 9)
-MAPPING = load_section_map(Path("configs/section_map.yaml"))
+MAPPING = load_section_map(Path("configs/books/book01/section_map.yaml"))
 ok = 0
 for seed in range(1, 31):
     book = make_sample_book(Path(tempfile.mkdtemp()), seed=seed)

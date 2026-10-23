@@ -8,6 +8,7 @@ from pathlib import Path
 
 import typer
 
+from dataminer.cli._common import current_book
 from dataminer.core.config import ConfigError, Settings, load_settings
 
 p2_app = typer.Typer(help="P2 - dựng cây cấu trúc sách.", no_args_is_help=True)
@@ -19,7 +20,7 @@ EvalOption = typer.Option(False, "--eval", help="So với đáp án sách mẫu,
 
 def _load(root: Path | None) -> Settings:
     try:
-        return load_settings(root)
+        return load_settings(root, book=current_book())
     except ConfigError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from None
@@ -269,7 +270,7 @@ def _proposals_path(settings: Settings) -> Path:
 
 
 def _map_path(settings: Settings) -> Path:
-    return settings.paths.data_dir.parent / settings.p2.sections.map
+    return settings.from_root(settings.p2.sections.map)
 
 
 @sections_app.command("map")

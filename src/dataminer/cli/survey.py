@@ -9,6 +9,7 @@ from pathlib import Path
 
 import typer
 
+from dataminer.cli._common import current_book
 from dataminer.core.config import ConfigError, Settings, load_settings
 from dataminer.core.run import RunRecorder
 
@@ -28,7 +29,7 @@ TruthOption = typer.Option(None, "--truth", help="File đáp án (mặc định:
 
 def _load(root: Path | None) -> Settings:
     try:
-        return load_settings(root)
+        return load_settings(root, book=current_book())
     except ConfigError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from None

@@ -16,10 +16,11 @@ from dataminer.structure.toc_match import norm_title
 from dataminer.text.blocks import is_upper_text
 
 OUT = Path("samples/P2.2")
-blocks = list(read_jsonl(Path("data/p1_clean/blocks.jsonl"), Block))
+blocks = list(read_jsonl(Path("data/books/book01/p1_clean/blocks.jsonl"), Block))
 by_id = {b.id: b for b in blocks}
-decisions = list(read_jsonl(Path("data/p2_tree/heading_levels.jsonl"), HeadingDecision))
-truth = json.loads(Path("data/raw/book01.truth.json").read_text(encoding="utf-8"))
+LEVELS = Path("data/books/book01/p2_tree/heading_levels.jsonl")
+decisions = list(read_jsonl(LEVELS, HeadingDecision))
+truth = json.loads(Path("data/books/book01/raw/book01.truth.json").read_text(encoding="utf-8"))
 pages = (min(b.page_start for b in blocks), max(b.page_end for b in blocks))
 (OUT / "heading_eval.txt").write_text(
     "Đánh giá G2 (sách mẫu seed 7, pilot trang PDF 4-9) - dm p2 headings --eval\n\n"

@@ -1,0 +1,14 @@
+# Hồ sơ sách: book01 - sách mẫu tiếng Việt tổng hợp (9 trang, có đáp án book01.truth.json).
+# Lớp cấu hình nằm giữa default.yaml và local.yaml (xem src/dataminer/core/config.py).
+# Luật nhận dạng của sách này: src/dataminer/books/book01/.
+
+project:
+  book_file: book01.pdf      # data/books/book01/raw/book01.pdf
+
+pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
+  page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
+  page_end: 9
+  diseases:                  # tên như trong mục lục; kiểm tra bằng `dm pilot check`
+    - Viêm khớp dạng thấp
+    - Thoái hóa khớp gối
+    - Viêm loét dạ dày tá tràng

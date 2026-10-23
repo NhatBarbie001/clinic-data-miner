@@ -19,17 +19,16 @@ from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
 
 ROOT = Path(__file__).resolve().parents[2]
+
+from tests.unit.llm_fakes import copy_configs  # noqa: E402
+
 pytestmark = pytest.mark.live
 
 
 def test_live_fix_pilot_meets_g5_to_g9(tmp_path: Path) -> None:
-    for folder, names in (
-        ("configs", ("default.yaml", "models.yaml", "glossary.yaml")),
-        ("prompts", ("p1_fix_ocr.md",)),
-    ):
-        (tmp_path / folder).mkdir()
-        for name in names:
-            shutil.copy(ROOT / folder / name, tmp_path / folder / name)
+    copy_configs(tmp_path)
+    (tmp_path / "prompts").mkdir()
+    shutil.copy(ROOT / "prompts" / "p1_fix_ocr.md", tmp_path / "prompts" / "p1_fix_ocr.md")
     key = load_settings(ROOT).require_api_key()
     settings = load_settings(tmp_path, env={"OPENROUTER_API_KEY": key})
     book = make_sample_book(tmp_path / "book", seed=7)

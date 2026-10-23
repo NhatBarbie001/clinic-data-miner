@@ -56,9 +56,8 @@ def run_p2(
     pdf = settings.paths.raw_dir / settings.project.book_file
     if not pdf.is_file():
         raise FileNotFoundError(f"Không thấy {pdf} (cần để đọc trang mục lục).")
-    root = settings.paths.data_dir.parent
     cfg = settings.p2
-    map_path = root / cfg.sections.map
+    map_path = settings.from_root(cfg.sections.map)
     out = p2_dir(settings)
     rules = rules_for(settings)
     warnings: list[str] = []

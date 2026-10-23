@@ -186,19 +186,19 @@ def test_cli_sample_book_survey_check(tmp_path: Path) -> None:
     root = ["--root", str(tmp_path)]
     made = runner.invoke(app, ["dev", "make-sample-book", *root])
     assert made.exit_code == 0, made.output
-    assert (tmp_path / "data/raw/book01.pdf").is_file()
+    assert (tmp_path / "data/books/book01/raw/book01.pdf").is_file()
 
     surveyed = runner.invoke(app, ["survey", *root])
     assert surveyed.exit_code == 0, surveyed.output
-    manifest = read_json(tmp_path / "data/p0_survey/manifest.json")
+    manifest = read_json(tmp_path / "data/books/book01/p0_survey/manifest.json")
     assert manifest["status"] == "success"
-    assert manifest["inputs"][0]["path"] == "data/raw/book01.pdf"
+    assert manifest["inputs"][0]["path"] == "data/books/book01/raw/book01.pdf"
     assert manifest["counts"]["pages"] == 9
 
     checked = runner.invoke(app, ["dev", "check-survey", *root])
     assert checked.exit_code == 0, checked.output
     assert "ĐẠT mọi chỉ tiêu" in checked.output
-    assert (tmp_path / "data/p0_survey/survey_vs_truth.txt").is_file()
+    assert (tmp_path / "data/books/book01/p0_survey/survey_vs_truth.txt").is_file()
 
 
 def test_cli_survey_missing_pdf(tmp_path: Path) -> None:

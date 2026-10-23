@@ -107,11 +107,10 @@ class OCRFixer:
     @classmethod
     def from_settings(cls, settings: Settings, client: LLMClient | None = None) -> "OCRFixer":
         cfg = settings.p1.fix
-        root = settings.paths.data_dir.parent
         return cls(
             client or LLMClient(settings),
             load_prompt(settings.paths.prompts_dir, cfg.prompt),
-            load_glossary(root / cfg.glossary),
+            load_glossary(settings.from_root(cfg.glossary)),
             cfg,
         )
 

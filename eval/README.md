@@ -28,4 +28,6 @@ Thước đo dùng xuyên suốt dự án (plan.md mục 5.3, docs/phases/P2/P2.
 
 | File | Nội dung |
 |---|---|
-| `golden_qa_v1.jsonl` | 30 câu: 20 cụ thể (gồm 2 câu số liệu/bảng), 5 liệt kê, 5 từ chối - pilot sách mẫu |
+| `book01/golden_qa_v1.jsonl` | Sách mẫu: 30 câu: 20 cụ thể (gồm 2 câu số liệu/bảng), 5 liệt kê, 5 từ chối - pilot |
+
+Mỗi sách một thư mục `eval/<book_id>/` (cấu hình `paths.eval_dir: eval/{book_id}`).

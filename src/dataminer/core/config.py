@@ -1,11 +1,14 @@
 """Cấu hình dự án: một nguồn duy nhất, có kiểm tra kiểu.
 
 Các lớp cấu hình (lớp sau ghi đè lớp trước, gộp sâu):
-    1. configs/default.yaml   giá trị mặc định (commit)
-    2. configs/models.yaml    tác vụ → model (commit), nạp vào khóa `models`
-    3. configs/local.yaml     tùy chỉnh máy cá nhân (KHÔNG commit, tùy chọn)
-    4. Biến môi trường        `DM__LLM__CONCURRENCY=8` (giá trị parse như YAML);
-                              API key đọc từ `OPENROUTER_API_KEY`.
+    1. configs/default.yaml              giá trị mặc định (commit)
+    2. configs/models.yaml               tác vụ → model (commit), nạp vào khóa `models`
+    3. configs/books/<book_id>/book.yaml HỒ SƠ SÁCH: thiết lập riêng của cuốn đang chạy (commit)
+    4. configs/local.yaml                tùy chỉnh máy cá nhân (KHÔNG commit, tùy chọn)
+    5. Biến môi trường                   `DM__LLM__CONCURRENCY=8` (giá trị parse như YAML);
+                                         API key đọc từ `OPENROUTER_API_KEY`.
+Sách đang chạy: `dm --book <id>` > `DM__PROJECT__BOOK_ID` > local.yaml > default.yaml.
+Chuỗi `{book_id}` trong cấu hình (đường dẫn dữ liệu, từ điển…) được thay bằng sách đang chạy.
 Biến môi trường lấy từ `.env` rồi `os.environ` (os.environ thắng).
 
 Xem docs/phases/P0/P0.2_plan.md.
@@ -50,6 +53,8 @@ REQUIRED_TASKS: tuple[str, ...] = (
 DEFAULT_FILE = "configs/default.yaml"
 MODELS_FILE = "configs/models.yaml"
 LOCAL_FILE = "configs/local.yaml"
+BOOKS_DIR = "configs/books"  # configs/books/<book_id>/book.yaml
+BOOK_PLACEHOLDER = "{book_id}"
 
 
 class ConfigError(Exception):
@@ -168,7 +173,7 @@ class FixCfg(_Strict):
     blocks_per_call: int = Field(default=25, ge=1, le=200)
     max_changed_ratio: float = Field(default=0.35, gt=0, le=1)  # > tỉ lệ này → từ chối cả block
     min_similarity: float = Field(default=0.6, ge=0, le=1)  # giống nhau (đã bỏ dấu) tối thiểu
-    glossary: str = "configs/glossary.yaml"  # thuật ngữ được bảo vệ (tương đối gốc repo)
+    glossary: str = "configs/books/{book_id}/glossary.yaml"  # thuật ngữ được bảo vệ (gốc repo)
 
 
 class P1Cfg(_Strict):
@@ -206,7 +211,7 @@ class HeadingsCfg(_Strict):
 class SectionsCfg(_Strict):
     """P2.4 - ánh xạ loại mục."""
 
-    map: str = "configs/section_map.yaml"  # từ điển tên mục → loại (tương đối gốc repo)
+    map: str = "configs/books/{book_id}/section_map.yaml"  # tên mục → loại (gốc repo)
     fuzzy_min: float = Field(default=0.9, gt=0, le=1)  # khớp gần (chịu lỗi OCR nhầm 1 ký tự)
     llm_fallback: bool = True  # tên mục lạ → LLM đề xuất → hàng đợi duyệt
     prompt: str = "p2_classify_section"
@@ -233,6 +238,7 @@ class Settings(_Strict):
 
     _fingerprint: str = PrivateAttr(default="")
     _sources: list[str] = PrivateAttr(default_factory=list)
+    _root: Path = PrivateAttr(default=Path())
 
     @model_validator(mode="after")
     def _check_tasks(self) -> "Settings":
@@ -266,6 +272,16 @@ class Settings(_Strict):
     def fingerprint(self) -> str:
         """Hash ngắn của cấu hình (không gồm bí mật, đường dẫn tương đối) - ghi vào manifest."""
         return self._fingerprint
+
+    @property
+    def root(self) -> Path:
+        """Gốc dự án (thư mục có pyproject.toml) - mọi đường dẫn tương đối tính từ đây."""
+        return self._root
+
+    def from_root(self, relative: str) -> Path:
+        """Đường dẫn tương đối gốc dự án (vd. từ điển `configs/books/book01/section_map.yaml`);
+        `{book_id}` được thay bằng sách đang chạy."""
+        return self._root / relative.replace(BOOK_PLACEHOLDER, self.project.book_id)
 
     @property
     def sources(self) -> list[str]:
@@ -407,12 +423,26 @@ def _read_env(root: Path) -> dict[str, str]:
     return env
 
 
-def load_settings(root: Path | None = None, env: Mapping[str, str] | None = None) -> Settings:
+def _substitute(value: Any, book_id: str) -> Any:
+    """Thay `{book_id}` trong mọi chuỗi của cấu hình (đệ quy)."""
+    if isinstance(value, str):
+        return value.replace(BOOK_PLACEHOLDER, book_id)
+    if isinstance(value, dict):
+        return {k: _substitute(v, book_id) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_substitute(v, book_id) for v in value]
+    return value
+
+
+def load_settings(
+    root: Path | None = None, env: Mapping[str, str] | None = None, *, book: str | None = None
+) -> Settings:
     """Nạp và kiểm tra cấu hình.
 
     Args:
         root: gốc dự án; mặc định tìm từ thư mục hiện tại.
         env: biến môi trường; mặc định `.env` + `os.environ`. Test truyền dict riêng.
+        book: sách cần chạy; mặc định `dm --book` > env > local.yaml > default.yaml.
     """
     root = (root or find_project_root()).resolve()
     if env is None:
@@ -431,15 +461,34 @@ def load_settings(root: Path | None = None, env: Mapping[str, str] | None = None
     applied.append(MODELS_FILE)
 
     local = _read_yaml(root / LOCAL_FILE, required=False)
+    env_layer = _env_layer(env)
+
+    # Sách đang chạy → nạp hồ sơ sách (giữa models.yaml và local.yaml).
+    book_id = book
+    for layer in (env_layer, local or {}, merged):
+        if book_id:
+            break
+        project = layer.get("project")
+        if isinstance(project, dict) and isinstance(project.get("book_id"), str):
+            book_id = project["book_id"]
+    profile_file = f"{BOOKS_DIR}/{book_id}/book.yaml"
+    profile = _read_yaml(root / profile_file, required=False) if book_id else None
+    if profile is not None:
+        _merge(merged, profile, profile_file, sources)
+        applied.append(profile_file)
+
     if local is not None:
         _merge(merged, local, LOCAL_FILE, sources)
         applied.append(LOCAL_FILE)
 
-    env_layer = _env_layer(env)
     if env_layer:
         _merge(merged, env_layer, "env", sources)
         names = sorted(k for k in env if k.upper().startswith(ENV_PREFIX))
         applied.append("env: " + ", ".join(names))
+
+    if book_id:
+        merged.setdefault("project", {})["book_id"] = book_id
+        merged = _substitute(merged, book_id)
 
     # Fingerprint: trước khi thêm bí mật và resolve đường dẫn → ổn định giữa các máy.
     canonical = json.dumps(merged, sort_keys=True, ensure_ascii=False, default=str)
@@ -459,11 +508,12 @@ def load_settings(root: Path | None = None, env: Mapping[str, str] | None = None
     try:
         settings = Settings.model_validate(merged)
     except ValidationError as exc:
-        order = [DEFAULT_FILE, MODELS_FILE, LOCAL_FILE, "env"]
+        order = [DEFAULT_FILE, MODELS_FILE, profile_file, LOCAL_FILE, "env"]
         raise ConfigError(_format_errors(exc, sources, order)) from None
 
     settings._fingerprint = fingerprint
     settings._sources = applied
+    settings._root = root
     return settings
 
 

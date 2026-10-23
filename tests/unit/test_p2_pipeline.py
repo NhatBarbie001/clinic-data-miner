@@ -21,7 +21,7 @@ from dataminer.model.tree import Node
 from dataminer.pipeline.p1 import p1_dir, run_p1
 from dataminer.pipeline.p2 import OUTPUTS, p2_dir, run_p2
 from tests.conftest import SampleBookFor
-from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
+from tests.unit.llm_fakes import ROOT, SleepRecorder, copy_configs, make_settings, ok
 from tests.unit.test_p1_pipeline import client as p1_client
 from tests.unit.test_p1_pipeline import oracle_for, truth_of
 
@@ -30,13 +30,11 @@ runner = CliRunner()
 
 def project(tmp: Path, book_for: SampleBookFor) -> Settings:
     """Dự án tạm: cấu hình + prompt + từ điển thật, sách mẫu seed 7."""
-    (tmp / "configs").mkdir(parents=True, exist_ok=True)
-    for name in ("default.yaml", "models.yaml", "glossary.yaml", "section_map.yaml"):
-        shutil.copy(ROOT / "configs" / name, tmp / "configs" / name)
+    copy_configs(tmp)
     if not (tmp / "prompts").exists():
         shutil.copytree(ROOT / "prompts", tmp / "prompts")
     (tmp / "pyproject.toml").write_text("", encoding="utf-8")
-    raw = tmp / "data" / "raw"
+    raw = tmp / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True, exist_ok=True)
     book = book_for(7)
     shutil.copy(book.pdf_path, raw / "book01.pdf")
@@ -112,7 +110,7 @@ def test_02_rerun_is_byte_identical(p1_rules: Settings) -> None:
 
 
 def test_03_eval_exit_codes(p1_rules: Settings) -> None:
-    root = ["--root", str(p1_rules.paths.data_dir.parent)]
+    root = ["--root", str(p1_rules.root)]
     not_run = runner.invoke(app, ["p2", "eval", *root])
     assert not_run.exit_code == 1 and "dm p2 run" in not_run.output
 
@@ -126,7 +124,7 @@ def test_03_eval_exit_codes(p1_rules: Settings) -> None:
 
     wrong = truth_of(p1_rules)
     wrong["toc"][1]["printed_page"] = 2
-    bad_truth = p1_rules.paths.data_dir.parent / "wrong.truth.json"
+    bad_truth = p1_rules.root / "wrong.truth.json"
     bad_truth.write_text(json.dumps(wrong, ensure_ascii=False), encoding="utf-8")
     bad = runner.invoke(app, ["p2", "eval", *root, "--truth", str(bad_truth)])
     assert bad.exit_code == 1 and "✗ G1_toc" in bad.output and "CHƯA ĐẠT" in bad.output
@@ -136,7 +134,7 @@ def test_03_eval_exit_codes(p1_rules: Settings) -> None:
 
 
 def test_04_report_sections_and_matrix(p1_rules: Settings) -> None:
-    root = ["--root", str(p1_rules.paths.data_dir.parent)]
+    root = ["--root", str(p1_rules.root)]
     assert "dm p2 run" in runner.invoke(app, ["p2", "report", *root]).output
     assert runner.invoke(app, ["p2", "run", *root, "--no-llm"]).exit_code == 0
     assert runner.invoke(app, ["p2", "report", *root]).exit_code == 0
@@ -201,7 +199,7 @@ def test_05_missing_p1_output(tmp_path: Path, sample_book_for: SampleBookFor) ->
     project(tmp_path, sample_book_for)
     result = runner.invoke(app, ["p2", "run", "--root", str(tmp_path), "--no-llm"])
     assert result.exit_code == 1 and "dm p1 run" in result.output
-    assert not (tmp_path / "data" / "p2_tree" / "nodes.jsonl").exists()
+    assert not (tmp_path / "data" / "books" / "book01" / "p2_tree" / "nodes.jsonl").exists()
 
 
 # ---------------------------------------------------------------- #6 đầu-cuối

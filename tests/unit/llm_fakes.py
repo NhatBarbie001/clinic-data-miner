@@ -18,12 +18,19 @@ MODEL = "deepseek/deepseek-v4.1-flash-1017"
 Handler = Callable[[httpx.Request], Any]
 
 
+def copy_configs(root: Path) -> None:
+    """Chép cấu hình thật vào dự án tạm: default.yaml, models.yaml và mọi hồ sơ sách
+    (configs/books/<sách>/: book.yaml, từ điển tên mục, thuật ngữ…). Không chép local.yaml."""
+    (root / "configs").mkdir(parents=True, exist_ok=True)
+    for name in ("default.yaml", "models.yaml"):
+        shutil.copy(ROOT / "configs" / name, root / "configs" / name)
+    shutil.copytree(ROOT / "configs" / "books", root / "configs" / "books", dirs_exist_ok=True)
+
+
 def make_settings(root: Path, **env: str) -> Settings:
     """Dự án tạm với configs thật; cache/ledger nằm trong `root/data/cache`."""
     if not (root / "configs").exists():
-        (root / "configs").mkdir(parents=True)
-        for name in ("default.yaml", "models.yaml"):
-            shutil.copy(ROOT / "configs" / name, root / "configs" / name)
+        copy_configs(root)
     base = {"OPENROUTER_API_KEY": FAKE_KEY}
     base.update({k: v for k, v in env.items()})
     return load_settings(root, env=base)

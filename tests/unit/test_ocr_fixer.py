@@ -23,7 +23,7 @@ from dataminer.ocrfix.fixer import OCRFixer, plan_batches
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
 from tests.conftest import SampleBookFor
-from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
+from tests.unit.llm_fakes import ROOT, SleepRecorder, copy_configs, make_settings, ok
 
 PILOT = (4, 9)
 
@@ -31,9 +31,7 @@ PILOT = (4, 9)
 def project(tmp: Path, **env: str) -> Settings:
     (tmp / "prompts").mkdir(parents=True, exist_ok=True)
     shutil.copy(ROOT / "prompts" / "p1_fix_ocr.md", tmp / "prompts" / "p1_fix_ocr.md")
-    (tmp / "configs").mkdir(exist_ok=True)
-    for name in ("default.yaml", "models.yaml", "glossary.yaml"):
-        shutil.copy(ROOT / "configs" / name, tmp / "configs" / name)
+    copy_configs(tmp)
     return make_settings(tmp, **env)
 
 

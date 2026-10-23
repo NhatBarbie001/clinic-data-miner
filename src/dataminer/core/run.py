@@ -42,8 +42,9 @@ def _git(root: Path, *args: str) -> str | None:
 
 
 def project_root(settings: Settings) -> Path:
-    """Gốc dự án suy ra từ cấu hình (data_dir nằm trong gốc)."""
-    return settings.paths.data_dir.parent
+    """Gốc dự án (ghi nhớ lúc nạp cấu hình) - KHÔNG suy từ data_dir: mỗi sách có thư mục dữ
+    liệu riêng (data/books/<sách>/)."""
+    return settings.root
 
 
 class RunRecorder:

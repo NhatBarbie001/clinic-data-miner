@@ -10,8 +10,8 @@ from dataminer.model.tree import Node
 from dataminer.structure.golden import GoldenItem
 
 OUT = Path("samples/P2.5")
-items = list(read_jsonl(Path("eval/golden_qa_v1.jsonl"), GoldenItem))
-nodes = list(read_jsonl(Path("data/p2_tree/nodes.jsonl"), Node))
+items = list(read_jsonl(Path("eval/book01/golden_qa_v1.jsonl"), GoldenItem))
+nodes = list(read_jsonl(Path("data/books/book01/p2_tree/nodes.jsonl"), Node))
 (OUT / "golden_validation.txt").write_text(
     "Kiểm G7: eval/golden_qa_v1.jsonl ↔ cây hiện tại (data/p2_tree/nodes.jsonl) - "
     "dm p2 golden --check\n\n" + format_eval(eval_golden(items, nodes)) + "\n",

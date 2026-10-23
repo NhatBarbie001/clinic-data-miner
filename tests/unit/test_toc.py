@@ -26,7 +26,7 @@ from dataminer.evaluation.p2_eval import all_pass, eval_toc
 from dataminer.model.line import Line, Zone
 from dataminer.structure.toc_match import match_key, norm_title
 from tests.conftest import SampleBookFor
-from tests.unit.llm_fakes import ROOT
+from tests.unit.llm_fakes import copy_configs
 
 runner = CliRunner()
 _counter = iter(range(100_000))
@@ -313,23 +313,25 @@ def test_09b_eval_fails_on_wrong_title_missing_or_extra(book: SampleBook) -> Non
 
 
 def test_cli_toc(tmp_path: Path, book: SampleBook) -> None:
-    (tmp_path / "configs").mkdir()
-    for name in ("default.yaml", "models.yaml"):
-        shutil.copy(ROOT / "configs" / name, tmp_path / "configs" / name)
+    copy_configs(tmp_path)
     (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
     root = ["--root", str(tmp_path)]
 
     missing = runner.invoke(app, ["p2", "toc", *root])
     assert missing.exit_code == 1 and "Không có file sách" in missing.output
 
-    raw = tmp_path / "data" / "raw"
+    raw = tmp_path / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True)
     shutil.copy(book.pdf_path, raw / "book01.pdf")
     shutil.copy(book.truth_path, raw / "book01.truth.json")
     ok = runner.invoke(app, ["p2", "toc", *root, "--eval"])
     assert ok.exit_code == 0, ok.output
     assert "5 mục" in ok.output and "✓ G1_toc" in ok.output
-    saved = json.loads((tmp_path / "data" / "p2_tree" / "toc.json").read_text(encoding="utf-8"))
+    saved = json.loads(
+        (tmp_path / "data" / "books" / "book01" / "p2_tree" / "toc.json").read_text(
+            encoding="utf-8"
+        )
+    )
     assert len(saved["entries"]) == 5
 
     bad_truth = tmp_path / "bad.truth.json"

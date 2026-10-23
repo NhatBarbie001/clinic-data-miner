@@ -52,7 +52,7 @@ def _git_init(root: Path) -> None:
 
 def _run_ok(root: Path) -> RunRecorder:
     settings = make_settings(root)
-    src = root / "data" / "raw" / "input.jsonl"
+    src = root / "data" / "books" / "book01" / "raw" / "input.jsonl"
     write_jsonl(src, [Rec(id="a", text="vào")])
     out = settings.paths.data_dir / "p9_demo" / "out.jsonl"
     with RunRecorder(settings, phase="p9_demo") as run:
@@ -85,9 +85,9 @@ def test_11_success_manifest_complete(tmp_path: Path) -> None:
     assert m.config_fingerprint == make_settings(tmp_path).fingerprint()
     assert m.models["extract"].startswith("deepseek/")
     assert m.prompts == {"p9_prompt": "v3"}
-    assert m.inputs[0].path == "data/raw/input.jsonl"
+    assert m.inputs[0].path == "data/books/book01/raw/input.jsonl"
     assert m.inputs[0].records == 1
-    assert m.outputs[0].path == "data/p9_demo/out.jsonl"
+    assert m.outputs[0].path == "data/books/book01/p9_demo/out.jsonl"
     assert m.outputs[0].records == 3
     assert len(m.outputs[0].sha256) == 64
     assert m.counts == {"records": 3}
@@ -188,7 +188,7 @@ def test_16_latest_manifest_and_history(tmp_path: Path) -> None:
     first = _run_ok(tmp_path)
     second = _run_ok(tmp_path)
     assert first.run_id != second.run_id
-    phase_dir = tmp_path / "data" / "p9_demo"
+    phase_dir = tmp_path / "data" / "books" / "book01" / "p9_demo"
     assert read_json(phase_dir / "manifest.json")["run_id"] == second.run_id
     assert len(list((phase_dir / "runs").glob("*.json"))) == 2
     assert len(list((phase_dir / "runs").glob("*.log"))) == 2

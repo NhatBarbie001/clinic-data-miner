@@ -16,18 +16,17 @@ from dataminer.evaluation.p1_eval import evaluate_p1
 from dataminer.pipeline.p1 import p1_dir, run_p1
 
 ROOT = Path(__file__).resolve().parents[2]
+
+from tests.unit.llm_fakes import copy_configs  # noqa: E402
+
 pytestmark = pytest.mark.live
 
 
 def test_live_full_p1_pilot(tmp_path: Path) -> None:
-    for folder, names in (
-        ("configs", ("default.yaml", "models.yaml", "glossary.yaml")),
-        ("prompts", ("p1_fix_ocr.md",)),
-    ):
-        (tmp_path / folder).mkdir()
-        for name in names:
-            shutil.copy(ROOT / folder / name, tmp_path / folder / name)
-    book = make_sample_book(tmp_path / "data" / "raw", seed=7)
+    copy_configs(tmp_path)
+    (tmp_path / "prompts").mkdir()
+    shutil.copy(ROOT / "prompts" / "p1_fix_ocr.md", tmp_path / "prompts" / "p1_fix_ocr.md")
+    book = make_sample_book(tmp_path / "data" / "books" / "book01" / "raw", seed=7)
     key = load_settings(ROOT).require_api_key()
     settings = load_settings(tmp_path, env={"OPENROUTER_API_KEY": key})
 

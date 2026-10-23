@@ -30,13 +30,13 @@ from dataminer.structure.tree_builder import render_tree_md
 from dataminer.text.blocks import is_upper_text
 
 OUT = Path("samples/P2.4")
-MAP = Path("configs/section_map.yaml")
+MAP = Path("configs/books/book01/section_map.yaml")
 mapping = load_section_map(MAP)
 
 # ------------------------------------------------ pilot
-nodes = list(read_jsonl(Path("data/p2_tree/nodes.jsonl"), Node))
-truth = json.loads(Path("data/raw/book01.truth.json").read_text(encoding="utf-8"))
-blocks = list(read_jsonl(Path("data/p1_clean/blocks.jsonl"), Block))
+nodes = list(read_jsonl(Path("data/books/book01/p2_tree/nodes.jsonl"), Node))
+truth = json.loads(Path("data/books/book01/raw/book01.truth.json").read_text(encoding="utf-8"))
+blocks = list(read_jsonl(Path("data/books/book01/p1_clean/blocks.jsonl"), Block))
 pages = (min(b.page_start for b in blocks), max(b.page_end for b in blocks))
 (OUT / "section_eval.txt").write_text(
     "Đánh giá G5 (sách mẫu seed 7, pilot trang PDF 4-9) - dm p2 sections map --eval\n\n"

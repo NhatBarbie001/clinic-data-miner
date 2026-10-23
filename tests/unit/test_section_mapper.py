@@ -36,7 +36,7 @@ from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 from tests.unit.test_tree_builder import PILOT, make, pipeline
 
-MAP_PATH = ROOT / "configs" / "section_map.yaml"
+MAP_PATH = ROOT / "configs" / "books" / "book01" / "section_map.yaml"
 MAPPING = load_section_map(MAP_PATH)
 runner = CliRunner()
 
@@ -393,14 +393,13 @@ def test_cli_sections_map_export_import(tmp_path: Path, sample_book_for: SampleB
     make_settings(tmp_path)
     (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "prompts", tmp_path / "prompts")
-    shutil.copy(MAP_PATH, tmp_path / "configs" / "section_map.yaml")
-    raw = tmp_path / "data" / "raw"
+    raw = tmp_path / "data" / "books" / "book01" / "raw"
     raw.mkdir(parents=True)
     shutil.copy(book.pdf_path, raw / "book01.pdf")
     shutil.copy(book.truth_path, raw / "book01.truth.json")
     blocks, lines, _, _ = pipeline(book.pdf_path)
-    write_jsonl(tmp_path / "data" / "p1_clean" / "blocks.jsonl", blocks)
-    write_jsonl(tmp_path / "data" / "p1_clean" / "content_lines.jsonl", lines)
+    write_jsonl(tmp_path / "data" / "books" / "book01" / "p1_clean" / "blocks.jsonl", blocks)
+    write_jsonl(tmp_path / "data" / "books" / "book01" / "p1_clean" / "content_lines.jsonl", lines)
     root = ["--root", str(tmp_path)]
 
     assert runner.invoke(app, ["p2", "sections", "map", *root]).exit_code == 1  # chưa có cây
@@ -410,7 +409,7 @@ def test_cli_sections_map_export_import(tmp_path: Path, sample_book_for: SampleB
     assert good.exit_code == 0, good.output
     assert "từ điển 22 · khớp gần 0 · kế thừa 0 · LLM 0 · chưa rõ 0" in good.output
     assert "✓ G5_section_types" in good.output
-    out = tmp_path / "data" / "p2_tree"
+    out = tmp_path / "data" / "books" / "book01" / "p2_tree"
     assert "[symptom]" in (out / "tree.md").read_text(encoding="utf-8")
 
     # Giả lập 1 tên mục còn lỗi OCR nhầm ký tự → khớp gần → duyệt → vào từ điển

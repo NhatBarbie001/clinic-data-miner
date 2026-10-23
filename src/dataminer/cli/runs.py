@@ -5,6 +5,7 @@ from pathlib import Path
 
 import typer
 
+from dataminer.cli._common import current_book
 from dataminer.core.config import ConfigError, Settings, load_settings
 from dataminer.core.io import DataFileError, read_json
 from dataminer.core.schemas import RunManifest
@@ -16,7 +17,7 @@ RootOption = typer.Option(None, "--root", help="Gốc dự án.", show_default=F
 
 def _load(root: Path | None) -> Settings:
     try:
-        return load_settings(root)
+        return load_settings(root, book=current_book())
     except ConfigError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from None

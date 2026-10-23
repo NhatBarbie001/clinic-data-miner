@@ -19,7 +19,7 @@ from dataminer.devtools.sample_book import make_sample_book
 from dataminer.structure.golden import validate_golden
 from dataminer.structure.section_mapper import load_section_map, map_sections
 
-MAPPING = load_section_map(Path("configs/section_map.yaml"))
+MAPPING = load_section_map(Path("configs/books/book01/section_map.yaml"))
 ok = 0
 reference = None
 for seed in range(1, 31):

@@ -3,16 +3,16 @@
 # Ghi đè nhanh qua biến môi trường: DM__<NHÓM>__<KHÓA>, vd. DM__LLM__MODE=replay
 
 project:
-  book_id: book01            # chữ thường, số, '_' hoặc '-'; dùng trong ID và tên artifact
-  book_file: book01.pdf      # file nằm trong paths.raw_dir
+  book_id: book01            # sách mặc định; đổi bằng `dm --book <id>`. Hồ sơ: configs/books/<id>/book.yaml
+  book_file: book.pdf        # file nằm trong paths.raw_dir (hồ sơ sách ghi tên thật)
 
-paths:                       # tương đối với gốc repo
-  raw_dir: data/raw
-  data_dir: data
-  cache_dir: data/cache
+paths:                       # tương đối với gốc repo; {book_id} = sách đang chạy
+  raw_dir: data/books/{book_id}/raw
+  data_dir: data/books/{book_id}
+  cache_dir: data/cache      # cache LLM dùng chung mọi sách
   samples_dir: samples
   prompts_dir: prompts
-  eval_dir: eval
+  eval_dir: eval/{book_id}
 
 llm:
   base_url: https://openrouter.ai/api/v1
@@ -31,13 +31,7 @@ budget:                      # USD - vượt thì dừng (thực thi ở P0.3)
     fix_ocr: 2.0             # P1.4 sửa lỗi OCR (dự kiến pilot < $0.01)
     classify: 0.5            # P2 phân loại tiêu đề / tên mục mơ hồ (pilot sách mẫu: $0)
 
-pilot:                       # chương mẫu (P0.6): mọi phase chạy phần này trước rồi mới chạy toàn sách
-  page_start: 4              # SỐ TRANG PDF (không phải số trang in; trang in 1 = PDF 4 ở sách mẫu)
-  page_end: 9
-  diseases:                  # tên như trong mục lục; kiểm tra bằng `dm pilot check`
-    - Viêm khớp dạng thấp
-    - Thoái hóa khớp gối
-    - Viêm loét dạ dày tá tràng
+# pilot (chương mẫu) là riêng từng sách → configs/books/<id>/book.yaml
 
 p1:                          # P1 - trích xuất và làm sạch text (docs/phases/P1/plan.md)
   furniture:                 # P1.2 - header/footer/số trang
@@ -59,7 +53,7 @@ p1:                          # P1 - trích xuất và làm sạch text (docs/pha
     blocks_per_call: 25      # số block mỗi lời gọi (gửi theo trang để có ngữ cảnh)
     max_changed_ratio: 0.35  # LLM đổi > 35% số từ của block → từ chối cả block
     min_similarity: 0.6      # từ mới phải giống từ cũ (sau khi bỏ dấu) ≥ 60%
-    glossary: configs/glossary.yaml
+    glossary: configs/books/{book_id}/glossary.yaml
 
 p2:                          # P2 - dựng cây cấu trúc (docs/phases/P2/plan.md)
   toc:                       # P2.1 - mục lục
@@ -73,7 +67,7 @@ p2:                          # P2 - dựng cây cấu trúc (docs/phases/P2/plan
     llm_fallback: true       # tiêu đề còn tin cậy thấp → hỏi LLM (tác vụ `classify`)
     prompt: p2_classify_heading
   sections:                  # P2.4 - ánh xạ loại mục (section_type)
-    map: configs/section_map.yaml   # tên mục KHÔNG DẤU → loại; người duyệt bổ sung dần
+    map: configs/books/{book_id}/section_map.yaml   # tên mục → loại; người duyệt bổ sung dần
     fuzzy_min: 0.9           # khớp gần với khóa từ điển (chịu lỗi OCR nhầm 1 ký tự)
     llm_fallback: true       # tên mục lạ → LLM đề xuất → hàng đợi duyệt (CSV)
     prompt: p2_classify_section

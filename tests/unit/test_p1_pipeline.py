@@ -25,20 +25,16 @@ from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.pipeline.p1 import p1_dir, run_p1
 from tests.conftest import SampleBookFor
-from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
+from tests.unit.llm_fakes import ROOT, SleepRecorder, copy_configs, make_settings, ok
 
 runner = CliRunner()
 
 
 def project(tmp: Path, book_for: SampleBookFor, **env: str) -> Settings:
-    for folder, names in (
-        ("configs", ("default.yaml", "models.yaml", "glossary.yaml")),
-        ("prompts", ("p1_fix_ocr.md",)),
-    ):
-        (tmp / folder).mkdir(parents=True, exist_ok=True)
-        for name in names:
-            shutil.copy(ROOT / folder / name, tmp / folder / name)
-    raw = tmp / "data" / "raw"
+    copy_configs(tmp)
+    (tmp / "prompts").mkdir(parents=True, exist_ok=True)
+    shutil.copy(ROOT / "prompts" / "p1_fix_ocr.md", tmp / "prompts" / "p1_fix_ocr.md")
+    raw = tmp / "data" / "books" / "book01" / "raw"
     if not (raw / "book01.pdf").exists():
         raw.mkdir(parents=True, exist_ok=True)
         book = book_for(7)
@@ -99,7 +95,7 @@ def test_01_run_without_llm(tmp_path: Path, sample_book_for: SampleBookFor) -> N
     manifest = read_json(out / "manifest.json")
     assert manifest["status"] == "success"
     assert {o["path"] for o in manifest["outputs"]} == {
-        f"data/p1_clean/{n}"
+        f"data/books/book01/p1_clean/{n}"
         for n in (
             "lines.jsonl",
             "content_lines.jsonl",
@@ -313,10 +309,7 @@ def test_audit_sample_deterministic_and_keep_edit_only(
 
 
 def test_run_missing_pdf(tmp_path: Path) -> None:
-    for folder, names in (("configs", ("default.yaml", "models.yaml", "glossary.yaml")),):
-        (tmp_path / folder).mkdir()
-        for name in names:
-            shutil.copy(ROOT / folder / name, tmp_path / folder / name)
+    copy_configs(tmp_path)
     result = runner.invoke(app, ["p1", "run", "--root", str(tmp_path)])
     assert result.exit_code == 1
     assert "make-sample-book" in result.output
