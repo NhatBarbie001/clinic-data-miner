@@ -12,12 +12,12 @@ from typing import Any
 import pymupdf
 from pydantic import BaseModel
 
+from dataminer.books.book01.lines import heading_signals
 from dataminer.core.io import write_json, write_jsonl
 from dataminer.core.text_vi import has_vietnamese_marks, is_nfc, is_valid_syllable, nfc
 from dataminer.model.line import Line
 from dataminer.pdf.furniture import classify_furniture, furniture_key
 from dataminer.pdf.reader import body_font_size, read_lines
-from dataminer.text.blocks import heading_signals
 
 RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
 RE_SUB = re.compile(r"^\d{1,2}\.\d{1,2}\.?\s+\S")

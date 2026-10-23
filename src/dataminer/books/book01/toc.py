@@ -13,11 +13,11 @@ from pathlib import Path
 from typing import Literal
 
 from dataminer.core.config import FurnitureCfg, TocCfg
-from dataminer.core.text_vi import nfc, strip_diacritics
+from dataminer.core.text_vi import nfc
 from dataminer.model.line import Line
 from dataminer.model.toc import TocEntry, TocLevel, TocResult
-from dataminer.pdf.furniture import strip_furniture
-from dataminer.pdf.reader import body_font_size, read_lines
+from dataminer.pdf.reader import read_lines
+from dataminer.structure.toc_match import content_page_offset, norm_title
 
 # Chấm dẫn: "....", ". . . .", "……" (≥ 3 dấu chấm, có thể cách nhau 1 khoảng trắng) + số trang.
 RE_LEADER_ENTRY = re.compile(
@@ -30,19 +30,6 @@ RE_PLAIN_ENTRY = re.compile(r"^(?P<title>.*[^\W\d_].*?)\s+(?P<page>\d{1,4})$")
 RE_CHAPTER_NORM = re.compile(r"^(chuong|phan)\s+([0-9]+|[ivxlc]+)\b")
 TOC_TITLES = frozenset({"muc luc", "noi dung", "contents", "table of contents"})
 INDENT_TOLERANCE = 3.0  # hai dòng cùng mức thụt lề nếu x0 lệch ≤ 3pt
-
-
-def norm_title(text: str) -> str:
-    """Bỏ dấu, chữ thường, gộp khoảng trắng: "Bệnh tiêu hỏa" → "benh tieu hoa"."""
-    return " ".join(strip_diacritics(nfc(text)).casefold().split())
-
-
-def match_key(text: str) -> str:
-    """Khóa so khớp chịu lỗi dính từ: chỉ giữ chữ và số của `norm_title`.
-
-    "Thoái hóa khớpgối" và "THOÁI HÓA KHỚP GỐI" → cùng "thoaihoakhopgoi".
-    """
-    return "".join(ch for ch in norm_title(text) if ch.isalnum())
 
 
 # --------------------------------------------------------------------------- tìm trang
@@ -178,17 +165,6 @@ def parse_toc(lines: Sequence[Line], toc_pages: Sequence[int]) -> tuple[list[Toc
 # --------------------------------------------------------------------------- toàn bộ
 
 
-def _content_page_offset(
-    lines: Sequence[Line], furniture: FurnitureCfg | None
-) -> tuple[int | None, dict[int, int], list[str]]:
-    """Độ lệch (PDF - in) và ánh xạ trang in → PDF, từ footer/số trang của MỌI trang (P1.2)."""
-    result = strip_furniture(list(lines), body_font_size(list(lines)), furniture)
-    printed_to_pdf = {p.printed_page: p.page for p in result.pages if p.printed_page is not None}
-    offsets = {pdf - printed for printed, pdf in printed_to_pdf.items()}
-    offset = next(iter(offsets)) if len(offsets) == 1 else None
-    return offset, printed_to_pdf, result.warnings
-
-
 def build_toc(
     lines: Sequence[Line],
     cfg: TocCfg | None = None,
@@ -219,7 +195,7 @@ def build_toc(
     if not entries:
         warnings.append(f"Trang mục lục {toc_pages} không có dòng nào tách được thành mục.")
     content = [ln for ln in lines if ln.page not in set(toc_pages)]
-    offset, printed_to_pdf, map_warnings = _content_page_offset(content, furniture)
+    offset, printed_to_pdf, map_warnings = content_page_offset(content, furniture)
     warnings.extend(map_warnings)
     max_printed = max(printed_to_pdf, default=None)
     for e in entries:

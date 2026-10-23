@@ -11,7 +11,7 @@ from dataminer.core.text_vi import nfc
 from dataminer.evaluation.p1_eval import _line_key_map, _norm
 from dataminer.model.toc import TocResult
 from dataminer.model.tree import HeadingDecision, Node
-from dataminer.structure.toc import match_key
+from dataminer.structure.toc_match import match_key
 from dataminer.structure.tree_builder import check_invariants
 
 

@@ -24,7 +24,12 @@ M = [
         'if not ln or "|" in ln or RE_CAPTION_LINE.match(ln):',
         "if not ln:",
     ),
-    ("G5 văn bản 'sạch' lấy từ OCR", G, "    if truth is None:\n", "    if True:\n"),
+    (
+        "G5 văn bản 'sạch' lấy từ OCR",
+        "src/dataminer/books/book01/golden.py",
+        "    if truth is None:\n",
+        "    if True:\n",
+    ),
     (
         "G6 liệt kê không lọc loại mục",
         G,

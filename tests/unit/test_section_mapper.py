@@ -13,6 +13,7 @@ import httpx
 import pytest
 from typer.testing import CliRunner
 
+from dataminer.books.book01.rules import build_tree
 from dataminer.cli import app
 from dataminer.core.config import SectionsCfg, Settings
 from dataminer.core.io import read_jsonl, write_jsonl
@@ -31,7 +32,6 @@ from dataminer.structure.section_mapper import (
     map_sections,
     normalize_section_title,
 )
-from dataminer.structure.tree_builder import build_tree
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 from tests.unit.test_tree_builder import PILOT, make, pipeline

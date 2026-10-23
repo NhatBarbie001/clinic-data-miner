@@ -13,7 +13,7 @@ M = [
     ("H1 bỏ khớp gần mục lục", H, "if score < cfg.toc_match_min:", "if score < 1.0:"),
     (
         "H2 bỏ mẫu chương không dấu",
-        H,
+        "src/dataminer/books/book01/headings.py",
         "if chapter := RE_CHAPTER_NORM.match(norm_title(block.text)):",
         "if chapter := RE_CHAPTER_NORM.match('x'):",
     ),
@@ -40,17 +40,22 @@ M = [
     ("H8 cảnh báo mục lục thiếu cả ngoài phạm vi", H, "lo <= e.pdf_page <= hi", "True"),
     (
         "H9 bỏ ngưỡng cỡ chữ của bệnh",
-        H,
+        "src/dataminer/books/book01/headings.py",
         "if block.is_upper and block.font_size >= threshold:",
         "if block.is_upper:",
     ),
     (
         "H10 mục chữ thường không xét cỡ",
-        H,
+        "src/dataminer/books/book01/headings.py",
         "if block.font_size >= body_size + SECTION_SIZE_DELTA:",
         "if True:",
     ),
-    ("H11 eval bỏ kiểm tra gióng thứ tự", E, "if similar.ratio() < 0.8:", "if False:"),
+    (
+        "H11 eval bỏ kiểm tra gióng thứ tự",
+        E,
+        'match_key(d.text), match_key(want["text"]))\n        if similar.ratio() < 0.8:',
+        'match_key(d.text), match_key(want["text"]))\n        if False:',
+    ),
     (
         "H12 eval bỏ đếm tiêu đề thừa",
         E,

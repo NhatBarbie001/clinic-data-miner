@@ -8,7 +8,7 @@ Xem docs/phases/P1/P1.3_plan.md.
 import itertools
 import re
 import statistics
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import Any, Literal
 
 from dataminer.core.config import BlocksCfg
@@ -18,12 +18,7 @@ from dataminer.model.block import Block, BlockKind
 from dataminer.model.line import Line
 from dataminer.pdf.layout import ROW_TOLERANCE
 
-RE_CHAPTER = re.compile(r"^(CHƯƠNG|Chương|PHẦN|Phần|BÀI|Bài)\s+([\dIVXLC]+)\b")
-RE_SUB = re.compile(r"^(\d{1,2}\.\d{1,2})\.?\s+\S")
-RE_SECTION = re.compile(r"^(\d{1,2})\.\s+\S")
 RE_NUMBERED_ITEM = re.compile(r"^(\d{1,2})[.)]\s+\S")
-RE_TOC_ENTRY = re.compile(r"(\.{4,}|…{2,})\s*\d+\s*$")
-RE_CAPTION = re.compile(r"^(Bảng|BẢNG|Hình|HÌNH|Biểu đồ|Sơ đồ)\s+\d+(\.\d+)*\.?(\s|$)")
 SENTENCE_END = (".", ":", ";", "?", "!", "…")
 
 
@@ -35,45 +30,6 @@ def is_upper_text(text: str) -> bool:
     return len(letters) >= 3 and sum(c.isupper() for c in letters) / len(letters) >= 0.8
 
 
-def heading_signals(
-    text: str, size: float, body_size: float, bold: bool = False
-) -> tuple[list[str], str]:
-    """(lý do, cấp đoán) của một dòng có thể là tiêu đề - dùng chung cho khảo sát (P0.5)."""
-    text = nfc(text)
-    upper = is_upper_text(text)
-    reasons: list[str] = []
-    if size >= body_size + 0.75:
-        reasons.append(f"cỡ chữ {size:.1f} > thân bài {body_size:.1f}")
-    if upper:
-        reasons.append("viết hoa toàn bộ")
-    if bold:
-        reasons.append("in đậm")
-    level = "unknown"
-    if RE_CHAPTER.match(text):
-        reasons.append("mẫu 'CHƯƠNG n'")
-        level = "chapter"
-    elif RE_SUB.match(text):
-        reasons.append("đánh số 'n.m.'")
-        level = "subsection"
-    elif RE_SECTION.match(text):
-        reasons.append("đánh số 'n.'")
-        level = "section"
-    elif upper and size >= body_size + 1.5:
-        level = "disease_or_title"
-    return reasons, level
-
-
-def numbering_of(text: str) -> str | None:
-    text = nfc(text)
-    if m := RE_CHAPTER.match(text):
-        return f"{m.group(1).upper()} {m.group(2)}"
-    if m := RE_SUB.match(text):
-        return m.group(1)
-    if m := RE_NUMBERED_ITEM.match(text):
-        return m.group(1)
-    return None
-
-
 def bullet_marker(text: str, markers: Iterable[str]) -> str | None:
     for marker in markers:
         if text.startswith(marker) and len(text) > len(marker) and text[len(marker)].isspace():
@@ -82,30 +38,9 @@ def bullet_marker(text: str, markers: Iterable[str]) -> str | None:
 
 
 LineKind = Literal["toc_entry", "caption", "heading", "bullet_start", "numbered_item", "body"]
-
-
-def classify_line(ln: Line, body_size: float, cfg: BlocksCfg) -> LineKind:
-    """Loại một dòng (không xét bảng - bảng được nhận diện theo hàng trước đó)."""
-    text = nfc(ln.text)
-    if RE_TOC_ENTRY.search(text):
-        return "toc_entry"
-    if RE_CAPTION.match(text):
-        return "caption"
-    if bullet_marker(text, cfg.bullet_markers):
-        return "bullet_start"
-    upper = is_upper_text(text)
-    if RE_CHAPTER.match(text) or RE_SUB.match(text):
-        return "heading"
-    if RE_SECTION.match(text):
-        # "3. TRIỆU CHỨNG" là tiêu đề; "1. Uống thuốc sau ăn." là danh sách đánh số
-        if upper or ln.size >= body_size + 0.75:
-            return "heading"
-        return "numbered_item"
-    if RE_NUMBERED_ITEM.match(text):
-        return "numbered_item"
-    if upper or ln.size >= body_size + cfg.heading_size_delta:
-        return "heading"
-    return "body"
+# Luật riêng từng sách (books/<sách>/): dòng nào là gì, và số thứ tự của một tiêu đề.
+ClassifyLine = Callable[[Line, float, BlocksCfg], LineKind]
+Numbering = Callable[[str], str | None]
 
 
 # --------------------------------------------------------------------------- block
@@ -268,8 +203,14 @@ def build_blocks(
     cfg: BlocksCfg | None = None,
     printed: dict[int, int | None] | None = None,
     book_id: str = "book",
+    *,
+    classify: ClassifyLine,
+    numbering: Numbering,
 ) -> list[Block]:
-    """Dựng block từ dòng NỘI DUNG (đã bỏ header/footer), theo thứ tự đọc."""
+    """Dựng block từ dòng NỘI DUNG (đã bỏ header/footer), theo thứ tự đọc.
+
+    `classify` (dòng nào là tiêu đề / gạch đầu dòng / …) và `numbering` (số thứ tự của tiêu đề)
+    là LUẬT RIÊNG của từng sách - truyền vào từ books/<sách>/."""
     cfg = cfg or BlocksCfg()
     printed = printed or {}
     step = _line_step(lines)
@@ -286,7 +227,7 @@ def build_blocks(
     def close() -> None:
         nonlocal current
         if current is not None:
-            out.append(_to_block(current, book_id, printed))
+            out.append(_to_block(current, book_id, printed, numbering))
             current = None
 
     emitted_tables: set[int] = set()
@@ -302,7 +243,7 @@ def build_blocks(
                 emitted_tables.add(t_idx)
             continue
 
-        kind = classify_line(ln, body_size, cfg)
+        kind = classify(ln, body_size, cfg)
         text = nfc(ln.text)
         if kind == "body" and current is not None and _continues(current, ln, step, cfg):
             if ln.page != current.last.page:
@@ -310,7 +251,11 @@ def build_blocks(
             current.text = join_text(current.text, text)
             current.lines.append(ln)
             continue
-        if kind == "heading" and current is not None and _heading_continues(current, ln, step):
+        if (
+            kind == "heading"
+            and current is not None
+            and _heading_continues(current, ln, step, numbering)
+        ):
             current.text = join_text(current.text, text)
             current.lines.append(ln)
             continue
@@ -353,16 +298,18 @@ def _continues(cur: _Open, ln: Line, step: float, cfg: BlocksCfg) -> bool:
     return len(cur.lines) == 1 and ln.bbox[0] < cur.lines[0].bbox[0] - cfg.x_tolerance
 
 
-def _heading_continues(cur: _Open, ln: Line, step: float) -> bool:
+def _heading_continues(cur: _Open, ln: Line, step: float, numbering: Numbering) -> bool:
     """Tiêu đề dài xuống dòng: cùng kiểu, không đánh số, sát ngay dòng trước."""
-    if cur.kind != "heading" or ln.page != cur.last.page or numbering_of(ln.text):
+    if cur.kind != "heading" or ln.page != cur.last.page or numbering(ln.text):
         return False
     same_style = is_upper_text(ln.text) == is_upper_text(cur.text)
     close = ln.bbox[3] - cur.last.bbox[3] <= 1.3 * max(step, cur.last.size * 1.2)
     return same_style and abs(ln.size - cur.last.size) < 0.8 and close
 
 
-def _to_block(cur: _Open, book_id: str, printed: dict[int, int | None]) -> Block:
+def _to_block(
+    cur: _Open, book_id: str, printed: dict[int, int | None], numbering: Numbering
+) -> Block:
     first = cur.lines[0]
     sizes = [(ln.size, len(ln.text)) for ln in cur.lines]
     total = sum(w for _, w in sizes) or 1
@@ -381,7 +328,7 @@ def _to_block(cur: _Open, book_id: str, printed: dict[int, int | None]) -> Block
         x0=first.bbox[0],
         font_size=round(sum(s * w for s, w in sizes) / total, 2),
         is_upper=is_upper_text(cur.text),
-        numbering=numbering_of(cur.text) if cur.kind == "heading" else None,
+        numbering=numbering(cur.text) if cur.kind == "heading" else None,
         marker=cur.marker,
         flags=flags,
     )

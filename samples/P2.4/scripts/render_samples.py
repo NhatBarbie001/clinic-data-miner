@@ -9,6 +9,8 @@ from pathlib import Path
 
 import httpx
 
+from dataminer.books.book01.lines import numbering_of
+from dataminer.books.book01.rules import build_tree
 from dataminer.core.config import load_settings
 from dataminer.core.io import read_jsonl
 from dataminer.core.llm_client import LLMClient
@@ -24,8 +26,8 @@ from dataminer.structure.section_mapper import (
     map_sections,
     normalize_section_title,
 )
-from dataminer.structure.tree_builder import build_tree, render_tree_md
-from dataminer.text.blocks import is_upper_text, numbering_of
+from dataminer.structure.tree_builder import render_tree_md
+from dataminer.text.blocks import is_upper_text
 
 OUT = Path("samples/P2.4")
 MAP = Path("configs/section_map.yaml")

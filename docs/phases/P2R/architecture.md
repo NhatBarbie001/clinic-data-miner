@@ -163,3 +163,30 @@ Sau S1–S5, plan P2R gọn lại: **I1** chỉ còn "tạo `books/iasp/` + `con
 - **Dữ liệu cục bộ của bạn trong `data/`** (git bỏ qua) sẽ được chuyển vào `data/books/book01/` bằng một lệnh chuyển. Lệnh này in ra mọi thứ nó di chuyển.
 - **Các báo cáo cũ** (P1, P2) vẫn nhắc đường dẫn file cũ. Tôi **không sửa lịch sử**, mà thêm một ghi chú "đường dẫn đã đổi, xem architecture.md" ở đầu `docs/phases/P1/gate_report.md` và `docs/phases/P2/gate_report.md`.
 - **Rủi ro:** đổi đường dẫn nhiều file dễ sót import. Lưới an toàn là 509 test cộng với phép so sha256 dữ liệu sách mẫu trước/sau. Mỗi bước có commit riêng nên dễ quay lại.
+
+## 8. Nhật ký thực hiện
+
+| Bước | Commit | Kết quả |
+|---|---|---|
+| S1 `model/` | `a328b61` | Gom 6 nhóm kiểu dữ liệu; sửa import ở 36 file (bằng script dựa trên AST). 510 test pass; 12/12 file dữ liệu sách mẫu **giống hệt từng byte** |
+| S2 tách `ingest/` | `1881762` | `pdf/` (reader, layout, furniture), `text/blocks`, `ocrfix/` (fixer, guards, review), `survey/`, `pipeline/` (p1, p1_report, p2). Logger đổi tên theo module mới. 514 test; 12/12 byte |
+| S3 `books/` | *(commit kèm theo)* | Xem bên dưới |
+
+**S3: phần dùng chung nhận luật qua tham số** (các tham số này bắt buộc truyền, không có mặc định mang luật sách mẫu):
+
+| Hàm dùng chung | Tham số luật | Sách mẫu truyền |
+|---|---|---|
+| `pdf.reader.read_lines` | `order` (mặc định chung: theo hàng) | mặc định |
+| `pdf.furniture.strip_furniture` | `page_number` (mặc định chung) | mặc định |
+| `text.blocks.build_blocks` | `classify`, `numbering` (**bắt buộc**) | `books/book01/lines.py` |
+| `structure.heading_levels.classify_headings` | `rule_level` (**bắt buộc**), `chapter_prefix` | `books/book01/headings.py` |
+| `structure.tree_builder.build_tree` | `display_title` (mặc định chung: bỏ số, chữ thường đầu câu) | thêm viết hoa sau "Chương n." |
+| mục lục | `BookRules.read_toc` | `books/book01/toc.py` (chấm dẫn) |
+
+`pipeline/p1.py`, `pipeline/p2.py` và CLI lấy luật qua `books.registry.rules_for(settings)`, theo `project.book_id`.
+
+**Hai ngoại lệ có chủ ý** (module ngoài `books/` vẫn dùng luật sách mẫu):
+- `cli_p2.py`, lệnh `dm p2 golden`: sinh câu hỏi tự động **chỉ có ý nghĩa với sách mẫu** (cần đáp án).
+- `survey/survey.py`: công cụ khảo sát viết cho sách scan tiếng Việt (tín hiệu tiêu đề và lỗi OCR kiểu tiếng Việt).
+
+**Script mutation check P2.1–P2.6:** đã cập nhật đường dẫn. Khi kiểm lại, phát hiện 2 đột biến (P2.1 M10, P2.2 H11) đã **không chạy được từ P2.4**, vì chuỗi đích bị trùng sau khi thêm `eval_sections`. Script đã từ chối chạy ("KHÔNG ÁP DỤNG ĐƯỢC") đúng như thiết kế, nhưng tôi không chạy lại script P2.1/P2.2 sau P2.4 nên không thấy. Đã sửa chuỗi đích. Toàn bộ 96 đích hiện tìm thấy đúng 1 lần.

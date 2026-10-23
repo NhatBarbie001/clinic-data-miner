@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from dataminer.books.book01.rules import build_blocks
 from dataminer.core.config import FixCfg
 from dataminer.core.prompts import Prompt
 from dataminer.devtools.auto_review import REVIEWER, fill_from_truth
@@ -29,7 +30,6 @@ from dataminer.ocrfix.review import (
 )
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
-from dataminer.text.blocks import build_blocks
 from tests.conftest import SampleBookFor
 
 

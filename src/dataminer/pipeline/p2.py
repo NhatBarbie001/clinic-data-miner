@@ -9,6 +9,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+from dataminer.books.registry import rules_for
 from dataminer.core.config import Settings
 from dataminer.core.io import read_jsonl, sha256_file, write_json, write_jsonl
 from dataminer.core.llm_client import LLMClient
@@ -17,7 +18,6 @@ from dataminer.core.run import RunRecorder
 from dataminer.model.block import Block
 from dataminer.structure.heading_levels import classify_headings
 from dataminer.structure.section_mapper import load_section_map, map_sections
-from dataminer.structure.toc import extract_toc
 from dataminer.structure.tree_builder import build_tree, render_tree_md, to_nested
 
 PHASE = "p2_tree"
@@ -60,6 +60,7 @@ def run_p2(
     cfg = settings.p2
     map_path = root / cfg.sections.map
     out = p2_dir(settings)
+    rules = rules_for(settings)
     warnings: list[str] = []
 
     with RunRecorder(settings, PHASE, out_dir=out) as run:
@@ -68,9 +69,7 @@ def run_p2(
         blocks = list(read_jsonl(blocks_path, Block))
 
         # P2.1 mục lục
-        toc = extract_toc(
-            pdf, book_id=settings.project.book_id, cfg=cfg.toc, furniture=settings.p1.furniture
-        )
+        toc = rules.read_toc(settings)
         write_json(out / "toc.json", toc.model_dump(mode="json"))
         warnings += [f"mục lục: {w}" for w in toc.warnings]
 
@@ -82,7 +81,13 @@ def run_p2(
         prompts = settings.paths.prompts_dir
         heading_prompt = load_prompt(prompts, cfg.headings.prompt) if llm_headings else None
         headings = classify_headings(
-            blocks, toc.entries, cfg.headings, client=client, prompt=heading_prompt
+            blocks,
+            toc.entries,
+            cfg.headings,
+            rule_level=rules.rule_level,
+            chapter_prefix=rules.chapter_prefix,
+            client=client,
+            prompt=heading_prompt,
         )
         write_jsonl(out / "heading_levels.jsonl", headings.decisions)
         warnings += [f"cấp tiêu đề: {w}" for w in headings.warnings]
@@ -91,7 +96,11 @@ def run_p2(
 
         # P2.3 cây
         tree = build_tree(
-            blocks, headings.decisions, book_id=settings.project.book_id, toc=toc.entries
+            blocks,
+            headings.decisions,
+            book_id=settings.project.book_id,
+            toc=toc.entries,
+            display_title=rules.display_title,
         )
         warnings += [f"cây: {w}" for w in tree.warnings]
 

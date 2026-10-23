@@ -17,6 +17,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from dataminer.books.registry import rules_for
 from dataminer.core.config import Settings
 from dataminer.core.io import read_jsonl, write_jsonl
 from dataminer.core.llm_client import LLMClient
@@ -92,6 +93,8 @@ def run_p1(
     start, end = resolve_pages(settings, scope, pages, page_count)
     p1 = settings.p1
 
+    rules = rules_for(settings)
+
     with RunRecorder(settings, PHASE, out_dir=out) as run:
         run.add_input(pdf, records=False)
         run.note(f"phạm vi: trang PDF {start}-{end} ({scope if not pages else 'tùy chọn'})")
@@ -102,12 +105,17 @@ def run_p1(
             pages=(start, end),
             top_zone=p1.furniture.top_zone,
             bottom_zone=p1.furniture.bottom_zone,
+            order=rules.order_lines,
         )
         write_jsonl(out / "lines.jsonl", lines)
         body = body_font_size(lines)
 
         furniture = strip_furniture(
-            lines, body, p1.furniture, pdf_pages=list(range(start, end + 1))
+            lines,
+            body,
+            p1.furniture,
+            pdf_pages=list(range(start, end + 1)),
+            page_number=rules.page_number,
         )
         save_furniture(furniture, out / "furniture.json")
         write_jsonl(out / "content_lines.jsonl", furniture.content)
@@ -115,7 +123,15 @@ def run_p1(
             run.note(f"số trang: {warning}")
 
         printed = {p.page: p.printed_page for p in furniture.pages}
-        blocks = build_blocks(furniture.content, body, p1.blocks, printed, settings.project.book_id)
+        blocks = build_blocks(
+            furniture.content,
+            body,
+            p1.blocks,
+            printed,
+            settings.project.book_id,
+            classify=rules.classify_line,
+            numbering=rules.numbering,
+        )
         write_jsonl(out / "blocks_rules.jsonl", blocks)
 
         progress = out / "fix_progress.jsonl"

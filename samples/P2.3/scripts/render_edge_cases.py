@@ -3,10 +3,12 @@ Chạy: uv run python samples/P2.3/scripts/render_edge_cases.py"""
 
 from pathlib import Path
 
+from dataminer.books.book01.lines import numbering_of
+from dataminer.books.book01.rules import build_tree
 from dataminer.model.block import Block
 from dataminer.model.tree import HeadingDecision
-from dataminer.structure.tree_builder import build_tree, render_tree_md
-from dataminer.text.blocks import is_upper_text, numbering_of
+from dataminer.structure.tree_builder import render_tree_md
+from dataminer.text.blocks import is_upper_text
 
 n = 0
 

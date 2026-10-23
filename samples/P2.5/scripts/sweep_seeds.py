@@ -13,11 +13,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from tests.unit.test_golden import oracle_blocks
 from tests.unit.test_tree_builder import pipeline
 
+from dataminer.books.book01.golden import clean_texts, draft_golden
+from dataminer.books.book01.rules import build_tree, classify_headings
 from dataminer.devtools.sample_book import make_sample_book
-from dataminer.structure.golden import clean_texts, draft_golden, validate_golden
-from dataminer.structure.heading_levels import classify_headings
+from dataminer.structure.golden import validate_golden
 from dataminer.structure.section_mapper import load_section_map, map_sections
-from dataminer.structure.tree_builder import build_tree
 
 MAPPING = load_section_map(Path("configs/section_map.yaml"))
 ok = 0

@@ -7,6 +7,7 @@ Xem docs/phases/P1/P1.2_plan.md.
 
 import re
 from collections import Counter, defaultdict
+from collections.abc import Callable
 from pathlib import Path
 from typing import Literal
 
@@ -62,7 +63,10 @@ class FurnitureResult(BaseModel):
 
 
 def classify_furniture(
-    lines: list[Line], body_size: float, cfg: FurnitureCfg | None = None
+    lines: list[Line],
+    body_size: float,
+    cfg: FurnitureCfg | None = None,
+    page_number: Callable[[str], int | None] = page_number_of,
 ) -> tuple[list[Line], list[FurnitureItem]]:
     """Tách (nội dung, đồ đạc trang). Một dòng ở lề là đồ đạc nếu: là số trang, HOẶC lặp lại
     ở ≥ min_repeat_pages trang, HOẶC chữ nhỏ hơn thân bài. Dòng ở lề cỡ thường, không lặp
@@ -79,7 +83,7 @@ def classify_furniture(
         if ln.zone == "body":
             content.append(ln)
             continue
-        number = page_number_of(ln.text)
+        number = page_number(ln.text)
         repeats = len(pages_by_key[(ln.zone, furniture_key(ln.text))])
         small = ln.size <= body_size * cfg.small_ratio
         kind: Literal["page_number", "running_head"]
@@ -178,9 +182,11 @@ def strip_furniture(
     body_size: float,
     cfg: FurnitureCfg | None = None,
     pdf_pages: list[int] | None = None,
+    page_number: Callable[[str], int | None] = page_number_of,
 ) -> FurnitureResult:
-    """Bỏ đồ đạc trang và ánh xạ số trang in cho `pdf_pages` (mặc định: các trang có dòng)."""
-    content, removed = classify_furniture(lines, body_size, cfg)
+    """Bỏ đồ đạc trang và ánh xạ số trang in cho `pdf_pages` (mặc định: các trang có dòng).
+    `page_number`: dòng nào là số trang - luật của sách (mặc định: page_number_of)."""
+    content, removed = classify_furniture(lines, body_size, cfg, page_number)
     pages = pdf_pages if pdf_pages is not None else sorted({ln.page for ln in lines})
     infos, warnings = map_printed_pages(pages, removed)
     return FurnitureResult(content=content, removed=removed, pages=infos, warnings=warnings)

@@ -12,6 +12,9 @@ import httpx
 import pytest
 from typer.testing import CliRunner
 
+from dataminer.books.book01.headings import rule_level
+from dataminer.books.book01.rules import build_blocks, classify_headings
+from dataminer.books.book01.toc import extract_toc
 from dataminer.cli import app
 from dataminer.core.config import BlocksCfg, HeadingsCfg, Settings
 from dataminer.core.io import write_jsonl
@@ -24,9 +27,8 @@ from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
-from dataminer.structure.heading_levels import check_numbering, classify_headings, rule_level
-from dataminer.structure.toc import extract_toc, norm_title
-from dataminer.text.blocks import build_blocks
+from dataminer.structure.heading_levels import check_numbering
+from dataminer.structure.toc_match import norm_title
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 
@@ -48,7 +50,8 @@ _counter = iter(range(100_000))
 
 def hb(text: str, size: float = 11.5, *, page: int = 4, numbering: str | None = None) -> Block:
     """Block tiêu đề tự dựng (numbering/IN HOA suy từ text như P1)."""
-    from dataminer.text.blocks import is_upper_text, numbering_of
+    from dataminer.books.book01.lines import numbering_of
+    from dataminer.text.blocks import is_upper_text
 
     n = next(_counter)
     return Block(

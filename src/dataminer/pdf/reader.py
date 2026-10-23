@@ -6,6 +6,7 @@ Xem docs/phases/P1/P1.1_plan.md.
 """
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -64,8 +65,11 @@ def read_lines(
     pages: tuple[int, int] | None = None,
     top_zone: float = TOP_ZONE,
     bottom_zone: float = BOTTOM_ZONE,
+    order: Callable[[list[dict[str, Any]]], list[dict[str, Any]]] = reading_order,
 ) -> list[Line]:
     """Đọc mọi dòng text (hoặc chỉ các trang trong `pages`, tính cả hai đầu).
+
+    `order`: thứ tự đọc các dòng của một trang - luật của sách (mặc định: theo hàng, 1 cột).
 
     `top_zone`/`bottom_zone`: tỉ lệ chiều cao trang coi là lề trên/dưới (cấu hình p1.furniture).
     """
@@ -78,7 +82,7 @@ def read_lines(
             page = doc[page_no - 1]
             width, height = page.rect.width, page.rect.height
             page_lines: list[Line] = []
-            for index, item in enumerate(reading_order(_raw_lines(page))):
+            for index, item in enumerate(order(_raw_lines(page))):
                 raw = item["text_raw"]
                 x0, y0, x1, y1 = item["bbox"]
                 zone: Zone = "body"

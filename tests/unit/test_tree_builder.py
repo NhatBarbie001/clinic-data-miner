@@ -11,6 +11,10 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
+from dataminer.books.book01.headings import display_title
+from dataminer.books.book01.lines import numbering_of
+from dataminer.books.book01.rules import build_blocks, build_tree, classify_headings
+from dataminer.books.book01.toc import extract_toc
 from dataminer.cli import app
 from dataminer.core.config import BlocksCfg
 from dataminer.core.io import write_jsonl
@@ -22,17 +26,9 @@ from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision, Node
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
-from dataminer.structure.heading_levels import classify_headings
-from dataminer.structure.toc import extract_toc, norm_title
-from dataminer.structure.tree_builder import (
-    TreeResult,
-    build_tree,
-    check_invariants,
-    display_title,
-    render_tree_md,
-    to_nested,
-)
-from dataminer.text.blocks import build_blocks, is_upper_text, numbering_of
+from dataminer.structure.toc_match import norm_title
+from dataminer.structure.tree_builder import TreeResult, check_invariants, render_tree_md, to_nested
+from dataminer.text.blocks import is_upper_text
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, make_settings
 

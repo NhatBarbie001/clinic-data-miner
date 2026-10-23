@@ -34,19 +34,17 @@ def toc_cmd(
     root: Path | None = RootOption, evaluate: bool = EvalOption, truth: Path | None = TruthOption
 ) -> None:
     """Tìm và đọc mục lục → data/p2_tree/toc.json (chương, bệnh, số trang in → trang PDF)."""
+    from dataminer.books.registry import rules_for
     from dataminer.core.io import write_json
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_toc
-    from dataminer.structure.toc import extract_toc
 
     settings = _load(root)
     pdf = settings.paths.raw_dir / settings.project.book_file
     if not pdf.is_file():
         typer.echo(f"Không có file sách {pdf} (đặt PDF vào {settings.paths.raw_dir}).", err=True)
         raise typer.Exit(1)
-    result = extract_toc(
-        pdf, book_id=settings.project.book_id, cfg=settings.p2.toc, furniture=settings.p1.furniture
-    )
+    result = rules_for(settings).read_toc(settings)
     out = p2_dir(settings) / "toc.json"
     write_json(out, result.model_dump(mode="json"))
 
@@ -89,6 +87,7 @@ def headings_cmd(
     no_llm: bool = NoLLMOption,
 ) -> None:
     """Cấp của mọi tiêu đề (chương/bệnh/mục/mục con/khác) → data/p2_tree/heading_levels.jsonl."""
+    from dataminer.books.registry import rules_for
     from dataminer.core.io import read_jsonl, write_json, write_jsonl
     from dataminer.core.llm_client import LLMClient
     from dataminer.core.llm_types import LLMError
@@ -99,7 +98,6 @@ def headings_cmd(
     from dataminer.model.toc import TocResult
     from dataminer.pipeline.p1 import p1_dir
     from dataminer.structure.heading_levels import classify_headings
-    from dataminer.structure.toc import extract_toc
 
     settings = _load(root)
     blocks_path = p1_dir(settings) / "blocks.jsonl"
@@ -107,18 +105,13 @@ def headings_cmd(
         typer.echo(f"Chưa có {blocks_path} - chạy `dm p1 run` trước.", err=True)
         raise typer.Exit(1)
     blocks = list(read_jsonl(blocks_path, Block))
+    rules = rules_for(settings)
     out_dir = p2_dir(settings)
     toc_path = out_dir / "toc.json"
     if toc_path.is_file():
         toc = TocResult.model_validate_json(toc_path.read_text(encoding="utf-8"))
     else:
-        pdf = settings.paths.raw_dir / settings.project.book_file
-        toc = extract_toc(
-            pdf,
-            book_id=settings.project.book_id,
-            cfg=settings.p2.toc,
-            furniture=settings.p1.furniture,
-        )
+        toc = rules.read_toc(settings)
         write_json(toc_path, toc.model_dump(mode="json"))
 
     cfg = settings.p2.headings
@@ -126,7 +119,15 @@ def headings_cmd(
     try:
         prompt = load_prompt(settings.paths.prompts_dir, cfg.prompt) if use_llm else None
         client = LLMClient(settings) if use_llm else None
-        result = classify_headings(blocks, toc.entries, cfg, client=client, prompt=prompt)
+        result = classify_headings(
+            blocks,
+            toc.entries,
+            cfg,
+            rule_level=rules.rule_level,
+            chapter_prefix=rules.chapter_prefix,
+            client=client,
+            prompt=prompt,
+        )
     except (LLMError, PromptError, ConfigError) as exc:
         typer.echo(f"✗ {exc}", err=True)
         raise typer.Exit(1) from None
@@ -174,6 +175,7 @@ def tree_cmd(
     root: Path | None = RootOption, evaluate: bool = EvalOption, truth: Path | None = TruthOption
 ) -> None:
     """Dựng cây chương → bệnh → mục → nodes.jsonl, tree.json, tree.md (cần `dm p2 headings`)."""
+    from dataminer.books.registry import rules_for
     from dataminer.core.io import read_jsonl, write_json, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_tree
@@ -206,7 +208,13 @@ def tree_cmd(
         else []
     )
     try:
-        result = build_tree(blocks, decisions, book_id=settings.project.book_id, toc=toc)
+        result = build_tree(
+            blocks,
+            decisions,
+            book_id=settings.project.book_id,
+            toc=toc,
+            display_title=rules_for(settings).display_title,
+        )
     except TreeInvariantError as exc:
         typer.echo(f"✗ {exc}", err=True)
         raise typer.Exit(1) from None
@@ -394,6 +402,7 @@ def golden_cmd(
     root: Path | None = RootOption, check: bool = CheckOption, truth: Path | None = TruthOption
 ) -> None:
     """Sinh (hoặc --check) bộ câu hỏi chuẩn eval/golden_qa_v1.jsonl từ cây + đáp án sách mẫu."""
+    from dataminer.books.book01.golden import clean_texts, draft_golden
     from dataminer.core.io import read_jsonl, write_jsonl
     from dataminer.evaluation.p1_eval import format_eval
     from dataminer.evaluation.p2_eval import all_pass, eval_golden
@@ -401,7 +410,7 @@ def golden_cmd(
     from dataminer.model.line import Line
     from dataminer.model.tree import Node
     from dataminer.pipeline.p1 import p1_dir
-    from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem, clean_texts, draft_golden
+    from dataminer.structure.golden import GOLDEN_VERSION, GoldenItem
 
     settings = _load(root)
     nodes_path = p2_dir(settings) / "nodes.jsonl"

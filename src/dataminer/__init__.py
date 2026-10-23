@@ -9,6 +9,7 @@ Các module con theo phase (xem plan.md):
     structure   P2 dựng cây cấu trúc (mục lục, cấp tiêu đề, cây, loại mục)
     pipeline    chạy cả chuỗi P1, P2 (manifest, đầu ra, báo cáo)
     survey      khảo sát sách mới, chương mẫu (pilot)
+    books       LUẬT RIÊNG từng sách (book01 = sách mẫu), qua giao diện books.base.BookRules
     index       P3 index & retrieval
     kb          P4 knowledge base
     qa          P5 hỏi đáp
@@ -34,6 +35,7 @@ SUBMODULES: tuple[str, ...] = (
     "structure",
     "pipeline",
     "survey",
+    "books",
     "index",
     "kb",
     "qa",

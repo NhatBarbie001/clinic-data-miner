@@ -12,7 +12,7 @@ import asyncio
 import difflib
 import json
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from pydantic import BaseModel, Field
 
@@ -22,12 +22,12 @@ from dataminer.core.prompts import Prompt
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import Confidence, HeadingDecision, Level
-from dataminer.structure.toc import RE_CHAPTER_NORM, match_key, norm_title
+from dataminer.structure.toc_match import match_key, norm_title
 
 RE_SUB_NUM = re.compile(r"^\d{1,2}\.\d{1,2}$")
 RE_SECTION_NUM = re.compile(r"^\d{1,2}$")
-RE_CHAPTER_PREFIX = re.compile(r"^(chuong|phan)\s+\S+?[.:]?\s+")
-SECTION_SIZE_DELTA = 0.75  # "3. Triệu chứng" (không IN HOA) vẫn là mục nếu cỡ ≥ thân bài + 0.75
+# Luật riêng từng sách (books/<sách>/): cấp + tin cậy + lý do của một tiêu đề theo quy tắc (lớp 1).
+RuleLevel = Callable[[Block, float, HeadingsCfg], tuple[Level, Confidence, list[str]]]
 
 
 class HeadingResult(BaseModel):
@@ -64,50 +64,31 @@ def body_size_of(blocks: Sequence[Block]) -> float:
     return 0.0
 
 
-def rule_level(
-    block: Block, body_size: float, cfg: HeadingsCfg
-) -> tuple[Level, Confidence, list[str]]:
-    """Lớp 1: cấp theo đánh số, IN HOA, cỡ chữ."""
-    num = block.numbering
-    size = f"cỡ {block.font_size:.1f}"
-    if num and RE_CHAPTER_NORM.match(norm_title(num)):
-        return "chapter", "high", [f"mẫu '{num}'"]
-    # P1 chỉ nhận "CHƯƠNG n" có dấu; OCR mất dấu ("CHUONG 1.") → so trên chữ đã bỏ dấu.
-    if chapter := RE_CHAPTER_NORM.match(norm_title(block.text)):
-        return "chapter", "high", [f"mẫu '{chapter.group(0)}' (so không dấu)"]
-    if num and RE_SUB_NUM.match(num):
-        return "subsection", "high", [f"đánh số mục con '{num}'"]
-    if num and RE_SECTION_NUM.match(num):
-        if block.is_upper:
-            return "section", "high", [f"đánh số mục '{num}' + IN HOA"]
-        if block.font_size >= body_size + SECTION_SIZE_DELTA:
-            return "section", "medium", [f"đánh số mục '{num}', {size} ≥ thân bài + 0.75"]
-        return "other", "low", [f"đánh số '{num}' nhưng chữ thường, {size} ~ thân bài"]
-    threshold = body_size + cfg.disease_size_delta
-    if block.is_upper and block.font_size >= threshold:
-        rule = f"thân bài {body_size:.1f} + {cfg.disease_size_delta}"
-        return "disease", "medium", [f"IN HOA, không đánh số, {size} ≥ {rule}"]
-    if block.is_upper:
-        return "other", "low", [f"IN HOA, không đánh số, {size} < ngưỡng bệnh {threshold:.1f}"]
-    return "other", "low", [f"không IN HOA, không đánh số, {size}"]
-
-
 # --------------------------------------------------------------------------- lớp 2
 
 
-def _keys(text: str) -> list[str]:
-    """Các biến thể khóa so khớp: nguyên tiêu đề, và (với chương) bỏ phần "Chương n."."""
+def _keys(text: str, chapter_prefix: re.Pattern[str] | None) -> list[str]:
+    """Các biến thể khóa so khớp: nguyên tiêu đề, và (với chương) bỏ tiền tố chương của sách
+    (`chapter_prefix`, vd. "chuong n." ở sách mẫu - so trên chữ đã bỏ dấu)."""
     keys = [match_key(text)]
-    stripped = RE_CHAPTER_PREFIX.sub("", norm_title(text))
+    if chapter_prefix is None:
+        return [k for k in keys if k]
+    stripped = chapter_prefix.sub("", norm_title(text))
     if stripped != norm_title(text):
         keys.append(match_key(stripped))
     return [k for k in keys if k]
 
 
-def toc_similarity(heading: str, entry: str) -> float:
+def toc_similarity(
+    heading: str, entry: str, chapter_prefix: re.Pattern[str] | None = None
+) -> float:
     """Độ giống lớn nhất giữa các biến thể khóa (1.0 = trùng sau khi bỏ dấu/khoảng trắng)."""
     return max(
-        (difflib.SequenceMatcher(None, a, b).ratio() for a in _keys(heading) for b in _keys(entry)),
+        (
+            difflib.SequenceMatcher(None, a, b).ratio()
+            for a in _keys(heading, chapter_prefix)
+            for b in _keys(entry, chapter_prefix)
+        ),
         default=0.0,
     )
 
@@ -117,6 +98,7 @@ def match_toc(
     blocks: dict[str, Block],
     toc: Sequence[TocEntry],
     cfg: HeadingsCfg,
+    chapter_prefix: re.Pattern[str] | None = None,
 ) -> tuple[list[str], list[str]]:
     """Lớp 2 (tại chỗ): tiêu đề không đánh số mục ↔ mục lục. Trả (mục lục thiếu, cảnh báo).
 
@@ -127,7 +109,11 @@ def match_toc(
     used: set[int] = set()
     candidates = [d for d in decisions if d.level in ("chapter", "disease", "other")]
     for d in candidates:
-        scored = [(toc_similarity(d.text, e.title), i) for i, e in enumerate(toc) if i not in used]
+        scored = [
+            (toc_similarity(d.text, e.title, chapter_prefix), i)
+            for i, e in enumerate(toc)
+            if i not in used
+        ]
         score, idx = max(scored, default=(0.0, -1))
         if score < cfg.toc_match_min:
             if d.level == "disease" and toc:
@@ -244,11 +230,14 @@ def classify_headings(
     toc: Sequence[TocEntry],
     cfg: HeadingsCfg | None = None,
     *,
+    rule_level: RuleLevel,
+    chapter_prefix: re.Pattern[str] | None = None,
     client: LLMClient | None = None,
     prompt: Prompt | None = None,
 ) -> HeadingResult:
     """Cấp của mọi block `heading` (theo thứ tự đọc). LLM chỉ chạy khi có `client` + `prompt`
-    và `cfg.llm_fallback`."""
+    và `cfg.llm_fallback`. `rule_level` (lớp 1) và `chapter_prefix` (so khớp mục lục) là LUẬT
+    RIÊNG của từng sách - truyền vào từ books/<sách>/."""
     cfg = cfg or HeadingsCfg()
     body = body_size_of(blocks)
     by_id = {b.id: b for b in blocks}
@@ -273,7 +262,7 @@ def classify_headings(
     warnings: list[str] = []
     missing: list[str] = []
     if cfg.use_toc and toc:
-        missing, toc_warnings = match_toc(decisions, by_id, toc, cfg)
+        missing, toc_warnings = match_toc(decisions, by_id, toc, cfg, chapter_prefix)
         warnings.extend(toc_warnings)
     elif cfg.use_toc:
         warnings.append("Không có mục lục - cấp tiêu đề chỉ dựa trên quy tắc.")

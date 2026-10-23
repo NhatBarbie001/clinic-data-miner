@@ -4,15 +4,16 @@ Chạy sau `dm p1 run` + `dm p2 headings`: uv run python samples/P2.2/scripts/re
 import json
 from pathlib import Path
 
+from dataminer.books.book01.lines import numbering_of
+from dataminer.books.book01.rules import classify_headings
 from dataminer.core.io import read_jsonl
 from dataminer.evaluation.p1_eval import format_eval
 from dataminer.evaluation.p2_eval import eval_heading_levels
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision
-from dataminer.structure.heading_levels import classify_headings
-from dataminer.structure.toc import norm_title
-from dataminer.text.blocks import is_upper_text, numbering_of
+from dataminer.structure.toc_match import norm_title
+from dataminer.text.blocks import is_upper_text
 
 OUT = Path("samples/P2.2")
 blocks = list(read_jsonl(Path("data/p1_clean/blocks.jsonl"), Block))

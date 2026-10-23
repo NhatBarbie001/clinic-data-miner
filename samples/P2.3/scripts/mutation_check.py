@@ -43,7 +43,7 @@ M = [
     ),
     (
         "T12 không viết hoa sau 'Chương n.'",
-        T,
+        "src/dataminer/books/book01/headings.py",
         "title = title[: m.end()] + rest[:1].upper() + rest[1:]",
         "title = title",
     ),

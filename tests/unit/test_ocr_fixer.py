@@ -9,6 +9,7 @@ from typing import Any
 import httpx
 import pytest
 
+from dataminer.books.book01.rules import build_blocks
 from dataminer.core.config import Settings
 from dataminer.core.llm_client import LLMClient
 from dataminer.core.llm_types import LLMError
@@ -21,7 +22,6 @@ from dataminer.model.line import Line
 from dataminer.ocrfix.fixer import OCRFixer, plan_batches
 from dataminer.pdf.furniture import strip_furniture
 from dataminer.pdf.reader import body_font_size, read_lines
-from dataminer.text.blocks import build_blocks
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT, SleepRecorder, make_settings, ok
 

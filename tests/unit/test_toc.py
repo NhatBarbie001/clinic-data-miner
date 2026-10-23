@@ -12,20 +12,19 @@ import pymupdf
 import pytest
 from typer.testing import CliRunner
 
+from dataminer.books.book01.toc import (
+    build_toc,
+    extract_toc,
+    find_toc_pages,
+    parse_entry_line,
+    parse_toc,
+)
 from dataminer.cli import app
 from dataminer.core.config import TocCfg
 from dataminer.devtools.sample_book import SampleBook
 from dataminer.evaluation.p2_eval import all_pass, eval_toc
 from dataminer.model.line import Line, Zone
-from dataminer.structure.toc import (
-    build_toc,
-    extract_toc,
-    find_toc_pages,
-    match_key,
-    norm_title,
-    parse_entry_line,
-    parse_toc,
-)
+from dataminer.structure.toc_match import match_key, norm_title
 from tests.conftest import SampleBookFor
 from tests.unit.llm_fakes import ROOT
 

@@ -8,7 +8,7 @@ Xem docs/phases/P2/P2.3_plan.md.
 """
 
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -18,13 +18,12 @@ from dataminer.core.text_vi import nfc
 from dataminer.model.block import Block
 from dataminer.model.toc import TocEntry
 from dataminer.model.tree import HeadingDecision, Node
-from dataminer.structure.toc import norm_title
+from dataminer.structure.toc_match import norm_title
 from dataminer.text.blocks import is_upper_text
 
 RANK: dict[str, int] = {"book": 0, "front": 1, "chapter": 1, "disease": 2, "section": 3,
                         "subsection": 4}  # fmt: skip
 RE_SECTION_PREFIX = re.compile(r"^\d{1,2}(\.\d{1,2})?\.?\s+")
-RE_CHAPTER_DISPLAY = re.compile(r"^(Chương|Phần|Chuong|Phan)\s+\S+?[.:]\s+")
 FRONT_TITLE = "Phần đầu"
 
 
@@ -49,16 +48,17 @@ def sentence_case(text: str) -> str:
     return lower[:1].upper() + lower[1:]
 
 
+# Luật riêng từng sách (books/<sách>/): tên hiển thị của nút (dùng làm `path` → ID).
+DisplayTitle = Callable[[str, str], str]
+
+
 def display_title(text: str, level: str) -> str:
-    """Tiêu đề để hiển thị và làm `path`: mục bỏ số thứ tự ("3. TRIỆU CHỨNG" → "Triệu chứng");
-    chương giữ "Chương n." ("CHƯƠNG 1. BỆNH…" → "Chương 1. Bệnh…")."""
+    """Tên hiển thị MẶC ĐỊNH: mục bỏ số thứ tự ("3. TRIỆU CHỨNG" → "Triệu chứng"), IN HOA →
+    chữ thường đầu câu. Sách có quy ước riêng (vd. "Chương n.") truyền hàm của mình vào
+    `build_tree(display_title=…)`."""
     if level in ("section", "subsection"):
         text = RE_SECTION_PREFIX.sub("", nfc(text).strip())
-    title = sentence_case(text)
-    if m := RE_CHAPTER_DISPLAY.match(title):  # "Chương 1. bệnh…" → "Chương 1. Bệnh…"
-        rest = title[m.end() :]
-        title = title[: m.end()] + rest[:1].upper() + rest[1:]
-    return title
+    return sentence_case(text)
 
 
 def block_text(block: Block) -> str:
@@ -74,7 +74,14 @@ def block_text(block: Block) -> str:
 
 
 class _Draft:
-    def __init__(self, level: str, parent: "_Draft | None", title: str, heading: Block | None):
+    def __init__(
+        self,
+        level: str,
+        parent: "_Draft | None",
+        title: str,
+        heading: Block | None,
+        display: DisplayTitle = display_title,
+    ):
         self.level = level
         self.parent = parent
         self.title = title
@@ -83,7 +90,7 @@ class _Draft:
         self.children: list[_Draft] = []
         self.flags: list[str] = []
         self.numbering = heading.numbering if heading else None
-        self.display = title if heading is None else display_title(title, level)
+        self.display = title if heading is None else display(title, level)
 
 
 def build_tree(
@@ -93,8 +100,10 @@ def build_tree(
     book_id: str,
     book_title: str | None = None,
     toc: Sequence[TocEntry] = (),
+    display_title: DisplayTitle = display_title,
 ) -> TreeResult:
-    """Dựng cây từ block (thứ tự đọc) + cấp tiêu đề (P2.2). Kiểm bất biến trước khi trả."""
+    """Dựng cây từ block (thứ tự đọc) + cấp tiêu đề (P2.2). Kiểm bất biến trước khi trả.
+    `display_title`: tên hiển thị của nút theo quy ước của sách (mặc định: hàm cùng tên)."""
     level_of = {d.block_id: d for d in decisions}
     root = _Draft("book", None, book_title or book_id, None)
     stack = [root]
@@ -116,7 +125,7 @@ def build_tree(
         while RANK[stack[-1].level] >= rank:
             stack.pop()
         parent = stack[-1]
-        node = _Draft(d.level, parent, b.text, b)
+        node = _Draft(d.level, parent, b.text, b, display_title)
         node.flags.extend(d.flags)
         if d.level == "subsection" and parent.level != "section":
             node.flags.append("orphan_subsection")

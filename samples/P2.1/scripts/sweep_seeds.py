@@ -8,9 +8,9 @@ Cột: seed · G1 · tiêu đề sạch khớp (match_key) · lỗi G1 · tiêu 
 import tempfile
 from pathlib import Path
 
+from dataminer.books.book01.toc import extract_toc
 from dataminer.devtools.sample_book import make_sample_book
 from dataminer.evaluation.p2_eval import eval_toc
-from dataminer.structure.toc import extract_toc
 
 ok = 0
 for seed in range(1, 31):

@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-T = "src/dataminer/structure/toc.py"
+T = "src/dataminer/books/book01/toc.py"
 E = "src/dataminer/evaluation/p2_eval.py"
 M = [
     (
@@ -43,7 +43,12 @@ M = [
     ),
     ("M8 bỏ cờ level_conflict", T, 'flags.append("level_conflict")', "pass"),
     ("M9 eval bỏ so tiêu đề", E, "if e.title != ocr_title:", "if False:"),
-    ("M10 eval bỏ đếm mục thừa", E, "problems.extend(extra)", "pass"),
+    (
+        "M10 eval bỏ đếm mục thừa",
+        E,
+        "for e in got[len(expected) :]]\n    problems.extend(extra)",
+        "for e in got[len(expected) :]]\n    pass",
+    ),
     ("M11 eval bỏ so trang mục lục", E, "if result.toc_pages != truth_pages:", "if False:"),
     ("M12 eval bỏ so cấp", E, '("level", want["level"]),', ""),
 ]
