@@ -134,6 +134,7 @@ def run_p1(
             settings.project.book_id,
             classify=rules.classify_line,
             numbering=rules.numbering,
+            heading_joins=rules.heading_joins,
         )
         write_jsonl(out / "blocks_rules.jsonl", blocks)
 

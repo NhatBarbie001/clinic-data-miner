@@ -158,11 +158,13 @@ def test_classify_line_by_bold_and_size() -> None:
 @pytest.mark.parametrize(
     ("text", "number"),
     [
-        ("GROUP XI:  PAIN IN THE SHOULDER, ARM, AND HAND", "GROUP XI"),
+        ("GROUP XI:  PAIN IN THE SHOULDER, ARM, AND HAND", "XI"),
         ("E.", "E"),
         ("A. RELATIVELY GENERALIZED SYNDROMES", "A"),
-        ("(XI-1)", None),  # mã đứng riêng dòng phải NỐI vào tên hội chứng (L7)
-        ("Tumors of the Brachial Plexus (XI-1)", None),
+        ("H. LOCAL SYNDROMES OF THE LOWER LIMBS", "H"),
+        ("Tumors of the Brachial Plexus (XI-1)", "XI-1"),  # I3: mã hội chứng đã chuẩn hóa (L8)
+        ("Phantom Pain (1-3)", "I-3"),
+        ("Complex Regional Pain Syndromes (CRPS)", None),  # ngoặc không phải mã
         ("Definition", None),
     ],
 )
@@ -248,17 +250,22 @@ def test_real_pdf_page_137_reading_order() -> None:
     content = [ln for ln in page if RULES.page_number(ln.text) is None]
     cfg = BlocksCfg(dehyphenate=True, detect_tables=False, bullet_markers=["-", "—"])
     built = text_blocks.build_blocks(
-        content, body_font_size(page), cfg, classify=RULES.classify_line, numbering=RULES.numbering
+        content,
+        body_font_size(page),
+        cfg,
+        classify=RULES.classify_line,
+        numbering=RULES.numbering,
+        heading_joins=RULES.heading_joins,  # I3: "E." + tên nhóm thành 1 tiêu đề
     )
     heads = [b.text for b in built if b.kind == "heading"]
     assert heads[:6] == [
-        "E.",
-        "LOCAL SYNDROMES OF THE UPPER LIMBS AND RELATIVELY GENERALIZED SYNDROMES OF THE UPPER "
+        "E. LOCAL SYNDROMES OF THE UPPER LIMBS AND RELATIVELY GENERALIZED SYNDROMES OF THE UPPER "
         "AND LOWER LIMBS",
         "GROUP XI: PAIN IN THE SHOULDER, ARM, AND HAND",
         "Tumors of the Brachial Plexus (XI-1)",
         "Definition",
         "Site",
+        "System",
     ]
     assert "Chemical Irritation of the Brachial Plexus (XI-2)" in heads
     assert all(b.kind != "table" for b in built)

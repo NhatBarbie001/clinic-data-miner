@@ -7,6 +7,8 @@ Mỗi sách trả lời 6 câu hỏi (docs/phases/P2R/architecture.md mục 4):
     4. dòng nào là tiêu đề / nội dung → classify_line, numbering   (riêng từng sách)
     5. mục lục đọc thế nào           → read_toc             (riêng từng sách)
     6. tiêu đề thuộc cấp nào         → rule_level, chapter_prefix, display_title
+    (thêm) tiêu đề nhiều dòng nối thế nào → heading_joins; thuộc tính riêng sau khi dựng cây
+    → annotate_tree (cả hai có mặc định).
 Phương thức trừu tượng = BẮT BUỘC mỗi sách tự viết; còn lại có mặc định dùng chung.
 """
 
@@ -18,11 +20,11 @@ from dataminer.core.config import BlocksCfg, HeadingsCfg, Settings
 from dataminer.model.block import Block
 from dataminer.model.line import Line
 from dataminer.model.toc import TocResult
-from dataminer.model.tree import Confidence, Level
+from dataminer.model.tree import Confidence, Level, Node
 from dataminer.pdf.furniture import page_number_of
 from dataminer.pdf.layout import reading_order
 from dataminer.structure.tree_builder import display_title
-from dataminer.text.blocks import LineKind
+from dataminer.text.blocks import LineKind, default_heading_joins
 
 
 class BookRules(ABC):
@@ -49,6 +51,11 @@ class BookRules(ABC):
     def numbering(self, text: str) -> str | None:
         """Số thứ tự của một tiêu đề (vd. "3.1"), None nếu không có."""
 
+    def heading_joins(self, prev: str, text: str) -> bool:
+        """Dòng tiêu đề `text` có nối vào tiêu đề đang mở `prev` không? Mặc định: dòng sau không
+        đánh số và cùng kiểu IN HOA (luật sách mẫu)."""
+        return default_heading_joins(prev, text, self.numbering)
+
     # ---------------------------------------------------------------- P2: dựng cây
     @abstractmethod
     def read_toc(self, settings: Settings) -> TocResult:
@@ -63,3 +70,8 @@ class BookRules(ABC):
     def display_title(self, text: str, level: str) -> str:
         """Tên hiển thị của nút (dùng làm `path` → ID ổn định)."""
         return display_title(text, level)
+
+    def annotate_tree(self, nodes: list[Node]) -> list[str]:
+        """Gắn thuộc tính riêng của sách vào nút đã dựng (`attrs`, `flags`; KHÔNG đổi id/path).
+        Trả cảnh báo. Mặc định: không làm gì."""
+        return []

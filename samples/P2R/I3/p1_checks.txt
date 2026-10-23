@@ -1,0 +1,7 @@
+Part II = PDF 53-222 · 14643 dòng · 6642 block · {'heading': 2843, 'list_item': 110, 'paragraph': 3689}
+A1 không trộn cột  : 0 block trộn cột không có cờ nối []
+   bảng giả        : 0
+A7 không mất chữ   : PDF 450800 ký tự chữ/số · block 450698 + ký hiệu 102 = 450800 → lệch 0
+Tiêu đề lớn (đậm ≥12.4): PDF 618 dòng · block tiêu đề lớn gồm 618 dòng
+'Definition': PDF 242 dòng · block 242
+Tên mục (đậm cỡ thường) phổ biến: [('Code', 275), ('Definition', 242), ('Pathology', 163), ('Main Features', 160), ('Site', 147), ('Differential Diagnosis', 131), ('System', 130), ('Usual Course', 114)]

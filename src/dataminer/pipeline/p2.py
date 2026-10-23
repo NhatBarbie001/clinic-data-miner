@@ -102,6 +102,7 @@ def run_p2(
             display_title=rules.display_title,
         )
         warnings += [f"cây: {w}" for w in tree.warnings]
+        warnings += [f"thuộc tính: {w}" for w in rules.annotate_tree(tree.nodes)]
 
         # P2.4 loại mục (LLM chỉ cho tên mục lạ)
         section_prompt = load_prompt(prompts, cfg.sections.prompt) if llm_sections else None
@@ -135,7 +136,8 @@ def run_p2(
             "nodes": len(nodes),
             **{
                 f"nodes_{lv}": levels.count(lv)
-                for lv in ("chapter", "disease", "section", "subsection", "front")
+                for lv in ("part", "chapter", "disease", "section", "subsection", "front")
+                if lv != "part" or "part" in levels  # sách không có cấp part: giữ nguyên số đếm
             },
             **{f"sections_{k}": v for k, v in sections.counts.items()},
             "section_proposals": len(sections.proposals),

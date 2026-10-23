@@ -21,8 +21,8 @@ from dataminer.model.tree import HeadingDecision, Node
 from dataminer.structure.toc_match import norm_title
 from dataminer.text.blocks import is_upper_text
 
-RANK: dict[str, int] = {"book": 0, "front": 1, "chapter": 1, "disease": 2, "section": 3,
-                        "subsection": 4}  # fmt: skip
+RANK: dict[str, int] = {"book": 0, "part": 1, "front": 1, "chapter": 2, "disease": 3,
+                        "section": 4, "subsection": 5}  # fmt: skip
 RE_SECTION_PREFIX = re.compile(r"^\d{1,2}(\.\d{1,2})?\.?\s+")
 FRONT_TITLE = "Phần đầu"
 
@@ -359,6 +359,9 @@ def render_tree_md(nodes: Sequence[Node], blocks: Sequence[Block]) -> str:
     def label(n: Node) -> str:
         prefix = f"{n.numbering}. " if n.level in ("section", "subsection") and n.numbering else ""
         parts = [f"{prefix}{n.display_title}"]
+        if n.level == "disease" and n.numbering:
+            parts.append(f"(mã {n.numbering})")
+        parts += [f"{key}: {', '.join(vals)}" for key, vals in n.attrs.items()]
         if n.section_type:
             parts.append(f"[{n.section_type}]")
         summary = _content_summary(n, by_block)

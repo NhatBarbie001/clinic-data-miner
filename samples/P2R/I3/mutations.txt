@@ -1,0 +1,12 @@
+M1 bỏ dừng sau mã → BẮT ĐƯỢC
+M2 bỏ nối dòng ngoặc → BẮT ĐƯỢC
+M3 bỏ nối 'and' → BẮT ĐƯỢC
+M4 nhóm 11≠II → BẮT ĐƯỢC
+M5 chữ 1→l → BẮT ĐƯỢC
+M6 cỡ 15 ngoài IN HOA → BẮT ĐƯỢC
+M7 bỏ cờ thiếu tên → BẮT ĐƯỢC
+M8 bỏ kiểm sai nhóm → BẮT ĐƯỢC
+M9 A2 bỏ kiểm trùng → BẮT ĐƯỢC
+M10 Note là tên mục → BẮT ĐƯỢC
+M11 strip_code chương → BẮT ĐƯỢC
+M12 mã con sai → BẮT ĐƯỢC

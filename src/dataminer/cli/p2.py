@@ -137,7 +137,8 @@ def headings_cmd(
 
     counts = {
         lv: sum(d.level == lv for d in result.decisions)
-        for lv in ("chapter", "disease", "section", "subsection", "other")
+        for lv in ("part", "chapter", "disease", "section", "subsection", "other")
+        if lv != "part" or any(d.level == "part" for d in result.decisions)
     }
     sources = {s: sum(d.source == s for d in result.decisions) for s in ("rules", "toc", "llm")}
     typer.echo(
@@ -208,18 +209,20 @@ def tree_cmd(
         if toc_path.is_file()
         else []
     )
+    rules = rules_for(settings)
     try:
         result = build_tree(
             blocks,
             decisions,
             book_id=settings.project.book_id,
             toc=toc,
-            display_title=rules_for(settings).display_title,
+            display_title=rules.display_title,
         )
     except TreeInvariantError as exc:
         typer.echo(f"✗ {exc}", err=True)
         raise typer.Exit(1) from None
     nodes = result.nodes
+    result.warnings += rules.annotate_tree(nodes)
     write_jsonl(out_dir / "nodes.jsonl", nodes)
     write_json(out_dir / "tree.json", to_nested(nodes))
     tree_md = render_tree_md(nodes, blocks)
@@ -227,9 +230,11 @@ def tree_cmd(
 
     attached = sum(len(n.block_ids) + (n.heading_block_id is not None) for n in nodes)
     count = {lv: sum(n.level == lv for n in nodes) for lv in
-             ("chapter", "disease", "section", "subsection", "front")}  # fmt: skip
+             ("part", "chapter", "disease", "section", "subsection", "front")}  # fmt: skip
     typer.echo(
-        f"Cây: {count['chapter']} chương · {count['disease']} bệnh · {count['section']} mục · "
+        "Cây: "
+        + (f"{count['part']} phần · " if count["part"] else "")
+        + f"{count['chapter']} chương · {count['disease']} bệnh · {count['section']} mục · "
         f"{count['subsection']} mục con · {attached}/{len(blocks)} block được gắn"
         + (" · có phần đầu" if count["front"] else "")
     )

@@ -7,7 +7,8 @@ from pydantic import BaseModel, Field
 
 from dataminer.core.schemas import BaseRecord
 
-Level = Literal["chapter", "disease", "section", "subsection", "other"]
+# part = nhóm lớn trên chương (sách IASP: nhóm chữ cái "E. LOCAL SYNDROMES …"); sách mẫu không có
+Level = Literal["part", "chapter", "disease", "section", "subsection", "other"]
 
 
 Confidence = Literal["high", "medium", "low"]
@@ -26,7 +27,7 @@ class HeadingDecision(BaseModel):
     flags: list[str] = Field(default_factory=list)
 
 
-NodeLevel = Literal["book", "chapter", "disease", "section", "subsection", "front"]
+NodeLevel = Literal["book", "part", "chapter", "disease", "section", "subsection", "front"]
 
 
 class Node(BaseRecord):
@@ -48,3 +49,5 @@ class Node(BaseRecord):
     printed_start: int | None = None
     printed_end: int | None = None
     flags: list[str] = Field(default_factory=list)
+    # thuộc tính riêng của sách (BookRules.annotate_tree), vd. IASP: {"iasp_codes": ["102.X4b"]}
+    attrs: dict[str, list[str]] = Field(default_factory=dict)

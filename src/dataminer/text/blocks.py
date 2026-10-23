@@ -41,6 +41,13 @@ LineKind = Literal["toc_entry", "caption", "heading", "bullet_start", "numbered_
 # Luật riêng từng sách (books/<sách>/): dòng nào là gì, và số thứ tự của một tiêu đề.
 ClassifyLine = Callable[[Line, float, BlocksCfg], LineKind]
 Numbering = Callable[[str], str | None]
+# (tiêu đề đang mở, dòng tiêu đề kế tiếp) → nối thành một tiêu đề? (khoảng cách dòng xét riêng)
+HeadingJoins = Callable[[str, str], bool]
+
+
+def default_heading_joins(prev: str, text: str, numbering: Numbering) -> bool:
+    """Luật nối tiêu đề MẶC ĐỊNH (sách mẫu): dòng sau không đánh số và cùng kiểu IN HOA."""
+    return not numbering(text) and is_upper_text(text) == is_upper_text(prev)
 
 
 # --------------------------------------------------------------------------- block
@@ -247,12 +254,15 @@ def build_blocks(
     *,
     classify: ClassifyLine,
     numbering: Numbering,
+    heading_joins: HeadingJoins | None = None,
 ) -> list[Block]:
     """Dựng block từ dòng NỘI DUNG (đã bỏ header/footer), theo thứ tự đọc.
 
-    `classify` (dòng nào là tiêu đề / gạch đầu dòng / …) và `numbering` (số thứ tự của tiêu đề)
-    là LUẬT RIÊNG của từng sách - truyền vào từ books/<sách>/."""
+    `classify` (dòng nào là tiêu đề / gạch đầu dòng / …), `numbering` (số thứ tự của tiêu đề) và
+    `heading_joins` (tiêu đề nhiều dòng nối thế nào; mặc định `default_heading_joins`) là LUẬT
+    RIÊNG của từng sách - truyền vào từ books/<sách>/."""
     cfg = cfg or BlocksCfg()
+    joins = heading_joins or (lambda prev, text: default_heading_joins(prev, text, numbering))
     printed = printed or {}
     step = _line_step(lines)
     vocab = Vocab(ln.text for ln in lines) if cfg.dehyphenate else None
@@ -296,7 +306,7 @@ def build_blocks(
         if (
             kind == "heading"
             and current is not None
-            and _heading_continues(current, ln, step, numbering)
+            and _heading_continues(current, ln, step, joins)
         ):
             current.text = join_text(current.text, text, cfg.dehyphenate, vocab)
             current.lines.append(ln)
@@ -347,13 +357,13 @@ def _continues(cur: _Open, ln: Line, step: float, cfg: BlocksCfg) -> bool:
     return len(cur.lines) == 1 and ln.bbox[0] < cur.lines[0].bbox[0] - cfg.x_tolerance
 
 
-def _heading_continues(cur: _Open, ln: Line, step: float, numbering: Numbering) -> bool:
-    """Tiêu đề dài xuống dòng: cùng kiểu, không đánh số, sát ngay dòng trước."""
-    if cur.kind != "heading" or ln.page != cur.last.page or numbering(ln.text):
+def _heading_continues(cur: _Open, ln: Line, step: float, joins: HeadingJoins) -> bool:
+    """Tiêu đề dài xuống dòng: cùng trang, cùng cỡ, sát ngay dòng trước, và luật của sách cho
+    nối (`joins`)."""
+    if cur.kind != "heading" or ln.page != cur.last.page:
         return False
-    same_style = is_upper_text(ln.text) == is_upper_text(cur.text)
     close = ln.bbox[3] - cur.last.bbox[3] <= 1.3 * max(step, cur.last.size * 1.2)
-    return same_style and abs(ln.size - cur.last.size) < 0.8 and close
+    return abs(ln.size - cur.last.size) < 0.8 and close and joins(cur.text, ln.text)
 
 
 def _to_block(

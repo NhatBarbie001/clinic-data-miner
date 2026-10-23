@@ -21,3 +21,7 @@ p1:
 p2:
   toc:
     pages: [5, 6]            # L12: mục lục "tên ↵ số trang" (không có chấm dẫn)
+  headings:
+    llm_fallback: false      # cấp tiêu đề theo quy tắc cố định (I3), không có tiêu đề tin cậy thấp
+  sections:
+    llm_fallback: false      # loại mục: từ điển tiếng Anh ở I4
