@@ -1,5 +1,7 @@
 # Problem Statement: Hệ thống khai thác dữ liệu y khoa từ sách
 
+> **Cập nhật 2026-10-23 (quyết định của chủ dự án):** sách chính là **IASP "Classification of Chronic Pain"** (tiếng Anh, xuất từ Word, in 2 cột), không còn là sách tiếng Việt. Mỗi sách xử lý bằng **bộ luật riêng** (xem [docs/phases/P2R/](docs/phases/P2R/)). Ngôn ngữ của câu trả lời, bộ câu hỏi chuẩn và dữ liệu huấn luyện sẽ được chốt lại ở P3/P5/P7. Repo GitHub để private.
+
 ## 1. Bối cảnh
 
 Có một cuốn sách y khoa tiếng Việt dạng PDF scan, **đã được OCR sẵn** (PDF có lớp text). Nội dung sách hiện chỉ đọc được thủ công, không tra cứu, truy vấn hay tái sử dụng được.
