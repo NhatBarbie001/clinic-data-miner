@@ -54,6 +54,9 @@ class IaspRules(BookRules):
     def section_key(self, title: str) -> str:
         return headings.section_key(title)
 
+    def review_units(self, nodes: list[Node]) -> list[Node]:
+        return [n for n in nodes if headings.is_syndrome(n)]  # gồm GROUP-hội chứng (XVI-1)
+
     def annotate_tree(self, nodes: list[Node]) -> list[str]:
         return headings.annotate_tree(nodes)
 

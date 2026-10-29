@@ -8,7 +8,8 @@ Mỗi sách trả lời 6 câu hỏi (docs/phases/P2R/architecture.md mục 4):
     5. mục lục đọc thế nào           → read_toc             (riêng từng sách)
     6. tiêu đề thuộc cấp nào         → rule_level, chapter_prefix, display_title
     (thêm) tiêu đề nhiều dòng nối thế nào → heading_joins; thuộc tính riêng sau khi dựng cây
-    → annotate_tree; tên mục → khóa tra từ điển loại mục → section_key (đều có mặc định).
+    → annotate_tree; tên mục → khóa tra từ điển loại mục → section_key; nút nào là một "bệnh"
+    để soát tay → review_units (đều có mặc định).
 Phương thức trừu tượng = BẮT BUỘC mỗi sách tự viết; còn lại có mặc định dùng chung.
 """
 
@@ -75,6 +76,11 @@ class BookRules(ABC):
     def section_key(self, title: str) -> str:
         """Tên mục → khóa tra từ điển loại mục. Mặc định: bỏ số thứ tự, bỏ dấu, chữ thường."""
         return normalize_section_title(title)
+
+    def review_units(self, nodes: list[Node]) -> list[Node]:
+        """Các nút mô tả MỘT bệnh (đơn vị soát tay / bảng bệnh), theo thứ tự đọc.
+        Mặc định: nút cấp `disease`."""
+        return [n for n in nodes if n.level == "disease"]
 
     def annotate_tree(self, nodes: list[Node]) -> list[str]:
         """Gắn thuộc tính riêng của sách vào nút đã dựng (`attrs`, `flags`; KHÔNG đổi id/path).

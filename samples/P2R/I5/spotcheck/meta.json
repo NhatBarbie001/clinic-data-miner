@@ -1,0 +1,29 @@
+{
+  "book_id": "iasp",
+  "nodes_sha256": "7329347590c4988056768b0855f95a0ba5090eae78cd72823707d65e8164dbe1",
+  "seed": 2026,
+  "n": 10,
+  "dpi": 120,
+  "sample": [
+    "nd_444244baa8f6f83b",
+    "nd_23160249608b9a40",
+    "nd_3a2bd32de767f3e9",
+    "nd_d2e044e23e57e857",
+    "nd_9ba06e61ad140187",
+    "nd_cc92b78af7e8f714",
+    "nd_459668b9bc40af20",
+    "nd_ac4915b066d4d32c",
+    "nd_00408b52c96c2892",
+    "nd_e7d7b2c2812942e3"
+  ],
+  "extras": [
+    "nd_07e25bb08b216f6e",
+    "nd_507b4c92c6b01b0f",
+    "nd_802c9f1e81d46a1c",
+    "nd_81aaed86b42c3cc9",
+    "nd_075806f6e78d47f5",
+    "nd_e150417f52ebd78b",
+    "nd_de22694494d75324",
+    "nd_05d7cd0cd91b5744"
+  ]
+}

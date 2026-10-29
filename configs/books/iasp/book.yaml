@@ -27,3 +27,5 @@ p2:
     toc_match_min: 0.8       # mục lục đảo từ: "Cervical Spinal or Radicular" ↔ thân sách "Cervical or Radicular Spinal" (0.84)
   sections:
     llm_fallback: false      # loại mục: từ điển viết tay đủ 110 tên mục (I4), không cần AI
+  spotcheck:
+    unit_name: syndromes   # → p2_tree/syndromes.csv; trang soát gọi là "hội chứng"

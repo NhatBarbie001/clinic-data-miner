@@ -1,0 +1,13 @@
+✓ 10 hội chứng ngẫu nhiên (seed 2026) + 8 xem thêm · 22 trang ảnh (120 dpi)
+  ·        I-8  Polymyalgia Rheumatica  (PDF 60)
+  ·        V-5  Mixed Headache  (PDF 95)
+  ·     VIII-3  Tuberculosis of Larynx  (PDF 114)
+  ·        X-9  Thoracic Discogenic Pain  (PDF 132)
+  ·       XI-7  Bicipital Tendinitis  (PDF 140)
+  ·      XIX-7  Duodenal Ulcer with Chest Pain  (PDF 165)
+  ·      XXV-2  Rectal, Perineal, and Genital Pain of Psychological Origin  (PDF 189)
+  ·      XXV-5  Ulcer of Anus or Rectum  (PDF 190)
+  ·   XXVII-10  Sacroiliac Joint Pain  (PDF 206)
+  ·    XXXII-3  Osteoarthritis of the Hip  (PDF 221)
+  mở: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\data\books\iasp\p2_tree\spotcheck\index.html
+  phiếu chấm: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\data\books\iasp\p2_tree\spotcheck\review.csv · bảng 335 hội chứng: C:\Users\loidi\my_code\auto-fill-form_v2\Data-miner\data\books\iasp\p2_tree\syndromes.csv

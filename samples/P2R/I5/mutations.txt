@@ -1,0 +1,12 @@
+M1 nhóm nhỏ có thể 0 lượt → BẮT ĐƯỢC
+M2 chọn cả bệnh có cờ → BẮT ĐƯỢC
+M3 bỏ qua seed → BẮT ĐƯỢC
+M4 không escape chữ sách → BẮT ĐƯỢC
+M5 không chặn </script> trong dữ liệu → BẮT ĐƯỢC
+M6 tọa độ chia nhầm chiều → BẮT ĐƯỢC
+M7 ngưỡng A9 lỏng → BẮT ĐƯỢC
+M8 ô trống tính là đạt → BẮT ĐƯỢC
+M9 ghi đè phiếu đã chấm → BẮT ĐƯỢC
+M10 bỏ cảnh báo bản cây cũ → BẮT ĐƯỢC
+M11 không đọc ';' của Excel → BẮT ĐƯỢC
+M12 cột loại mục trùng cột mã → BẮT ĐƯỢC

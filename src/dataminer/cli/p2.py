@@ -581,3 +581,165 @@ def report_cmd(root: Path | None = RootOption) -> None:
         raise typer.Exit(1)
     (out / "tree_report.md").write_text(render_tree_report(out), encoding="utf-8")
     typer.echo(f"✓ {out / 'tree_report.md'}")
+
+
+# ---------------------------------------------------------------- P2R I5: soát tay
+
+spotcheck_app = typer.Typer(
+    help="Soát tay (A9): trang HTML ảnh trang PDF ↔ nội dung đã tách, phiếu chấm, bảng bệnh."
+)
+p2_app.add_typer(spotcheck_app, name="spotcheck")
+
+
+SampleSizeOption = typer.Option(None, "--n", help="Cỡ mẫu (mặc định p2.spotcheck.n).")
+SeedOption = typer.Option(None, "--seed", help="Hạt giống chọn mẫu (mặc định p2.spotcheck.seed).")
+CodesOption = typer.Option("", "--codes", help="Xem thêm (không tính A9): mã, cách nhau ','.")
+DpiOption = typer.Option(None, "--dpi", help="Độ phân giải ảnh trang (mặc định p2.spotcheck.dpi).")
+ReviewFileOption = typer.Option(
+    None, "--file", help="Phiếu chấm (mặc định spotcheck/review.csv; hoặc file tải từ trang soát)."
+)
+
+
+def _spotcheck_dir(settings: Settings) -> Path:
+    return p2_dir(settings) / "spotcheck"
+
+
+@spotcheck_app.callback(invoke_without_command=True)
+def spotcheck_cmd(
+    ctx: typer.Context,
+    root: Path | None = RootOption,
+    n: int | None = SampleSizeOption,
+    seed: int | None = SeedOption,
+    codes: str = CodesOption,
+    dpi: int | None = DpiOption,
+) -> None:
+    """Chọn mẫu ngẫu nhiên → spotcheck/index.html + review.csv; bảng mọi bệnh <unit_name>.csv."""
+    if ctx.invoked_subcommand is not None:
+        return
+    from dataminer.books.registry import rules_for
+    from dataminer.core.io import read_jsonl, sha256_file, write_json
+    from dataminer.evaluation import spotcheck as sc
+    from dataminer.evaluation.spotcheck_page import render_html, render_page_images
+    from dataminer.model.block import Block
+    from dataminer.model.line import Line
+    from dataminer.model.tree import Node
+    from dataminer.pipeline.p1 import p1_dir
+    from dataminer.structure.section_mapper import SECTION_TYPES
+
+    settings = _load(root)
+    cfg = settings.p2.spotcheck
+    n, seed, dpi = n or cfg.n, cfg.seed if seed is None else seed, dpi or cfg.dpi
+    nodes_path = p2_dir(settings) / "nodes.jsonl"
+    pdf = settings.paths.raw_dir / settings.project.book_file
+    needed = (nodes_path, p1_dir(settings) / "blocks.jsonl", p1_dir(settings) / "lines.jsonl", pdf)
+    for path in needed:
+        if not path.is_file():
+            typer.echo(f"Chưa có {path} - chạy `dm p1 run` và `dm p2 run` trước.", err=True)
+            raise typer.Exit(1)
+    nodes = list(read_jsonl(nodes_path, Node))
+    blocks = {b.id: b for b in read_jsonl(p1_dir(settings) / "blocks.jsonl", Block)}
+    lines = {ln.id: ln for ln in read_jsonl(p1_dir(settings) / "lines.jsonl", Line)}
+    tree = sc.Tree(nodes)
+    units = rules_for(settings).review_units(nodes)
+    if not units:
+        typer.echo("Cây không có bệnh nào để soát.", err=True)
+        raise typer.Exit(1)
+
+    sample = sc.choose_sample(units, tree, n, seed)
+    wanted = [c.strip() for c in codes.split(",") if c.strip()]
+    by_code = {c.strip(): u for u in units for c in sc.code_of(u).split(",") if c.strip()}
+    unknown = [c for c in wanted if c not in by_code and c not in tree.by_id]
+    if unknown:
+        typer.echo(f"Không có bệnh mã {', '.join(unknown)}.", err=True)
+        raise typer.Exit(1)
+    chosen = {u.id for u in sample}
+    extra_ids = [u.id for u in units if not sc.eligible(u)]
+    extra_ids += [(by_code.get(c) or tree.by_id[c]).id for c in wanted]
+    extras = [u for u in units if u.id in set(extra_ids) - chosen]
+
+    out = _spotcheck_dir(settings)
+    views = [sc.build_view(u, tree, blocks, lines) for u in sample]
+    extra_views = [sc.build_view(u, tree, blocks, lines) for u in extras]
+    pages = sorted({p for v in [*views, *extra_views] for p in v.pages})
+    render_page_images(pdf, pages, dpi, out)
+    nodes_sha = sha256_file(nodes_path)
+    meta = {
+        "book_id": settings.project.book_id,
+        "nodes_sha256": nodes_sha,
+        "seed": seed,
+        "n": n,
+        "dpi": dpi,
+        "sample": [u.id for u in sample],
+        "extras": [u.id for u in extras],
+    }
+    unit_label = "hội chứng" if cfg.unit_name == "syndromes" else "bệnh"
+    page = render_html(
+        views, extra_views, book_title=settings.project.book_id, unit_label=unit_label, meta=meta
+    )
+    (out / "index.html").write_text(page, encoding="utf-8")
+    write_json(out / "meta.json", meta)
+
+    review = out / "review.csv"
+    kept = False
+    if review.is_file():
+        try:
+            rows = sc.read_review(review)
+            kept = any(r.get(c, "").strip() for r in rows for c in sc.CRITERIA)
+        except sc.SpotcheckError:
+            kept = False
+    if kept:
+        typer.echo(f"  ⚠ giữ nguyên {review} (đã có điểm chấm) - xóa file nếu muốn phiếu mới.")
+    else:
+        sc.write_csv(review, sc.REVIEW_COLUMNS, sc.review_rows(views))
+
+    used = [t for t in SECTION_TYPES if any(x.section_type == t for x in nodes)]
+    columns, rows = sc.units_table(units, tree, used)
+    table = p2_dir(settings) / f"{cfg.unit_name}.csv"
+    sc.write_csv(table, columns, rows)
+
+    typer.echo(
+        f"✓ {len(sample)} {unit_label} ngẫu nhiên (seed {seed}) + {len(extras)} xem thêm · "
+        f"{len(pages)} trang ảnh ({dpi} dpi)"
+    )
+    for v in views:
+        typer.echo(f"  · {v.code or '-':>10}  {v.title}  (PDF {v.pages[0] if v.pages else '-'})")
+    typer.echo(f"  mở: {out / 'index.html'}")
+    typer.echo(f"  phiếu chấm: {review} · bảng {len(units)} {unit_label}: {table}")
+
+
+@spotcheck_app.command("score")
+def spotcheck_score_cmd(
+    root: Path | None = RootOption,
+    file: Path | None = ReviewFileOption,
+) -> None:
+    """Chấm A9 từ phiếu: đạt khi ≥ min_pass bệnh đúng cả 4 tiêu chí. Exit 1 nếu chưa đạt."""
+    from dataminer.core.io import read_json, sha256_file
+    from dataminer.evaluation import spotcheck as sc
+
+    settings = _load(root)
+    out = _spotcheck_dir(settings)
+    if not (out / "meta.json").is_file():
+        typer.echo("Chưa có trang soát - chạy `dm p2 spotcheck` trước.", err=True)
+        raise typer.Exit(1)
+    meta = read_json(out / "meta.json")
+    try:
+        rows = sc.read_review(file or out / "review.csv")
+        result = sc.score(rows, meta["sample"], settings.p2.spotcheck.min_pass)
+    except sc.SpotcheckError as exc:
+        typer.echo(f"✗ {exc}", err=True)
+        raise typer.Exit(1) from None
+    nodes_path = p2_dir(settings) / "nodes.jsonl"
+    stale = nodes_path.is_file() and sha256_file(nodes_path) != meta["nodes_sha256"]
+    lines = [f"# Soát tay (A9) - {settings.project.book_id}", "", f"- {result.check.line()}"]
+    if stale:
+        lines.append(
+            "- ⚠ cây đã được chạy lại SAU khi sinh trang soát - phiếu này chấm bản cây cũ; "
+            "chạy lại `dm p2 spotcheck` rồi soát lại."
+        )
+    lines += [f"- chưa chấm: {u}" for u in result.unscored]
+    lines += [f"- sai: {f}" for f in result.failed]
+    (out / "score.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    for line in lines[2:]:
+        typer.echo(line.removeprefix("- "))
+    if not result.check.passed or stale:
+        raise typer.Exit(1)

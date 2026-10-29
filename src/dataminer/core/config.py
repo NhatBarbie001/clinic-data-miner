@@ -227,12 +227,23 @@ class SectionsCfg(_Strict):
     context_chars: int = Field(default=400, ge=0)  # phần đầu nội dung mục gửi kèm cho LLM
 
 
+class SpotcheckCfg(_Strict):
+    """P2R I5 - trang soát tay: ảnh trang PDF ↔ nội dung đã tách (docs/phases/P2R/I5_plan.md)."""
+
+    n: int = Field(default=10, ge=1)  # cỡ mẫu A9
+    seed: int = 2026  # cùng seed → cùng mẫu
+    dpi: int = Field(default=120, ge=50, le=300)  # độ phân giải ảnh trang (JPEG)
+    unit_name: str = Field(default="diseases", pattern=r"^[a-z_]+$")  # tên file <unit_name>.csv
+    min_pass: float = Field(default=0.9, gt=0, le=1)  # A9: tỉ lệ đạt tối thiểu (9/10)
+
+
 class P2Cfg(_Strict):
     """Phase P2 - dựng cây cấu trúc (các task sau bổ sung nhóm của mình)."""
 
     toc: TocCfg = Field(default_factory=TocCfg)
     headings: HeadingsCfg = Field(default_factory=HeadingsCfg)
     sections: SectionsCfg = Field(default_factory=SectionsCfg)
+    spotcheck: SpotcheckCfg = Field(default_factory=SpotcheckCfg)
 
 
 class Settings(_Strict):
